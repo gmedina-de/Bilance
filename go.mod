@@ -1,6 +1,6 @@
 module Bilance
 
-go 1.17
+go 1.11
 
 require (
 	github.com/joncalhoun/form v1.0.0
