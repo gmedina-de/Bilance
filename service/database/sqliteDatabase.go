@@ -34,7 +34,7 @@ func (s *sqliteDatabase) Insert(model interface{}) {
 	}
 
 	query := `INSERT INTO ` + modelType.Name() + `(` + strings.Join(columns, ",") + `) VALUES (` + strings.Join(values, ",") + `)`
-	s.log.Info("Executing query " + query)
+	s.log.Debug("Executing query " + query)
 	_, err := s.db.Exec(query)
 	if err != nil {
 		s.log.Error(err.Error())

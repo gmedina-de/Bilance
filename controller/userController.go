@@ -4,7 +4,6 @@ import (
 	. "Bilance/model"
 	"Bilance/service/database"
 	"Bilance/service/router"
-	"html/template"
 	"net/http"
 )
 
@@ -21,20 +20,7 @@ func (this *userController) Routing(router router.Router) {
 }
 
 func (this *userController) SayHello(writer http.ResponseWriter, request *http.Request) {
-	newUser := User{Username: "Admin6", Password: "asdf"}
-
-	this.database.Insert(&newUser)
-	var users []User
-
-	tmpl, err := template.New("user.html").ParseFiles("view/user.html")
-
-	err = tmpl.Execute(writer,
-		struct {
-			Users   []User
-			NewUser User
-		}{users, newUser},
-	)
-	if err != nil {
-		panic(err)
-	}
+	user := User{Username: "Admin6", Password: "asdf"}
+	this.database.Insert(&user)
+	render(writer, "user", struct{ user User }{user})
 }
