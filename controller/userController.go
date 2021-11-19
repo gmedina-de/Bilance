@@ -16,11 +16,11 @@ func UserController(database database.Database) Controller {
 }
 
 func (this *userController) Routing(router router.Router) {
-	router.Get("/", this.SayHello)
+	baseRoute := "/user"
+	router.Get(baseRoute+"/", this.List)
 }
 
-func (this *userController) SayHello(writer http.ResponseWriter, request *http.Request) {
-	user := User{Username: "Admin6", Password: "asdf"}
-	this.database.Insert(&user)
-	render(writer, "user", struct{ user User }{user})
+func (this *userController) List(writer http.ResponseWriter, request *http.Request) {
+	users := RetrieveUsers(this.database)
+	render(writer, "user", struct{ Users []User }{users})
 }

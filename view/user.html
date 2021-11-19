@@ -1,48 +1,23 @@
 {{define "content"}}
-<h1>Example</h1>
-<p>You can view the source of this page and copy it to get a quick start on a project with Min! You can view the
-    source of this page and copy it to get a quick start on a project with Min! You can view the source of this page
-    and copy it to get a quick start on a project with Min! You can view the source of this page and copy it to get
-    a quick start on a project with Min! You can view the source of this page and copy it to get a quick start on a
-    project with Min! You can view the source of this page and copy it to get a quick start on a project with Min!
-    You can view the source of this page and copy it to get a quick start on a project with Min! You can view the
-    source of this page and copy it to get a quick start on a project with Min!</p>
-<h1>Doing things!</h1>
-<p>Enter how many dollars you want! <span class="addon">$</span><input type="text" class="smooth"> You can view the
-    source of this page and copy it to get a quick start on a project with Min!</p>
-<h1>Do we like numbers?</h1>
+<h2>Users
+    <a class="btn btn-b btn-sm smooth right" href="/user/new">New</a>
+</h2>
 <table class="table">
     <thead>
     <tr>
-        <th>#</th>
-        <th>Widgets Sold</th>
-        <th>Revenue (£)</th>
-        <th>Profit (£)</th>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Password</th>
     </tr>
     </thead>
     <tbody>
+    {{range .Users}}
     <tr>
-        <td>1</td>
-        <td>5</td>
-        <td>10</td>
-        <td>2</td>
+        <td>{{.Id}}</td>
+        <td><a href="/user/edit?Id={{.Id}}">{{.Username}}</a></td>
+        <td>{{.Password}}</td>
     </tr>
-    <tr>
-        <td>2</td>
-        <td>10</td>
-        <td>20</td>
-        <td>4</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>500</td>
-        <td>1000</td>
-        <td>200</td>
-    </tr>
+    {{end}}
     </tbody>
 </table>
-<h1>Conclusions ☺ ☻</h1>
-<i class="ico">We like chess. ♠ ♣ ♥ ♦ ♪ ♛ ♜ ♝ ♞ ♟</i>
-<br><i class="ico">We like phones! ☎</i>
-<br><i class="ico">We like arrows! ⇦ ⇧ ⇨ ⇩</i>
 {{end}}

@@ -40,3 +40,7 @@ func (s *sqliteDatabase) Insert(model interface{}) {
 		s.log.Error(err.Error())
 	}
 }
+
+func (s *sqliteDatabase) Query(query string) (*sql.Rows, error) {
+	return s.db.Query(query)
+}
