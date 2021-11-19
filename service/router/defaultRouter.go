@@ -1,25 +1,18 @@
-package service
+package router
 
 import (
+	log2 "Bilance/service/log"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
-type Router interface {
-	Get(route string, handler Handler)
-	Post(route string, handler Handler)
-	http.Handler
-}
-
-type Handler func(http.ResponseWriter, *http.Request)
-
 type defaultRouter struct {
-	log    Log
+	log    log2.Log
 	routes map[string]Handler
 }
 
-func DefaultRouter(log Log) Router {
+func DefaultRouter(log log2.Log) Router {
 	return &defaultRouter{log: log, routes: make(map[string]Handler)}
 }
 

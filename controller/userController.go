@@ -2,7 +2,8 @@ package controller
 
 import (
 	. "Bilance/model"
-	"Bilance/service"
+	"Bilance/service/database"
+	"Bilance/service/router"
 	"github.com/joncalhoun/form"
 	"html/template"
 	"net/http"
@@ -19,22 +20,22 @@ var inputTpl = `
 `
 
 type userController struct {
-	repository service.Repository
+	database database.Database
 }
 
-func UserController(repository service.Repository) Controller {
-	return &userController{repository: repository}
+func UserController(database database.Database) Controller {
+	return &userController{database: database}
 }
 
-func (this *userController) Routing(router service.Router) {
+func (this *userController) Routing(router router.Router) {
 	router.Get("/Hello", this.SayHello)
 }
 
 func (this *userController) SayHello(writer http.ResponseWriter, request *http.Request) {
 	newUser := User{Username: "Admin", Password: "asdf"}
-	this.repository.Create(&newUser)
+	this.database.Create(&newUser)
 	var users []User
-	this.repository.RetrieveAll(&users)
+	this.database.RetrieveAll(&users)
 
 	tpl := template.Must(template.New("").Parse(inputTpl))
 	fb := form.Builder{

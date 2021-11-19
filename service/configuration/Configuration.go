@@ -1,18 +1,8 @@
-package service
+package configuration
 
 type Configuration interface {
 	Get(setting Setting) string
 	Set(setting Setting, value string)
-}
-
-type Setting int
-
-type mapConfiguration struct {
-	settings map[Setting]string
-}
-
-func MapConfiguration() Configuration {
-	return &mapConfiguration{settings: make(map[Setting]string)}
 }
 
 func (this *mapConfiguration) Get(setting Setting) string {

@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"Bilance/service"
+	"Bilance/service/router"
 )
 
 type Controller interface {
-	Routing(router service.Router)
+	Routing(router router.Router)
 }
