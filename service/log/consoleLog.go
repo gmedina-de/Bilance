@@ -3,7 +3,6 @@ package log
 import (
 	"fmt"
 	"log"
-	"time"
 )
 
 type consoleLog struct {
@@ -30,8 +29,7 @@ func (this *consoleLog) Error(message string, parameters ...interface{}) {
 }
 
 func (this *consoleLog) log(level Level, message string, parameters ...interface{}) {
-	log.Printf("%s %s %s%s %s%s %s\n",
-		time.Now().Format("2006-01-02 15:04:05"),
+	log.Printf("%s %s%s %s%s %s\n",
 		level.toBgColor(),
 		Reset,
 		level.toFgColor(),

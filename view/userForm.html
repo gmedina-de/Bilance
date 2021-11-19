@@ -1,0 +1,12 @@
+{{define "content"}}
+<h2>
+    {{if not .Id}} Create user {{else}} Edit {{.Username}} {{end}}
+    {{if not .Id}} <a class="btn btn-c btn-sm smooth right" href="/user">Cancel</a> {{else}} <a class="btn btn-c btn-sm smooth right" href="/user/delete?Id={{.Id}}">Delete</a> {{end}}
+</h2>
+<form method="post">
+    <input type="hidden" name="Id" value="{{.Id}}"/>
+    <input type="text" name="Username" placeholder="Username" value="{{.Username}}" required/>
+    <input type="password" name="Password" placeholder="Password" value="{{.Password}}" required/>
+    <input type="submit" class="btn btn-a btn-sm smooth"/>
+</form>
+{{end}}

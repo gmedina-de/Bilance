@@ -3,6 +3,7 @@ package model
 import (
 	"Bilance/service/database"
 	"log"
+	"strings"
 )
 
 type User struct {
@@ -11,9 +12,9 @@ type User struct {
 	Password string
 }
 
-func RetrieveUsers(db database.Database) []User {
+func RetrieveUsers(db database.Database, conditions ...string) []User {
 	var result []User
-	row, err := db.Query("SELECT * FROM User ORDER BY Id")
+	row, err := db.Query("SELECT * FROM User " + strings.Join(conditions, " "))
 	if err != nil {
 		log.Fatal(err)
 	}
