@@ -1,19 +1,21 @@
 package router
 
 import (
-	log2 "Bilance/service/log"
+	"Bilance/service/authenticator"
+	"Bilance/service/log"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
 type defaultRouter struct {
-	log    log2.Log
-	routes map[string]Handler
+	log           log.Log
+	authenticator authenticator.Authenticator
+	routes        map[string]Handler
 }
 
-func DefaultRouter(log log2.Log) Router {
-	return &defaultRouter{log: log, routes: make(map[string]Handler)}
+func DefaultRouter(log log.Log, authenticator authenticator.Authenticator) Router {
+	return &defaultRouter{log: log, authenticator: authenticator, routes: make(map[string]Handler)}
 }
 
 func (r *defaultRouter) Get(route string, handler Handler) {
@@ -26,10 +28,12 @@ func (r *defaultRouter) Post(route string, handler Handler) {
 
 func (r *defaultRouter) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	r.log.Debug("%s %s", request.Method, request.URL)
-	handler, found := r.routes[strings.ToUpper(request.Method)+" "+request.URL.Path]
-	if found {
-		handler(writer, request)
-	} else {
-		fmt.Fprintf(writer, "No route for %s found!", request.URL.Path)
+	if r.authenticator.Authenticate(writer, request) {
+		handler, found := r.routes[strings.ToUpper(request.Method)+" "+request.URL.Path]
+		if found {
+			handler(writer, request)
+		} else {
+			fmt.Fprintf(writer, "No route for %s found!", request.URL.Path)
+		}
 	}
 }
