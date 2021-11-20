@@ -6,6 +6,7 @@
 *.dylib
 database.db
 go.sum
+main
 
 # Test binary, built with `go test -c`
 *.test

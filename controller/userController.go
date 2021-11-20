@@ -49,7 +49,7 @@ func (this *userController) New(writer http.ResponseWriter, request *http.Reques
 			request.Form.Get("Password"),
 			admin,
 		})
-		http.Redirect(writer, request, "/user", http.StatusTemporaryRedirect)
+		http.Redirect(writer, request, "/admin/user", http.StatusTemporaryRedirect)
 	}
 }
 
@@ -67,7 +67,7 @@ func (this *userController) Edit(writer http.ResponseWriter, request *http.Reque
 			request.Form.Get("Password"),
 			admin,
 		})
-		http.Redirect(writer, request, "/user", http.StatusTemporaryRedirect)
+		http.Redirect(writer, request, "/admin/user", http.StatusTemporaryRedirect)
 	}
 }
 
@@ -75,6 +75,6 @@ func (this *userController) Delete(writer http.ResponseWriter, request *http.Req
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
 		id := request.URL.Query().Get("Id")
 		this.database.Delete("User", id)
-		http.Redirect(writer, request, "/user", http.StatusTemporaryRedirect)
+		http.Redirect(writer, request, "/admin/user", http.StatusTemporaryRedirect)
 	}
 }
