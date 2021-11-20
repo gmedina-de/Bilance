@@ -10,6 +10,7 @@ type User struct {
 	Id       int
 	Username string
 	Password string
+	Admin    int
 }
 
 func RetrieveUsers(db database.Database, conditions ...string) []User {
@@ -23,8 +24,9 @@ func RetrieveUsers(db database.Database, conditions ...string) []User {
 		var Id int
 		var Username string
 		var Password string
-		row.Scan(&Id, &Username, &Password)
-		result = append(result, User{Id, Username, Password})
+		var Admin int
+		row.Scan(&Id, &Username, &Password, &Admin)
+		result = append(result, User{Id, Username, Password, Admin})
 	}
 	return result
 }

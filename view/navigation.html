@@ -1,0 +1,19 @@
+{{define "navigation"}}
+<nav class="nav" tabindex="-1" onclick="this.focus()">
+    <div class="container">
+        <a class="pagename current" href="/">Bilance</a>
+        {{if .Admin}}
+        <a href="/admin/user">Users</a>
+        {{end}}
+        <a href="#" class="right" style="top: -4px;padding-right: 0;">
+            <label for="cars">Choose a car:</label>
+            <select id="cars" name="cars" style="background: white;">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="fiat">Fiat</option>
+                <option value="audi">Audi</option>
+            </select>
+        </a>
+    </div>
+</nav>
+{{end}}

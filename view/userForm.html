@@ -1,12 +1,16 @@
 {{define "content"}}
 <h2>
-    {{if not .Id}} Create user {{else}} Edit {{.Username}} {{end}}
-    {{if not .Id}} <a class="btn btn-c btn-sm smooth right" href="/user">Cancel</a> {{else}} <a class="btn btn-c btn-sm smooth right" href="/user/delete?Id={{.Id}}">Delete</a> {{end}}
+    {{if not .Data.Id}} Create user {{else}} Edit {{.Data.Username}} {{end}}
+    {{if not .Data.Id}} <a class="btn btn-c btn-sm smooth right" href="/admin/user">Cancel</a> {{else}} <a class="btn btn-c btn-sm smooth right" href="/admin/user/delete?Id={{.Data.Id}}">Delete</a> {{end}}
 </h2>
 <form method="post">
-    <input type="hidden" name="Id" value="{{.Id}}"/>
-    <input type="text" name="Username" placeholder="Username" value="{{.Username}}" required/>
-    <input type="password" name="Password" placeholder="Password" value="{{.Password}}" required/>
+    <input type="hidden" name="Id" value="{{.Data.Id}}"/>
+    <input type="text" name="Username" placeholder="Username" value="{{.Data.Username}}" required/>
+    <input type="password" name="Password" placeholder="Password" value="{{.Data.Password}}" required/>
+    <select name="Admin" required>
+        <option value="0" {{if not .Data.Admin}} selected {{end}}>Normal</option>
+        <option value="1" {{if .Data.Admin}} selected {{end}}>Admin</option>
+    </select>
     <input type="submit" class="btn btn-a btn-sm smooth"/>
 </form>
 {{end}}

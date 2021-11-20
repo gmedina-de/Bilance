@@ -17,13 +17,13 @@ func UserController(database database.Database) Controller {
 }
 
 func (this *userController) Routing(router router.Router) {
-	router.Get("/user", this.List)
-	router.Post("/user", this.List)
-	router.Get("/user/new", this.New)
-	router.Post("/user/new", this.New)
-	router.Get("/user/edit", this.Edit)
-	router.Post("/user/edit", this.Edit)
-	router.Get("/user/delete", this.Delete)
+	router.Get("/admin/user", this.List)
+	router.Post("/admin/user", this.List)
+	router.Get("/admin/user/new", this.New)
+	router.Post("/admin/user/new", this.New)
+	router.Get("/admin/user/edit", this.Edit)
+	router.Post("/admin/user/edit", this.Edit)
+	router.Get("/admin/user/delete", this.Delete)
 }
 
 func (this *userController) List(writer http.ResponseWriter, request *http.Request) {
@@ -34,18 +34,20 @@ func (this *userController) List(writer http.ResponseWriter, request *http.Reque
 	} else {
 		users = model.RetrieveUsers(this.database, "ORDER BY Id")
 	}
-	render(writer, "user", struct{ Users []model.User }{users})
+	render(writer, request, "user", struct{ Users []model.User }{users})
 }
 
 func (this *userController) New(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" {
-		render(writer, "userForm", &model.User{})
+		render(writer, request, "userForm", &model.User{})
 	} else if request.Method == "POST" {
 		request.ParseForm()
+		admin, _ := strconv.Atoi(request.Form.Get("Admin"))
 		this.database.Insert(&model.User{
 			0,
 			request.Form.Get("Username"),
 			request.Form.Get("Password"),
+			admin,
 		})
 		http.Redirect(writer, request, "/user", http.StatusTemporaryRedirect)
 	}
@@ -54,14 +56,16 @@ func (this *userController) New(writer http.ResponseWriter, request *http.Reques
 func (this *userController) Edit(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
 		id := request.URL.Query().Get("Id")
-		render(writer, "userForm", model.RetrieveUsers(this.database, "WHERE Id = '"+id+"'")[0])
+		render(writer, request, "userForm", model.RetrieveUsers(this.database, "WHERE Id = '"+id+"'")[0])
 	} else if request.Method == "POST" {
 		request.ParseForm()
 		id, _ := strconv.Atoi(request.Form.Get("Id"))
+		admin, _ := strconv.Atoi(request.Form.Get("Admin"))
 		this.database.Update(&model.User{
 			id,
 			request.Form.Get("Username"),
 			request.Form.Get("Password"),
+			admin,
 		})
 		http.Redirect(writer, request, "/user", http.StatusTemporaryRedirect)
 	}

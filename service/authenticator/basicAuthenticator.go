@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"crypto/subtle"
 	"net/http"
+	"strings"
 )
 
 type basicAuthenticator struct {
@@ -31,7 +32,9 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 			passwordMatch := subtle.ConstantTimeCompare(passwordHash[:], expectedPasswordHash[:]) == 1
 
 			if usernameMatch && passwordMatch {
-				return true
+				if !strings.HasPrefix(r.URL.Path, "/admin") || users[0].Admin == 1 {
+					return true
+				}
 			}
 		}
 	}

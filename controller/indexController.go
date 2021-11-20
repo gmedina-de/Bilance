@@ -16,8 +16,13 @@ func IndexController(database database.Database) Controller {
 
 func (this *indexController) Routing(router router.Router) {
 	router.Get("/", this.Index)
+	router.Get("/admin", this.Admin)
 }
 
 func (this *indexController) Index(writer http.ResponseWriter, request *http.Request) {
-	render(writer, "index", nil)
+	render(writer, request, "index", nil)
+}
+
+func (this *indexController) Admin(writer http.ResponseWriter, request *http.Request) {
+	render(writer, request, "admin", nil)
 }
