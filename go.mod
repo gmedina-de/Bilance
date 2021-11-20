@@ -2,4 +2,4 @@ module Bilance
 
 go 1.11
 
-require github.com/mattn/go-sqlite3 v1.14.9
+require modernc.org/sqlite v1.14.1

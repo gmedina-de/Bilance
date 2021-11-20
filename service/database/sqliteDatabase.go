@@ -4,7 +4,7 @@ import (
 	"Bilance/service/log"
 	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 	"reflect"
 	"strings"
 )
@@ -15,7 +15,7 @@ type sqliteDatabase struct {
 }
 
 func SqliteDatabase(log log.Log) Database {
-	db, _ := sql.Open("sqlite3", "./database.db")
+	db, _ := sql.Open("sqlite", "./database.db")
 	return &sqliteDatabase{log, db}
 }
 
