@@ -1,21 +1,21 @@
 {{define "navigation"}}
 <nav class="nav" tabindex="-1" onclick="this.focus()">
     <div class="container">
+        <a class="pagename current" href="/"><b>Bilance</b>{{if .Admin}} Admin {{end}}</a>
         {{if .Admin}}
-        <a class="pagename current" href="/">Bilance Admin</a>
         <a href="/admin/user">Users</a>
-        {{else}}
-        <a class="pagename current" href="/">Bilance</a>
+        <a href="/admin/tags">Tags</a>
+        <a href="/admin/projects">Projects</a>
+        {{end}}
         <a href="#" class="right" style="top: -4px;padding-right: 0;">
-            <label for="cars">Choose a car:</label>
+            <label for="cars">Choose a project:</label>
             <select id="cars" name="cars" style="background: white;">
-                <option value="volvo">Volvo</option>
+                <option value=""> </option>
                 <option value="saab">Saab</option>
                 <option value="fiat">Fiat</option>
                 <option value="audi">Audi</option>
             </select>
         </a>
-        {{end}}
     </div>
 </nav>
 {{end}}

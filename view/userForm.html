@@ -8,8 +8,8 @@
     <input type="text" name="Username" placeholder="Username" value="{{.Data.Username}}" required/>
     <input type="password" name="Password" placeholder="Password" value="{{.Data.Password}}" required/>
     <select name="Admin" required>
-        <option value="0" {{if not .Data.Admin}} selected {{end}}>Normal</option>
-        <option value="1" {{if .Data.Admin}} selected {{end}}>Admin</option>
+        <option value="0" {{if not .Data.Role}} selected {{end}}>Normal</option>
+        <option value="1" {{if .Data.Role}} selected {{end}}>Admin</option>
     </select>
     <input type="submit" class="btn btn-a btn-sm smooth"/>
 </form>
