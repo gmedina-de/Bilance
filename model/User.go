@@ -1,35 +1,24 @@
 package model
 
-import (
-	"Bilance/service/database"
-	"log"
-	"strings"
-)
+import "database/sql"
 
 type User struct {
 	Id       int
 	Username string
 	Password string
-	Role     int
+	Role     UserRole
 }
 
-const RoleNormal int = 0
-const RoleAdmin int = 1
+type UserRole int
 
-func RetrieveUsers(db database.Database, conditions ...string) []User {
-	var result []User
-	row, err := db.Query("SELECT * FROM User " + strings.Join(conditions, " "))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer row.Close()
-	for row.Next() {
-		var Id int
-		var Username string
-		var Password string
-		var Role int
-		row.Scan(&Id, &Username, &Password, &Role)
-		result = append(result, User{Id, Username, Password, Role})
-	}
-	return result
+const UserRoleNormal UserRole = 0
+const UserRoleAdmin UserRole = 1
+
+func UserQuery(row *sql.Rows) interface{} {
+	var id int
+	var username string
+	var password string
+	var role UserRole
+	row.Scan(&id, &username, &password, &role)
+	return &User{id, username, password, role}
 }

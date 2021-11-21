@@ -19,13 +19,29 @@ func SqliteDatabase(log log.Log) Database {
 	return &sqliteDatabase{log, db}
 }
 
-func (s *sqliteDatabase) Query(query string) (*sql.Rows, error) {
+func (s *sqliteDatabase) Query(result interface{}, queryFunction QueryFunc, conditions ...string) {
+	modelType := reflect.TypeOf(result)
+	resultValue := reflect.ValueOf(result)
+	if modelType.Kind() == reflect.Ptr {
+		modelType = modelType.Elem()
+		resultValue = resultValue.Elem()
+	}
+	if modelType.Kind() == reflect.Slice {
+		modelType = modelType.Elem()
+	} else {
+		panic("Input param is not a slice")
+	}
+
+	query := "SELECT * FROM " + modelType.Name() + " " + strings.Join(conditions, " ")
 	s.log.Debug("SQL " + query)
-	rows, err := s.db.Query(query)
+	row, err := s.db.Query(query)
 	if err != nil {
 		s.log.Error(err.Error())
 	}
-	return rows, err
+	defer row.Close()
+	for row.Next() {
+		resultValue.Set(reflect.Append(resultValue, reflect.ValueOf(queryFunction(row)).Elem()))
+	}
 }
 
 func (s *sqliteDatabase) Insert(model interface{}) {

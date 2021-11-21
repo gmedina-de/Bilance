@@ -30,9 +30,9 @@ func (this *userController) List(writer http.ResponseWriter, request *http.Reque
 	var users []model.User
 	if request.URL.Query().Has("Search") {
 		search := request.URL.Query().Get("Search")
-		users = model.RetrieveUsers(this.database, "WHERE Username LIKE '"+search+"'", "ORDER BY Id")
+		this.database.Query(&users, model.UserQuery, "WHERE Username LIKE '"+search+"'", "ORDER BY Id")
 	} else {
-		users = model.RetrieveUsers(this.database, "ORDER BY Id")
+		this.database.Query(&users, model.UserQuery, "ORDER BY Id")
 	}
 	render(writer, request, "user", struct{ Users []model.User }{users})
 }
@@ -42,12 +42,12 @@ func (this *userController) New(writer http.ResponseWriter, request *http.Reques
 		render(writer, request, "userForm", &model.User{})
 	} else if request.Method == "POST" {
 		request.ParseForm()
-		admin, _ := strconv.Atoi(request.Form.Get("Role"))
+		admin, _ := strconv.Atoi(request.Form.Get("UserRole"))
 		this.database.Insert(&model.User{
 			0,
 			request.Form.Get("Username"),
 			request.Form.Get("Password"),
-			admin,
+			model.UserRole(admin),
 		})
 		http.Redirect(writer, request, "/admin/user", http.StatusTemporaryRedirect)
 	}
@@ -56,16 +56,19 @@ func (this *userController) New(writer http.ResponseWriter, request *http.Reques
 func (this *userController) Edit(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
 		id := request.URL.Query().Get("Id")
-		render(writer, request, "userForm", model.RetrieveUsers(this.database, "WHERE Id = '"+id+"'")[0])
+		var users []model.User
+		this.database.Query(&users, model.UserQuery, "WHERE Id = '"+id+"'")
+		user := users[0]
+		render(writer, request, "userForm", user)
 	} else if request.Method == "POST" {
 		request.ParseForm()
 		id, _ := strconv.Atoi(request.Form.Get("Id"))
-		admin, _ := strconv.Atoi(request.Form.Get("Role"))
+		admin, _ := strconv.Atoi(request.Form.Get("UserRole"))
 		this.database.Update(&model.User{
 			id,
 			request.Form.Get("Username"),
 			request.Form.Get("Password"),
-			admin,
+			model.UserRole(admin),
 		})
 		http.Redirect(writer, request, "/admin/user", http.StatusTemporaryRedirect)
 	}

@@ -10,7 +10,7 @@ type Payment struct {
 	Amount   EUR
 	Date     time.Time
 	Picture  string
-	Category Category
+	Category PaymentCategory
 	Tag      *Tag
 	Payer    *User
 	Payee    *User
@@ -25,8 +25,8 @@ func (m EUR) String() string {
 	return fmt.Sprintf("%.2f €", x)
 }
 
-type Category int
+type PaymentCategory int
 
-const CategoryExpense = 0
-const CategoryIncome = 1
-const CategoryTransfer = 2
+const PaymentCategoryExpense = 0
+const PaymentCategoryIncome = 1
+const PaymentCategoryTransfer = 2

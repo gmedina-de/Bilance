@@ -23,7 +23,8 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 		usernameHash := sha256.Sum256([]byte(username))
 		passwordHash := sha256.Sum256([]byte(password))
 
-		users := model.RetrieveUsers(b.database, "WHERE Username = '"+username+"'")
+		var users []model.User
+		b.database.Query(&users, model.UserQuery, "WHERE Username = '"+username+"'")
 		if len(users) > 0 {
 			expectedUsernameHash := sha256.Sum256([]byte(users[0].Username))
 			expectedPasswordHash := sha256.Sum256([]byte(users[0].Password))
@@ -32,7 +33,7 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 			passwordMatch := subtle.ConstantTimeCompare(passwordHash[:], expectedPasswordHash[:]) == 1
 
 			if usernameMatch && passwordMatch {
-				if !strings.HasPrefix(r.URL.Path, "/admin") || users[0].Role == model.RoleAdmin {
+				if !strings.HasPrefix(r.URL.Path, "/admin") || users[0].Role == model.UserRoleAdmin {
 					return true
 				}
 			}
