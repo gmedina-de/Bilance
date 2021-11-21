@@ -1,12 +1,12 @@
 {{define "content"}}
 <h2>Users
-    <a class="btn btn-b btn-sm smooth right" href="/admin/user/new">New</a>
+    <a class="btn btn-b btn-sm smooth right" href="{{.CurrentPath}}/new">New</a>
     <a class="btn btn-a btn-sm smooth right" href="#greeting-modal">Filter</a>
 </h2>
 
 <div class="modal-container" id="greeting-modal">
     <div class="modal">
-        <form action="/admin/user" method="get">
+        <form action="{{.CurrentPath}}" method="get">
             <input type="text" name="Search" placeholder="Username"/>
             <input type="submit" class="btn btn-b btn-sm smooth"/>
         </form>
@@ -24,8 +24,9 @@
     </tr>
     </thead>
     <tbody>
+    {{$CurrentPath:=.CurrentPath}}
     {{range .Data.Users}}
-    <tr onclick="window.location.href='/admin/user/edit?Id={{.Id}}';">
+    <tr onclick="window.location.href='{{$CurrentPath}}/edit?Id={{.Id}}';">
         <td>{{.Id}}</td>
         <td>{{.Username}}</td>
         <td>{{.Password}}</td>

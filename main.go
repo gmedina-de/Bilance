@@ -19,8 +19,10 @@ func main() {
 	authenticator := authenticator.BasicAuthenticator(database)
 	router := router.DefaultRouter(log, authenticator)
 	server := server.DefaultServer(router, log, configuration)
+
 	indexController := controller.IndexController(database)
 	userController := controller.UserController(database)
-	application := application.WebApplication(server, router, indexController, userController)
+	tagController := controller.TagController(database)
+	application := application.WebApplication(server, router, indexController, userController, tagController)
 	application.Run()
 }

@@ -16,21 +16,23 @@ func UserController(database database.Database) Controller {
 	return &userController{database: database}
 }
 
+const userBasePath = "/admin/user"
+
 func (this *userController) Routing(router router.Router) {
-	router.Get("/admin/user", this.List)
-	router.Post("/admin/user", this.List)
-	router.Get("/admin/user/new", this.New)
-	router.Post("/admin/user/new", this.New)
-	router.Get("/admin/user/edit", this.Edit)
-	router.Post("/admin/user/edit", this.Edit)
-	router.Get("/admin/user/delete", this.Delete)
+	router.Get(userBasePath, this.List)
+	router.Post(userBasePath, this.List)
+	router.Get(userBasePath+"/new", this.New)
+	router.Post(userBasePath+"/new", this.New)
+	router.Get(userBasePath+"/edit", this.Edit)
+	router.Post(userBasePath+"/edit", this.Edit)
+	router.Get(userBasePath+"/delete", this.Delete)
 }
 
 func (this *userController) List(writer http.ResponseWriter, request *http.Request) {
 	var users []model.User
 	if request.URL.Query().Has("Search") {
 		search := request.URL.Query().Get("Search")
-		this.database.Query(&users, model.UserQuery, "WHERE Username LIKE '"+search+"'", "ORDER BY Id")
+		this.database.Query(&users, model.TagQuery, "WHERE Username LIKE '%"+search+"%'", "ORDER BY Id")
 	} else {
 		this.database.Query(&users, model.UserQuery, "ORDER BY Id")
 	}
@@ -49,7 +51,7 @@ func (this *userController) New(writer http.ResponseWriter, request *http.Reques
 			request.Form.Get("Password"),
 			model.UserRole(admin),
 		})
-		http.Redirect(writer, request, "/admin/user", http.StatusTemporaryRedirect)
+		http.Redirect(writer, request, userBasePath, http.StatusTemporaryRedirect)
 	}
 }
 
@@ -70,7 +72,7 @@ func (this *userController) Edit(writer http.ResponseWriter, request *http.Reque
 			request.Form.Get("Password"),
 			model.UserRole(admin),
 		})
-		http.Redirect(writer, request, "/admin/user", http.StatusTemporaryRedirect)
+		http.Redirect(writer, request, userBasePath, http.StatusTemporaryRedirect)
 	}
 }
 
@@ -78,6 +80,6 @@ func (this *userController) Delete(writer http.ResponseWriter, request *http.Req
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
 		id := request.URL.Query().Get("Id")
 		this.database.Delete("User", id)
-		http.Redirect(writer, request, "/admin/user", http.StatusTemporaryRedirect)
+		http.Redirect(writer, request, userBasePath, http.StatusTemporaryRedirect)
 	}
 }

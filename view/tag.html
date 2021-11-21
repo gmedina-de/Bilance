@@ -1,0 +1,23 @@
+{{define "content"}}
+<h2>Tags
+    <a class="btn btn-b btn-sm smooth right" href="{{.CurrentPath}}/new">New</a>
+</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{$CurrentPath:=.CurrentPath}}
+    {{range .Data.Tags}}
+    <tr onclick="window.location.href='{{$CurrentPath}}/edit?Id={{.Id}}';">
+        <td>{{.Id}}</td>
+        <td>{{.Name}}</td>
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+{{end}}
