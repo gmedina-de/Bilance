@@ -2,22 +2,24 @@
 'https://plantuml.com/class-diagram
 
 abstract class Payment {
-    Name
-    Category
-    Payer
-    Payee
-    Amount
-    Datetime
-    Picture
+	Name
+	Amount
+	Date
+	Picture
+	Tag
+	Payer
+	Payee
+	Project
 }
-
+class Expense {
+}
+class Income {
+}
 class Transfer {
 }
 
-class Income {
-}
-
-class Expense {
+class Tag {
+    Name
 }
 
 class Project {
@@ -25,22 +27,16 @@ class Project {
     Description
 }
 
-class Category {
-}
-
 class User {
     Username
     Password
     Role
 }
-
 class Admin {
 }
 
 
-class Category {
-    Name
-}
+
 
 Payment <|-- Transfer
 Payment <|-- Income
@@ -49,7 +45,8 @@ Payment <|-- Expense
 User <|-- Admin
 
 Project *-- "0..*" Payment
-Category "0..1" -- Payment
+Project "0..*" -- "0..*" User
+Tag "0..1" -- Payment
 
 
 Payment "Payer" -- "1" User
