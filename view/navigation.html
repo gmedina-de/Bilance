@@ -1,10 +1,11 @@
 {{define "navigation"}}
 <nav class="nav" tabindex="-1" onclick="this.focus()">
     <div class="container">
-        <a class="pagename current" href="/">Bilance</a>
         {{if .Admin}}
+        <a class="pagename current" href="/">Bilance Admin</a>
         <a href="/admin/user">Users</a>
-        {{end}}
+        {{else}}
+        <a class="pagename current" href="/">Bilance</a>
         <a href="#" class="right" style="top: -4px;padding-right: 0;">
             <label for="cars">Choose a car:</label>
             <select id="cars" name="cars" style="background: white;">
@@ -14,6 +15,7 @@
                 <option value="audi">Audi</option>
             </select>
         </a>
+        {{end}}
     </div>
 </nav>
 {{end}}
