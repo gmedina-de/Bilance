@@ -42,7 +42,7 @@ func (this *userController) New(writer http.ResponseWriter, request *http.Reques
 		render(writer, request, "userForm", &model.User{})
 	} else if request.Method == "POST" {
 		request.ParseForm()
-		admin, _ := strconv.Atoi(request.Form.Get("Admin"))
+		admin, _ := strconv.Atoi(request.Form.Get("Role"))
 		this.database.Insert(&model.User{
 			0,
 			request.Form.Get("Username"),
@@ -60,7 +60,7 @@ func (this *userController) Edit(writer http.ResponseWriter, request *http.Reque
 	} else if request.Method == "POST" {
 		request.ParseForm()
 		id, _ := strconv.Atoi(request.Form.Get("Id"))
-		admin, _ := strconv.Atoi(request.Form.Get("Admin"))
+		admin, _ := strconv.Atoi(request.Form.Get("Role"))
 		this.database.Update(&model.User{
 			id,
 			request.Form.Get("Username"),
