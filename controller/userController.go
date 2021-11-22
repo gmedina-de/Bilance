@@ -32,7 +32,7 @@ func (this *userController) List(writer http.ResponseWriter, request *http.Reque
 	var users []model.User
 	if request.URL.Query().Has("Search") {
 		search := request.URL.Query().Get("Search")
-		this.database.Query(&users, model.TagQuery, "WHERE Username LIKE '%"+search+"%'", "ORDER BY Id")
+		this.database.Query(&users, model.UserQuery, "WHERE Username LIKE '%"+search+"%'", "ORDER BY Id")
 	} else {
 		this.database.Query(&users, model.UserQuery, "ORDER BY Id")
 	}

@@ -23,6 +23,15 @@ func main() {
 	indexController := controller.IndexController(database)
 	userController := controller.UserController(database)
 	tagController := controller.TagController(database)
-	application := application.WebApplication(server, router, indexController, userController, tagController)
+	projectController := controller.ProjectController(database)
+
+	application := application.WebApplication(
+		server,
+		router,
+		indexController,
+		userController,
+		tagController,
+		projectController,
+	)
 	application.Run()
 }

@@ -6,6 +6,7 @@ import (
 )
 
 type Payment struct {
+	Id       int
 	Name     string
 	Amount   EUR
 	Date     time.Time
@@ -13,7 +14,7 @@ type Payment struct {
 	Category PaymentCategory
 	Tag      *Tag
 	Payer    *User
-	Payee    *User
+	Payees   *[]User
 	Project  *Project
 }
 
