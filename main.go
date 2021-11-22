@@ -3,6 +3,7 @@ package main
 import (
 	"Bilance/application"
 	"Bilance/controller"
+	"Bilance/repository"
 	"Bilance/service/authenticator"
 	"Bilance/service/configuration"
 	"Bilance/service/database"
@@ -15,15 +16,18 @@ func main() {
 
 	configuration := configuration.MapConfiguration()
 	log := log.ConsoleLog()
+
 	database := database.SqliteDatabase(log)
-	authenticator := authenticator.BasicAuthenticator(database)
+	userRepository := repository.UserRepository(database)
+	tagRepository := repository.TagRepository(database)
+
+	authenticator := authenticator.BasicAuthenticator(userRepository)
 	router := router.DefaultRouter(log, authenticator)
 	server := server.DefaultServer(router, log, configuration)
 
 	indexController := controller.IndexController(database)
-	userController := controller.UserController(database)
-	tagController := controller.TagController(database)
-	projectController := controller.ProjectController(database)
+	userController := controller.UserController(userRepository)
+	tagController := controller.TagController(tagRepository)
 
 	application := application.WebApplication(
 		server,
@@ -31,7 +35,6 @@ func main() {
 		indexController,
 		userController,
 		tagController,
-		projectController,
 	)
 	application.Run()
 }

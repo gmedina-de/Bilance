@@ -23,7 +23,7 @@
     </thead>
     <tbody>
     {{$CurrentPath:=.CurrentPath}}
-    {{range .Data.Tags}}
+    {{range .Data}}
     <tr onclick="window.location.href='{{$CurrentPath}}/edit?Id={{.Id}}';">
         <td>{{.Id}}</td>
         <td>{{.Name}}</td>
