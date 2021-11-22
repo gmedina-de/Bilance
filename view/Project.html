@@ -1,0 +1,23 @@
+{{define "table"}}
+<thead>
+<tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Description</th>
+</tr>
+</thead>
+<tbody>
+{{$CurrentPath:=.CurrentPath}}
+{{range .Data}}
+<tr onclick="window.location.href='{{$CurrentPath}}/edit?Id={{.Id}}';">
+    <td>{{.Id}}</td>
+    <td>{{.Name}}</td>
+    <td>{{.Description}}</td>
+</tr>
+{{end}}
+</tbody>
+{{end}}
+
+{{define "form"}}
+<textarea type="" name="Description" placeholder="Description">{{.Data.Description}}</textarea>
+{{end}}
