@@ -35,6 +35,12 @@ func (r *tagRepository) NewFromRequest(request *http.Request, id int) interface{
 	}
 }
 
+func (r *tagRepository) Find(id string) interface{} {
+	var result []model.Tag
+	r.database.Query(&result, r.NewFromQuery, "WHERE Id = "+id)
+	return &result[0]
+}
+
 func (r *tagRepository) List(conditions ...string) interface{} {
 	var result []model.Tag
 	conditions = append(conditions, "ORDER BY Id")

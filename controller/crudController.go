@@ -4,13 +4,13 @@ import (
 	"Bilance/repository"
 	"Bilance/service/router"
 	"net/http"
+	"reflect"
 	"strconv"
 )
 
 type baseController struct {
 	repository repository.Repository
 	basePath   string
-	template   string
 }
 
 func (c *baseController) Routing(router router.Router) {
@@ -30,12 +30,12 @@ func (c *baseController) List(writer http.ResponseWriter, request *http.Request)
 	} else {
 		search = c.repository.List()
 	}
-	render(writer, request, c.template, search)
+	render(writer, request, c.modelName()+" management", "crud", search)
 }
 
 func (c *baseController) New(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" {
-		render(writer, request, c.template+"Form", c.repository.NewEmpty())
+		render(writer, request, "New "+c.modelName(), "form", c.repository.NewEmpty())
 	} else if request.Method == "POST" {
 		request.ParseForm()
 		c.repository.Insert(c.repository.NewFromRequest(request, 0))
@@ -46,8 +46,8 @@ func (c *baseController) New(writer http.ResponseWriter, request *http.Request) 
 func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
 		id := request.URL.Query().Get("Id")
-		item := c.repository.List("WHERE Id = " + id)
-		render(writer, request, c.template+"Form", item)
+		item := c.repository.Find(id)
+		render(writer, request, "Edit "+c.modelName(), "form", item)
 	} else if request.Method == "POST" {
 		request.ParseForm()
 		id, _ := strconv.Atoi(request.Form.Get("Id"))
@@ -59,8 +59,15 @@ func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request)
 func (c *baseController) Delete(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
 		id := request.URL.Query().Get("Id")
-		item := c.repository.List("WHERE Id = " + id)
+		item := c.repository.Find(id)
 		c.repository.Delete(item)
 		http.Redirect(writer, request, c.basePath, http.StatusTemporaryRedirect)
 	}
+}
+
+func (c *baseController) modelName() string {
+	empty := c.repository.NewEmpty()
+	of := reflect.TypeOf(empty).Elem()
+	name := of.Name()
+	return name
 }

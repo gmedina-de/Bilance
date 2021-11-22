@@ -12,17 +12,22 @@ type Controller interface {
 
 type Context struct {
 	Data        interface{}
+	Title       string
 	Admin       bool
 	CurrentPath string
 }
 
-func render(writer http.ResponseWriter, request *http.Request, templateName string, data interface{}) {
+func render(writer http.ResponseWriter, request *http.Request, title string, templateName string, data interface{}) {
 	tmpl, err := template.ParseFiles("view/"+templateName+".html", "view/base.html", "view/navigation.html")
 	if err != nil {
 		panic(err)
 	}
-	path := request.URL.Path
-	context := &Context{data, request.Header.Get("isAdmin") == "true", path}
+	context := &Context{
+		data,
+		title,
+		request.Header.Get("isAdmin") == "true",
+		request.URL.Path,
+	}
 	err = tmpl.ExecuteTemplate(writer, "base", context)
 	if err != nil {
 		panic(err)

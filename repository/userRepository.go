@@ -39,6 +39,12 @@ func (r *userRepository) NewFromRequest(request *http.Request, id int) interface
 	}
 }
 
+func (r *userRepository) Find(id string) interface{} {
+	var result []model.User
+	r.database.Query(&result, r.NewFromQuery, "WHERE Id = "+id)
+	return &result[0]
+}
+
 func (r *userRepository) List(conditions ...string) interface{} {
 	var result []model.User
 	conditions = append(conditions, "ORDER BY Id")

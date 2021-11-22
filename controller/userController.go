@@ -13,7 +13,6 @@ func UserController(repository repository.Repository) Controller {
 		baseController{
 			repository: repository,
 			basePath:   "/admin/user",
-			template:   "user",
 		},
 	}
 }

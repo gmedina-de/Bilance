@@ -88,7 +88,7 @@ func (s *sqliteDatabase) Delete(model interface{}) {
 			id = value
 		}
 	}
-	s.execute(`DELETE FROM ` + modelType.Name() + ` WHERE Id = '` + id + `'`)
+	s.execute(`DELETE FROM ` + modelType.Name() + ` WHERE Id = ` + id)
 }
 
 func (s *sqliteDatabase) execute(query string) {

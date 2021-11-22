@@ -13,7 +13,6 @@ func TagController(repository repository.Repository) Controller {
 		baseController{
 			repository: repository,
 			basePath:   "/admin/tag",
-			template:   "tag",
 		},
 	}
 }
