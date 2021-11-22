@@ -19,3 +19,11 @@
 {{end}}
 </tbody>
 {{end}}
+
+{{define "form"}}
+<input type="password" name="Password" placeholder="Password" value="{{.Data.Password}}" required/>
+<select name="Role" required>
+    <option value="0" {{if not .Data.Role}} selected {{end}}>Normal</option>
+    <option value="1" {{if .Data.Role}} selected {{end}}>Admin</option>
+</select>
+{{end}}
