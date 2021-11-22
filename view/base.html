@@ -11,22 +11,22 @@
     </style>
 
     <style>
-        #greeting-modal {
+        #filter-modal {
             visibility: hidden;
             opacity: 0;
             transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
         }
-        #greeting-modal:target {
+        #filter-modal:target {
             visibility: visible;
             opacity: 1;
         }
-        #greeting-modal .modal {
+        #filter-modal .modal {
             opacity: 0;
             transform: translateY(-1rem);
             transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
             transition-delay: 0.2s;
         }
-        #greeting-modal:target .modal {
+        #filter-modal:target .modal {
             transform: translateY(0);
             opacity: 1;
         }

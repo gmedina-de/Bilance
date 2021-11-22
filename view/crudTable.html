@@ -2,10 +2,10 @@
 <h2>
     {{.Title}}
     <a class="btn btn-b btn-sm smooth right" href="{{.CurrentPath}}/new">New</a>
-    <a class="btn btn-a btn-sm smooth right" href="#greeting-modal">Filter</a>
+    <a class="btn btn-a btn-sm smooth right" href="#filter-modal">Filter</a>
 </h2>
 
-<div class="modal-container" id="greeting-modal">
+<div class="modal-container" id="filter-modal">
     <div class="modal">
         <form action="{{.CurrentPath}}" method="get">
             <input type="text" name="Search" placeholder="Name"/>
@@ -16,20 +16,6 @@
 </div>
 
 <table class="table">
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Name</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{$CurrentPath:=.CurrentPath}}
-    {{range .Data}}
-    <tr onclick="window.location.href='{{$CurrentPath}}/edit?Id={{.Id}}';">
-        <td>{{.Id}}</td>
-        <td>{{.Name}}</td>
-    </tr>
-    {{end}}
-    </tbody>
+    {{template "table" .}}
 </table>
 {{end}}

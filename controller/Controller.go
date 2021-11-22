@@ -17,8 +17,12 @@ type Context struct {
 	CurrentPath string
 }
 
-func render(writer http.ResponseWriter, request *http.Request, title string, templateName string, data interface{}) {
-	tmpl, err := template.ParseFiles("view/"+templateName+".html", "view/base.html", "view/navigation.html")
+func render(writer http.ResponseWriter, request *http.Request, title string, data interface{}, templates ...string) {
+	for i, iTemplate := range templates {
+		templates[i] = "view/" + iTemplate + ".html"
+	}
+	templates = append(templates, "view/base.html", "view/navigation.html")
+	tmpl, err := template.ParseFiles(templates...)
 	if err != nil {
 		panic(err)
 	}

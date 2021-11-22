@@ -8,14 +8,14 @@ type baseRepository struct {
 	database database.Database
 }
 
-func (r *baseRepository) Insert(model interface{}) {
-	r.database.Insert(model)
+func (r *baseRepository) Insert(entity interface{}) {
+	r.database.Insert(entity)
 }
 
-func (r *baseRepository) Update(model interface{}) {
-	r.database.Update(model)
+func (r *baseRepository) Update(entity interface{}) {
+	r.database.Update(entity)
 }
 
-func (r *baseRepository) Delete(model interface{}) {
-	r.database.Delete(model)
+func (r *baseRepository) Delete(entity interface{}) {
+	r.database.Delete(entity)
 }

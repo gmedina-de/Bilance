@@ -30,7 +30,7 @@ func (r *userRepository) NewFromQuery(row *sql.Rows) interface{} {
 }
 
 func (r *userRepository) NewFromRequest(request *http.Request, id int) interface{} {
-	admin, _ := strconv.Atoi(request.Form.Get("UserRole"))
+	admin, _ := strconv.Atoi(request.Form.Get("Role"))
 	return &model.User{
 		id,
 		request.Form.Get("Name"),

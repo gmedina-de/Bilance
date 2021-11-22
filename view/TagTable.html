@@ -1,0 +1,17 @@
+{{define "table"}}
+<thead>
+<tr>
+    <th>Id</th>
+    <th>Name</th>
+</tr>
+</thead>
+<tbody>
+{{$CurrentPath:=.CurrentPath}}
+{{range .Data}}
+<tr onclick="window.location.href='{{$CurrentPath}}/edit?Id={{.Id}}';">
+    <td>{{.Id}}</td>
+    <td>{{.Name}}</td>
+</tr>
+{{end}}
+</tbody>
+{{end}}
