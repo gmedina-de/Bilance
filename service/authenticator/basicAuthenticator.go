@@ -2,18 +2,18 @@ package authenticator
 
 import (
 	"Bilance/model"
-	"Bilance/repository"
 	"crypto/sha256"
 	"crypto/subtle"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
 type basicAuthenticator struct {
-	userRepository repository.Repository
+	userRepository model.Repository
 }
 
-func BasicAuthenticator(userRepository repository.Repository) Authenticator {
+func BasicAuthenticator(userRepository model.Repository) Authenticator {
 	return &basicAuthenticator{userRepository}
 }
 
@@ -35,10 +35,8 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 
 			if usernameMatch && passwordMatch {
 				isAdmin := user.Role == model.UserRoleAdmin
-				if isAdmin {
-					r.Header.Add("isAdmin", "true")
-				}
 				if !strings.HasPrefix(r.URL.Path, "/admin") || isAdmin {
+					r.Header.Add("userId", strconv.Itoa(user.Id))
 					return true
 				}
 			}

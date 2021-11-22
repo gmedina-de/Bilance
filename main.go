@@ -3,7 +3,7 @@ package main
 import (
 	"Bilance/application"
 	"Bilance/controller"
-	"Bilance/repository"
+	"Bilance/model"
 	"Bilance/service/authenticator"
 	"Bilance/service/configuration"
 	"Bilance/service/database"
@@ -18,9 +18,12 @@ func main() {
 	log := log.ConsoleLog()
 
 	database := database.SqliteDatabase(log)
-	userRepository := repository.UserRepository(database)
-	tagRepository := repository.TagRepository(database)
-	projectRepository := repository.ProjectRepository(database)
+	userRepository := model.UserRepository(database)
+	tagRepository := model.TagRepository(database)
+	projectRepository := model.ProjectRepository(database)
+
+	model.MyUserRepository = userRepository
+	model.MyProjectRepository = projectRepository
 
 	authenticator := authenticator.BasicAuthenticator(userRepository)
 	router := router.DefaultRouter(log, authenticator)

@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"Bilance/repository"
+	"Bilance/model"
 )
 
 type tagController struct {
 	baseController
 }
 
-func TagController(repository repository.Repository) Controller {
+func TagController(repository model.Repository) Controller {
 	return &tagController{
 		baseController{
 			repository: repository,

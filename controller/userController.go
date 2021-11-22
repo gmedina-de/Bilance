@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"Bilance/repository"
+	"Bilance/model"
 )
 
 type userController struct {
 	baseController
 }
 
-func UserController(repository repository.Repository) Controller {
+func UserController(repository model.Repository) Controller {
 	return &userController{
 		baseController{
 			repository: repository,

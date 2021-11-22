@@ -19,5 +19,13 @@
 {{end}}
 
 {{define "form"}}
-<textarea type="" name="Description" placeholder="Description">{{.Data.Description}}</textarea>
+<label for="Description">Description</label>
+<textarea id="Description" name="Description" placeholder="Description">{{.Data.Description}}</textarea>
+<label for="Users">{{.Data.Users}}</label>
+<select id="Users" name="Users" multiple>
+    <option value="volvo">Volvo</option>
+    <option value="saab">Saab</option>
+    <option value="opel">Opel</option>
+    <option value="audi">Audi</option>
+</select>
 {{end}}

@@ -1,8 +1,8 @@
 {{define "navigation"}}
 <nav class="nav" tabindex="-1" onclick="this.focus()">
     <div class="container">
-        <a class="pagename current" href="/"><b>Bilance</b>{{if .Admin}} Admin {{end}}</a>
-        {{if .Admin}}
+        <a class="pagename current" href="/"><b>Bilance</b>{{if .User.Role}} Admin {{end}}</a>
+        {{if .User.Role}}
         <a href="/admin/user">Users</a>
         <a href="/admin/tag">Tags</a>
         <a href="/admin/project">Projects</a>

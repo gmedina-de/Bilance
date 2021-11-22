@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"Bilance/model"
 	"Bilance/service/router"
 	"html/template"
 	"net/http"
@@ -13,7 +14,7 @@ type Controller interface {
 type Context struct {
 	Data        interface{}
 	Title       string
-	Admin       bool
+	User        *model.User
 	CurrentPath string
 }
 
@@ -29,7 +30,7 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 	context := &Context{
 		data,
 		title,
-		request.Header.Get("isAdmin") == "true",
+		model.MyUserRepository.Find(request.Header.Get("userId")).(*model.User),
 		request.URL.Path,
 	}
 	err = tmpl.ExecuteTemplate(writer, "base", context)

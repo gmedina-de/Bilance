@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"Bilance/repository"
+	"Bilance/model"
 	"Bilance/service/router"
 	"net/http"
 	"reflect"
@@ -9,7 +9,7 @@ import (
 )
 
 type baseController struct {
-	repository repository.Repository
+	repository model.Repository
 	basePath   string
 }
 
@@ -30,7 +30,7 @@ func (c *baseController) List(writer http.ResponseWriter, request *http.Request)
 	} else {
 		search = c.repository.List()
 	}
-	render(writer, request, c.modelName()+" management", search, "crudTable", c.modelName())
+	render(writer, request, c.modelName()+"s", search, "crudTable", c.modelName())
 }
 
 func (c *baseController) New(writer http.ResponseWriter, request *http.Request) {

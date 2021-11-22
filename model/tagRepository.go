@@ -1,7 +1,6 @@
-package repository
+package model
 
 import (
-	"Bilance/model"
 	"Bilance/service/database"
 	"database/sql"
 	"net/http"
@@ -18,31 +17,31 @@ func TagRepository(database database.Database) Repository {
 }
 
 func (r *tagRepository) NewEmpty() interface{} {
-	return &model.Tag{}
+	return &Tag{}
 }
 
 func (r *tagRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var id int
 	var name string
 	row.Scan(&id, &name)
-	return &model.Tag{id, name}
+	return &Tag{id, name}
 }
 
 func (r *tagRepository) NewFromRequest(request *http.Request, id int) interface{} {
-	return &model.Tag{
+	return &Tag{
 		id,
 		request.Form.Get("Name"),
 	}
 }
 
 func (r *tagRepository) Find(id string) interface{} {
-	var result []model.Tag
+	var result []Tag
 	r.database.Query(&result, r.NewFromQuery, "WHERE Id = "+id)
 	return &result[0]
 }
 
 func (r *tagRepository) List(conditions ...string) interface{} {
-	var result []model.Tag
+	var result []Tag
 	conditions = append(conditions, "ORDER BY Id")
 	r.database.Query(&result, r.NewFromQuery, conditions...)
 	return result
