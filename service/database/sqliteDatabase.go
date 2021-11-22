@@ -57,7 +57,7 @@ func (s *sqliteDatabase) Insert(model interface{}) {
 			values = append(values, value)
 		}
 	}
-	s.Exec(`INSERT INTO ` + modelType.Name() + `(` + strings.Join(columns, ",") + `) VALUES (` + strings.Join(values, ",") + `)`)
+	s.execute(`INSERT INTO ` + modelType.Name() + `(` + strings.Join(columns, ",") + `) VALUES (` + strings.Join(values, ",") + `)`)
 }
 
 func (s *sqliteDatabase) Update(model interface{}) {
@@ -74,14 +74,24 @@ func (s *sqliteDatabase) Update(model interface{}) {
 			sets = append(sets, column+"="+value)
 		}
 	}
-	s.Exec(`UPDATE ` + modelType.Name() + ` SET ` + strings.Join(sets, ",") + ` WHERE Id = ` + id)
+	s.execute(`UPDATE ` + modelType.Name() + ` SET ` + strings.Join(sets, ",") + ` WHERE Id = ` + id)
 }
 
-func (s *sqliteDatabase) Delete(table string, id string) {
-	s.Exec(`DELETE FROM ` + table + ` WHERE Id = '` + id + `'`)
+func (s *sqliteDatabase) Delete(model interface{}) {
+	modelType := reflect.TypeOf(model).Elem()
+	modelValue := reflect.ValueOf(model).Elem()
+	id := "0"
+	for i := 0; i < modelValue.NumField(); i++ {
+		column := modelType.Field(i).Name
+		value := fmt.Sprintf("'%v'", modelValue.Field(i).Interface())
+		if column == "Id" {
+			id = value
+		}
+	}
+	s.execute(`DELETE FROM ` + modelType.Name() + ` WHERE Id = '` + id + `'`)
 }
 
-func (s *sqliteDatabase) Exec(query string) {
+func (s *sqliteDatabase) execute(query string) {
 	s.log.Debug("SQL " + query)
 	_, err := s.db.Exec(query)
 	if err != nil {

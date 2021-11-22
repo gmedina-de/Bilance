@@ -6,7 +6,7 @@ type Database interface {
 	Query(resultSlice interface{}, queryFunction QueryFunc, conditions ...string)
 	Insert(model interface{})
 	Update(model interface{})
-	Delete(table string, id string)
+	Delete(model interface{})
 }
 
 type QueryFunc func(row *sql.Rows) interface{}
