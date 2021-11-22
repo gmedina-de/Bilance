@@ -32,7 +32,7 @@ func (this *userController) List(writer http.ResponseWriter, request *http.Reque
 	var users []model.User
 	if request.URL.Query().Has("Search") {
 		search := request.URL.Query().Get("Search")
-		this.database.Query(&users, model.UserQuery, "WHERE Username LIKE '%"+search+"%'", "ORDER BY Id")
+		this.database.Query(&users, model.UserQuery, "WHERE Name LIKE '%"+search+"%'", "ORDER BY Id")
 	} else {
 		this.database.Query(&users, model.UserQuery, "ORDER BY Id")
 	}
@@ -47,7 +47,7 @@ func (this *userController) New(writer http.ResponseWriter, request *http.Reques
 		admin, _ := strconv.Atoi(request.Form.Get("UserRole"))
 		this.database.Insert(&model.User{
 			0,
-			request.Form.Get("Username"),
+			request.Form.Get("Name"),
 			request.Form.Get("Password"),
 			model.UserRole(admin),
 		})
@@ -68,7 +68,7 @@ func (this *userController) Edit(writer http.ResponseWriter, request *http.Reque
 		admin, _ := strconv.Atoi(request.Form.Get("UserRole"))
 		this.database.Update(&model.User{
 			id,
-			request.Form.Get("Username"),
+			request.Form.Get("Name"),
 			request.Form.Get("Password"),
 			model.UserRole(admin),
 		})

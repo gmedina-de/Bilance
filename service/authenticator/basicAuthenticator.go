@@ -18,19 +18,19 @@ func BasicAuthenticator(database database.Database) Authenticator {
 }
 
 func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request) bool {
-	username, password, ok := r.BasicAuth()
+	Name, password, ok := r.BasicAuth()
 	if ok {
-		usernameHash := sha256.Sum256([]byte(username))
+		NameHash := sha256.Sum256([]byte(Name))
 		passwordHash := sha256.Sum256([]byte(password))
 
 		var users []model.User
-		b.database.Query(&users, model.UserQuery, "WHERE Username = '"+username+"'")
+		b.database.Query(&users, model.UserQuery, "WHERE Name = '"+Name+"'")
 		user := users[0]
 		if len(users) > 0 {
-			expectedUsernameHash := sha256.Sum256([]byte(user.Username))
+			expectedUsernameHash := sha256.Sum256([]byte(user.Name))
 			expectedPasswordHash := sha256.Sum256([]byte(user.Password))
 
-			usernameMatch := subtle.ConstantTimeCompare(usernameHash[:], expectedUsernameHash[:]) == 1
+			usernameMatch := subtle.ConstantTimeCompare(NameHash[:], expectedUsernameHash[:]) == 1
 			passwordMatch := subtle.ConstantTimeCompare(passwordHash[:], expectedPasswordHash[:]) == 1
 
 			if usernameMatch && passwordMatch {

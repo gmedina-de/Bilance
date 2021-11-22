@@ -28,7 +28,7 @@ class Project {
 }
 
 class User {
-    Username
+    Name
     Password
     Role
 }
