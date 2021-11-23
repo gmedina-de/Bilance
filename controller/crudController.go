@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"Bilance/model"
+	"Bilance/repository"
 	"Bilance/service/router"
 	"net/http"
 	"reflect"
@@ -9,7 +9,7 @@ import (
 )
 
 type baseController struct {
-	repository model.Repository
+	repository repository.Repository
 	basePath   string
 }
 

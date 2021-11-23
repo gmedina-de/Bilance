@@ -2,7 +2,6 @@ package model
 
 import (
 	"database/sql"
-	"strconv"
 )
 
 type Project struct {
@@ -11,10 +10,15 @@ type Project struct {
 	Description string
 }
 
-func (p *Project) Users() []User {
-	list := MyUserRepository.List("WHERE Id IN (SELECT Id FROM ProjectUser WHERE projectId = " + strconv.Itoa(p.Id) + ")").([]User)
-	return list
-}
+//func (p *Project) Users() []User {
+//	list := MyUserRepository.List("WHERE Id IN (SELECT Id FROM ProjectUser WHERE projectId = " + strconv.Itoa(p.Id) + ")").([]User)
+//	return list
+//}
+//
+//func (p *Project) NotUsers() []User {
+//	list := MyUserRepository.List("WHERE Id NOT IN (SELECT Id FROM ProjectUser WHERE projectId = " + strconv.Itoa(p.Id) + ")").([]User)
+//	return list
+//}
 
 func ProjectQuery(row *sql.Rows) interface{} {
 	var id int

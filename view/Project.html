@@ -19,13 +19,23 @@
 {{end}}
 
 {{define "form"}}
-<label for="Description">Description</label>
-<textarea id="Description" name="Description" placeholder="Description">{{.Data.Description}}</textarea>
-<label for="Users">{{.Data.Users}}</label>
-<select id="Users" name="Users" multiple>
-    <option value="volvo">Volvo</option>
-    <option value="saab">Saab</option>
-    <option value="opel">Opel</option>
-    <option value="audi">Audi</option>
-</select>
+<div class="col-12">
+    <label for="Name" class="form-label">Name</label>
+    <input type="text" class="form-control" name="Name" id="Name" placeholder="Name" value="{{.Data.Name}}" required>
+</div>
+<div class="col-12">
+    <label for="Description" class="form-label">Description</label>
+    <textarea class="form-control" name="Description" id="Description"rows="3" placeholder="Description">{{.Data.Description}}</textarea>
+</div>
+<div class="col-12">
+    <label for="Users" class="form-label">Users</label>
+    <select id="Users" name="Users" multiple class="form-control">
+        {{range .Data.Users}}
+        <option value="{{.Id}}" selected>{{.Name}}</option>
+        {{end}}
+        {{range .Data.NotUsers}}
+        <option value="{{.Id}}">{{.Name}}</option>
+        {{end}}
+    </select>
+</div>
 {{end}}

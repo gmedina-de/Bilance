@@ -1,4 +1,4 @@
-package model
+package repository
 
 import (
 	"Bilance/service/database"

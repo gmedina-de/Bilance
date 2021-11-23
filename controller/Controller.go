@@ -2,6 +2,7 @@ package controller
 
 import (
 	"Bilance/model"
+	"Bilance/repository"
 	"Bilance/service/router"
 	"html/template"
 	"net/http"
@@ -18,6 +19,8 @@ type Context struct {
 	CurrentPath string
 }
 
+var MyUserRepository repository.Repository
+
 func render(writer http.ResponseWriter, request *http.Request, title string, data interface{}, templates ...string) {
 	for i, iTemplate := range templates {
 		templates[i] = "view/" + iTemplate + ".html"
@@ -30,7 +33,7 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 	context := &Context{
 		data,
 		title,
-		model.MyUserRepository.Find(request.Header.Get("userId")).(*model.User),
+		MyUserRepository.Find(request.Header.Get("userId")).(*model.User),
 		request.URL.Path,
 	}
 	err = tmpl.ExecuteTemplate(writer, "base", context)

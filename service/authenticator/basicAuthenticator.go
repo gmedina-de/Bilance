@@ -2,6 +2,7 @@ package authenticator
 
 import (
 	"Bilance/model"
+	"Bilance/repository"
 	"crypto/sha256"
 	"crypto/subtle"
 	"net/http"
@@ -10,10 +11,10 @@ import (
 )
 
 type basicAuthenticator struct {
-	userRepository model.Repository
+	userRepository repository.Repository
 }
 
-func BasicAuthenticator(userRepository model.Repository) Authenticator {
+func BasicAuthenticator(userRepository repository.Repository) Authenticator {
 	return &basicAuthenticator{userRepository}
 }
 

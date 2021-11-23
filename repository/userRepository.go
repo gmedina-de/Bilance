@@ -1,6 +1,7 @@
-package model
+package repository
 
 import (
+	"Bilance/model"
 	"Bilance/service/database"
 	"database/sql"
 	"net/http"
@@ -16,36 +17,36 @@ func UserRepository(database database.Database) Repository {
 }
 
 func (r *userRepository) NewEmpty() interface{} {
-	return &User{}
+	return &model.User{}
 }
 
 func (r *userRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var id int
 	var Name string
 	var password string
-	var role UserRole
+	var role model.UserRole
 	row.Scan(&id, &Name, &password, &role)
-	return &User{id, Name, password, role}
+	return &model.User{id, Name, password, role}
 }
 
 func (r *userRepository) NewFromRequest(request *http.Request, id int) interface{} {
 	admin, _ := strconv.Atoi(request.Form.Get("Role"))
-	return &User{
+	return &model.User{
 		id,
 		request.Form.Get("Name"),
 		request.Form.Get("Password"),
-		UserRole(admin),
+		model.UserRole(admin),
 	}
 }
 
 func (r *userRepository) Find(id string) interface{} {
-	var result []User
+	var result []model.User
 	r.database.Query(&result, r.NewFromQuery, "WHERE Id = "+id)
 	return &result[0]
 }
 
 func (r *userRepository) List(conditions ...string) interface{} {
-	var result []User
+	var result []model.User
 	conditions = append(conditions, "ORDER BY Id")
 	r.database.Query(&result, r.NewFromQuery, conditions...)
 	return result
