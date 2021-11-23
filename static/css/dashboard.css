@@ -63,6 +63,12 @@ body {
   text-transform: uppercase;
 }
 
+@media (max-width: 767.98px) {
+  .sidebar {
+    top: 0rem;
+  }
+}
+
 /* Navbar */
 
 .navbar-brand {
@@ -95,8 +101,31 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
 
-/* Custom */
+.navbar-dark .navbar-toggler {
+  border-color: transparent;
+}
 
+.navbar-toggler:focus {
+  text-decoration: none;
+  outline: 0;
+  box-shadow: none;
+}
+
+#project-selector {
+  display: inline;
+}
+
+#project-selector select {
+  background: none;
+  border: none;
+  color: white;
+}
+
+#project-selector option {
+  color: black!important;
+}
+
+/* Custom */
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
@@ -109,4 +138,8 @@ body {
   .bd-placeholder-img-lg {
     font-size: 3.5rem;
   }
+}
+
+.flex-md-nowrap {
+  flex-wrap: nowrap!important;
 }
