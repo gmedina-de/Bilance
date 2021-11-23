@@ -19,7 +19,7 @@ func SqliteDatabase(log log.Log) Database {
 	return &sqliteDatabase{log, db}
 }
 
-func (s *sqliteDatabase) Query(result interface{}, queryFunction QueryFunc, conditions ...string) {
+func (s *sqliteDatabase) Select(result interface{}, queryFunction QueryFunc, conditions ...string) {
 	modelType := reflect.TypeOf(result)
 	resultValue := reflect.ValueOf(result)
 	if modelType.Kind() == reflect.Ptr {

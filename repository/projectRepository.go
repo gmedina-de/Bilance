@@ -39,13 +39,13 @@ func (r *projectRepository) NewFromRequest(request *http.Request, id int) interf
 
 func (r *projectRepository) Find(id string) interface{} {
 	var result []model.Project
-	r.database.Query(&result, r.NewFromQuery, "WHERE Id = "+id)
+	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+id)
 	return &result[0]
 }
 
 func (r *projectRepository) List(conditions ...string) interface{} {
 	var result []model.Project
 	conditions = append(conditions, "ORDER BY Id")
-	r.database.Query(&result, r.NewFromQuery, conditions...)
+	r.database.Select(&result, r.NewFromQuery, conditions...)
 	return result
 }
