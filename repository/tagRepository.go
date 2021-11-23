@@ -5,6 +5,7 @@ import (
 	"Bilance/service/database"
 	"database/sql"
 	"net/http"
+	"strconv"
 )
 
 type tagRepository struct {
@@ -22,22 +23,22 @@ func (r *tagRepository) NewEmpty() interface{} {
 }
 
 func (r *tagRepository) NewFromQuery(row *sql.Rows) interface{} {
-	var id int
+	var id int64
 	var name string
 	row.Scan(&id, &name)
 	return &model.Tag{id, name}
 }
 
-func (r *tagRepository) NewFromRequest(request *http.Request, id int) interface{} {
+func (r *tagRepository) NewFromRequest(request *http.Request, id int64) interface{} {
 	return &model.Tag{
 		id,
 		request.Form.Get("Name"),
 	}
 }
 
-func (r *tagRepository) Find(id string) interface{} {
+func (r *tagRepository) Find(id int64) interface{} {
 	var result []model.Tag
-	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+id)
+	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
 	return &result[0]
 }
 

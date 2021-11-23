@@ -21,7 +21,7 @@ func (r *userRepository) NewEmpty() interface{} {
 }
 
 func (r *userRepository) NewFromQuery(row *sql.Rows) interface{} {
-	var id int
+	var id int64
 	var Name string
 	var password string
 	var role model.UserRole
@@ -29,7 +29,7 @@ func (r *userRepository) NewFromQuery(row *sql.Rows) interface{} {
 	return &model.User{id, Name, password, role}
 }
 
-func (r *userRepository) NewFromRequest(request *http.Request, id int) interface{} {
+func (r *userRepository) NewFromRequest(request *http.Request, id int64) interface{} {
 	admin, _ := strconv.Atoi(request.Form.Get("Role"))
 	return &model.User{
 		id,
@@ -39,9 +39,9 @@ func (r *userRepository) NewFromRequest(request *http.Request, id int) interface
 	}
 }
 
-func (r *userRepository) Find(id string) interface{} {
+func (r *userRepository) Find(id int64) interface{} {
 	var result []model.User
-	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+id)
+	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
 	return &result[0]
 }
 

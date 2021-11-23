@@ -1,13 +1,13 @@
 package model
 
 type User struct {
-	Id       int
+	Id       int64
 	Name     string
 	Password string
 	Role     UserRole
 }
 
-type UserRole int
+type UserRole int64
 
 const UserRoleNormal UserRole = 0
 const UserRoleAdmin UserRole = 1

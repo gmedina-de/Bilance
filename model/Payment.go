@@ -6,7 +6,7 @@ import (
 )
 
 type Payment struct {
-	Id       int
+	Id       int64
 	Name     string
 	Amount   EUR
 	Date     time.Time
@@ -26,7 +26,7 @@ func (m EUR) String() string {
 	return fmt.Sprintf("%.2f €", x)
 }
 
-type PaymentCategory int
+type PaymentCategory int64
 
 const PaymentCategoryExpense = 0
 const PaymentCategoryIncome = 1

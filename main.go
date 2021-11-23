@@ -21,7 +21,7 @@ func main() {
 	userRepository := repository.UserRepository(database)
 	controller.MyUserRepository = userRepository
 	tagRepository := repository.TagRepository(database)
-	projectRepository := repository.ProjectRepository(database)
+	projectRepository := repository.ProjectRepository(database, userRepository)
 
 	authenticator := authenticator.BasicAuthenticator(userRepository)
 	router := router.DefaultRouter(log, authenticator)

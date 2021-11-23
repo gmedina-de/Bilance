@@ -45,12 +45,12 @@ func (c *baseController) New(writer http.ResponseWriter, request *http.Request) 
 
 func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
-		id := request.URL.Query().Get("Id")
+		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
 		item := c.repository.Find(id)
 		render(writer, request, "Edit "+c.modelName(), item, "crudForm", c.modelName())
 	} else if request.Method == "POST" {
 		request.ParseForm()
-		id, _ := strconv.Atoi(request.Form.Get("Id"))
+		id, _ := strconv.ParseInt(request.Form.Get("Id"), 10, 64)
 		c.repository.Update(c.repository.NewFromRequest(request, id))
 		http.Redirect(writer, request, c.basePath, http.StatusTemporaryRedirect)
 	}
@@ -58,7 +58,7 @@ func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request)
 
 func (c *baseController) Delete(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
-		id := request.URL.Query().Get("Id")
+		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
 		item := c.repository.Find(id)
 		c.repository.Delete(item)
 		http.Redirect(writer, request, c.basePath, http.StatusTemporaryRedirect)
