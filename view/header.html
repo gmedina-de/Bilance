@@ -1,8 +1,8 @@
 {{define "header"}}
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">
         <b>Bilance</b>
-        <form action="/" id="project-selector">
+        <form action="/" id="project-selector" onclick="event.preventDefault()">
             <select name="Project" onchange="this.form.submit()">
                 <option value="">Project</option>
                 <option value="saab">Saab</option>
@@ -10,7 +10,7 @@
                 <option value="audi">Audi</option>
             </select>
         </form>
-    </div>
+    </a>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
             data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
             aria-label="Toggle navigation">
