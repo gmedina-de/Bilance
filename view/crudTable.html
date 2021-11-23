@@ -1,21 +1,12 @@
 {{define "content"}}
-<h2>
-    {{.Title}}
-    <a class="btn btn-b btn-sm smooth right" href="{{.CurrentPath}}/new">New</a>
-    <a class="btn btn-a btn-sm smooth right" href="#filter-modal">Filter</a>
-</h2>
-
-<div class="modal-container" id="filter-modal">
-    <div class="modal">
-        <form action="{{.CurrentPath}}" method="get">
-            <input type="text" name="Search" placeholder="Name"/>
-            <input type="submit" class="btn btn-b btn-sm smooth"/>
-        </form>
-    </div>
-    <a href="#" class="modal-bg"></a>
-</div>
-
 <table class="table">
     {{template "table" .}}
 </table>
+{{end}}
+
+{{define "options"}}
+<div class="btn-group me-2">
+    <button type="button" class="btn btn-sm btn-outline-secondary" href="{{.CurrentPath}}/new">New</button>
+    <button type="button" class="btn btn-sm btn-outline-secondary" href="#filter-modal">Filter</button>
+</div>
 {{end}}
