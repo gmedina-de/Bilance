@@ -26,6 +26,7 @@ func DefaultServer(router router.Router, log log.Log, configuration configuratio
 }
 
 func (this *defaultServer) Start() {
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", this.router.ServeHTTP)
 	this.log.Info("Listening to http://localhost:%d", this.port)
 	http.ListenAndServe(fmt.Sprintf(":%d", this.port), nil)
