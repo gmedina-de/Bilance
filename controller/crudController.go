@@ -20,7 +20,7 @@ func (c *baseController) Routing(router router.Router) {
 	router.Post(c.basePath+"/new", c.New)
 	router.Get(c.basePath+"/edit", c.Edit)
 	router.Post(c.basePath+"/edit", c.Edit)
-	router.Get(c.basePath+"/delete", c.Delete)
+	router.Get(c.basePath+"/edit/delete", c.Delete)
 }
 
 func (c *baseController) List(writer http.ResponseWriter, request *http.Request) {

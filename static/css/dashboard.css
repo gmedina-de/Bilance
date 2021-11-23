@@ -143,3 +143,10 @@ body {
 .flex-md-nowrap {
   flex-wrap: nowrap!important;
 }
+
+tbody > tr {
+  cursor: pointer;
+}
+tbody > tr:hover {
+  background: lightblue !important;
+}

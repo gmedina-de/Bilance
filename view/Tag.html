@@ -17,4 +17,8 @@
 {{end}}
 
 {{define "form"}}
+<div class="col-12">
+    <label for="Name" class="form-label">Name</label>
+    <input type="text" class="form-control" name="Name" id="Name" placeholder="Name" value="{{.Data.Name}}" required>
+</div>
 {{end}}

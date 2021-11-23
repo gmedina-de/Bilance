@@ -21,9 +21,19 @@
 {{end}}
 
 {{define "form"}}
-<input type="password" name="Password" placeholder="Password" value="{{.Data.Password}}" required/>
-<select name="Role" required>
-    <option value="0" {{if not .Data.Role}} selected {{end}}>Normal</option>
-    <option value="1" {{if .Data.Role}} selected {{end}}>Admin</option>
-</select>
+<div class="col-sm-6">
+    <label for="Name" class="form-label">Username</label>
+    <input type="text" class="form-control" name="Name" id="Name" placeholder="Username" value="{{.Data.Name}}" required>
+</div>
+<div class="col-sm-6">
+    <label for="Password" class="form-label">Password</label>
+    <input type="text" class="form-control" name="Password" id="Password" placeholder="Password" value="{{.Data.Password}}" required>
+</div>
+<div class="col-12">
+    <label for="Role" class="form-label">Role</label>
+    <select class="form-select" id="Role" name="Role" required>
+        <option value="0" {{if not .Data.Role}} selected {{end}}>Normal</option>
+        <option value="1" {{if .Data.Role}} selected {{end}}>Admin</option>
+    </select>
+</div>
 {{end}}
