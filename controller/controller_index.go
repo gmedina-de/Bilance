@@ -18,5 +18,5 @@ func (this *indexController) Routing(router service.Router) {
 }
 
 func (this *indexController) Index(writer http.ResponseWriter, request *http.Request) {
-	render(writer, request, "Dashboard", nil, "index")
+	render(writer, request, "dashboard", nil, "index")
 }

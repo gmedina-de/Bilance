@@ -1,0 +1,43 @@
+{{define "table"}}
+    <thead>
+    <tr>
+        <th>{{translate "id"}}</th>
+        <th>{{translate "name"}}</th>
+        <th>{{translate "description"}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{$CurrentPath:=.CurrentPath}}
+    {{range .Data}}
+        <tr onclick="window.location.href='{{$CurrentPath}}/edit?Id={{.Id}}';">
+            <td>{{.Id}}</td>
+            <td>{{.Name}}</td>
+            <td>{{.Description}}</td>
+        </tr>
+    {{end}}
+    </tbody>
+{{end}}
+
+{{define "form"}}
+    <div class="col-12">
+        <label for="name" class="form-label">{{translate "name"}}</label>
+        <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "name_placeholder"}}"
+               value="{{.Data.Name}}" required>
+    </div>
+    <div class="col-12">
+        <label for="description" class="form-label">{{translate "description"}}</label>
+        <textarea class="form-control" name="Description" id="description" rows="3"
+                  placeholder="{{translate "description_placeholder"}}">{{.Data.Description}}</textarea>
+    </div>
+    <div class="col-12">
+        <label for="Users" class="form-label">{{translate "users"}}</label>
+        <select id="Users" name="Users" multiple class="form-control">
+            {{range .Data.Users}}
+                <option value="{{.Id}}" selected>{{.Name}}</option>
+            {{end}}
+            {{range .Data.NotUsers}}
+                <option value="{{.Id}}">{{.Name}}</option>
+            {{end}}
+        </select>
+    </div>
+{{end}}

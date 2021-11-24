@@ -36,7 +36,7 @@ func (c *baseController) List(writer http.ResponseWriter, request *http.Request)
 
 func (c *baseController) New(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" {
-		render(writer, request, "New "+c.modelName(), c.repository.NewEmpty(), "crud_form", c.modelName())
+		render(writer, request, "new", c.repository.NewEmpty(), "crud_form", c.modelName())
 	} else if request.Method == "POST" {
 		request.ParseForm()
 		c.repository.Insert(c.repository.NewFromRequest(request, 0))
@@ -48,7 +48,7 @@ func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request)
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
 		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
 		item := c.repository.Find(id)
-		render(writer, request, "Edit "+c.modelName(), item, "crud_form", c.modelName())
+		render(writer, request, "edit", item, "crud_form", c.modelName())
 	} else if request.Method == "POST" {
 		request.ParseForm()
 		id, _ := strconv.ParseInt(request.Form.Get("Id"), 10, 64)

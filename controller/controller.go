@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"Bilance/localization"
 	"Bilance/model"
 	"Bilance/repository"
 	"Bilance/service"
@@ -20,17 +21,19 @@ type Context struct {
 	CurrentPath string
 }
 
+var MyLog service.Log
 var MyUserRepository repository.Repository
 
 func render(writer http.ResponseWriter, request *http.Request, title string, data interface{}, templates ...string) {
 	for i, iTemplate := range templates {
-		templates[i] = "view/" + iTemplate + ".html"
+		templates[i] = "view/" + iTemplate + ".gohtml"
 	}
-	templates = append(templates, "view/base.html", "view/navbar.html", "view/navigation.html")
-	tmpl, err := template.ParseFiles(templates...)
-	if err != nil {
-		panic(err)
-	}
+	templates = append(templates, "view/base.gohtml", "view/navbar.gohtml", "view/navigation.gohtml")
+	tmpl := template.New("")
+	tmpl.Funcs(template.FuncMap{
+		"translate": localization.Translate,
+	})
+	tmpl, err := tmpl.ParseFiles(templates...)
 	parseInt, _ := strconv.ParseInt(request.Header.Get("userId"), 10, 64)
 	context := &Context{
 		data,
@@ -40,6 +43,6 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 	}
 	err = tmpl.ExecuteTemplate(writer, "base", context)
 	if err != nil {
-		panic(err)
+		MyLog.Error(err.Error())
 	}
 }
