@@ -1,11 +1,11 @@
 package repository
 
 import (
-	"Bilance/service/database"
+	"Bilance/service"
 )
 
 type baseRepository struct {
-	database database.Database
+	database service.Database
 }
 
 func (r *baseRepository) Insert(entity interface{}) {

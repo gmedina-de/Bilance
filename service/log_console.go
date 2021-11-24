@@ -1,4 +1,4 @@
-package log
+package service
 
 import (
 	"fmt"
@@ -28,7 +28,7 @@ func (this *consoleLog) Error(message string, parameters ...interface{}) {
 	this.log(Error, message, parameters...)
 }
 
-func (this *consoleLog) log(level Level, message string, parameters ...interface{}) {
+func (this *consoleLog) log(level LogLevel, message string, parameters ...interface{}) {
 	log.Printf("%s %s%s %s%s %s\n",
 		level.toBgColor(),
 		Reset,

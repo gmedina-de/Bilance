@@ -1,4 +1,4 @@
-package configuration
+package service
 
 type mapConfiguration struct {
 	settings map[Setting]string

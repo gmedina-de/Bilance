@@ -3,14 +3,14 @@ package controller
 import (
 	"Bilance/model"
 	"Bilance/repository"
-	"Bilance/service/router"
+	"Bilance/service"
 	"html/template"
 	"net/http"
 	"strconv"
 )
 
 type Controller interface {
-	Routing(router router.Router)
+	Routing(router service.Router)
 }
 
 type Context struct {

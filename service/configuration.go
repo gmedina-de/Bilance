@@ -1,4 +1,4 @@
-package configuration
+package service
 
 type Configuration interface {
 	Get(setting Setting) string

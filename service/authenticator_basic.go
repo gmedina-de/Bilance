@@ -1,21 +1,21 @@
-package authenticator
+package service
 
 import (
 	"Bilance/model"
-	"Bilance/repository"
 	"crypto/sha256"
 	"crypto/subtle"
+	"database/sql"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
 type basicAuthenticator struct {
-	userRepository repository.Repository
+	database Database
 }
 
-func BasicAuthenticator(userRepository repository.Repository) Authenticator {
-	return &basicAuthenticator{userRepository}
+func BasicAuthenticator(database Database) Authenticator {
+	return &basicAuthenticator{database}
 }
 
 func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request) bool {
@@ -25,7 +25,14 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 		passwordHash := sha256.Sum256([]byte(password))
 
 		var users []model.User
-		users = b.userRepository.List("WHERE Name = '" + username + "'").([]model.User)
+		b.database.Select(&users, func(row *sql.Rows) interface{} {
+			var id int64
+			var Name string
+			var password string
+			var role model.UserRole
+			row.Scan(&id, &Name, &password, &role)
+			return &model.User{id, Name, password, role}
+		}, "WHERE Name = '"+username+"'")
 		if len(users) > 0 {
 			user := users[0]
 			expectedUsernameHash := sha256.Sum256([]byte(user.Name))

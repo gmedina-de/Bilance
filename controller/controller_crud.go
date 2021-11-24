@@ -2,10 +2,11 @@ package controller
 
 import (
 	"Bilance/repository"
-	"Bilance/service/router"
+	"Bilance/service"
 	"net/http"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 type baseController struct {
@@ -13,7 +14,7 @@ type baseController struct {
 	basePath   string
 }
 
-func (c *baseController) Routing(router router.Router) {
+func (c *baseController) Routing(router service.Router) {
 	router.Get(c.basePath, c.List)
 	router.Post(c.basePath, c.List)
 	router.Get(c.basePath+"/new", c.New)
@@ -30,12 +31,12 @@ func (c *baseController) List(writer http.ResponseWriter, request *http.Request)
 	} else {
 		search = c.repository.List()
 	}
-	render(writer, request, c.modelName()+"s", search, "crudTable", c.modelName())
+	render(writer, request, c.modelName()+"s", search, "crud_table", c.modelName())
 }
 
 func (c *baseController) New(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" {
-		render(writer, request, "New "+c.modelName(), c.repository.NewEmpty(), "crudForm", c.modelName())
+		render(writer, request, "New "+c.modelName(), c.repository.NewEmpty(), "crud_form", c.modelName())
 	} else if request.Method == "POST" {
 		request.ParseForm()
 		c.repository.Insert(c.repository.NewFromRequest(request, 0))
@@ -47,7 +48,7 @@ func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request)
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
 		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
 		item := c.repository.Find(id)
-		render(writer, request, "Edit "+c.modelName(), item, "crudForm", c.modelName())
+		render(writer, request, "Edit "+c.modelName(), item, "crud_form", c.modelName())
 	} else if request.Method == "POST" {
 		request.ParseForm()
 		id, _ := strconv.ParseInt(request.Form.Get("Id"), 10, 64)
@@ -69,5 +70,5 @@ func (c *baseController) modelName() string {
 	empty := c.repository.NewEmpty()
 	of := reflect.TypeOf(empty).Elem()
 	name := of.Name()
-	return name
+	return strings.ToLower(name)
 }

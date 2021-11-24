@@ -1,21 +1,18 @@
-package server
+package service
 
 import (
-	"Bilance/service/configuration"
-	"Bilance/service/log"
-	"Bilance/service/router"
 	"fmt"
 	"net/http"
 	"strconv"
 )
 
 type defaultServer struct {
-	router router.Router
-	log    log.Log
+	router Router
+	log    Log
 	port   int
 }
 
-func DefaultServer(router router.Router, log log.Log, configuration configuration.Configuration) Server {
+func DefaultServer(router Router, log Log, configuration Configuration) Server {
 	var port int
 	var error error
 	port, error = strconv.Atoi(configuration.Get(Port))

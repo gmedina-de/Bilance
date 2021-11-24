@@ -1,15 +1,15 @@
-package log
+package service
 
-type Level string
+type LogLevel string
 
 const (
-	Debug   Level = "DBUG"
-	Info    Level = "INFO"
-	Warning Level = "WARN"
-	Error   Level = "ERRO"
+	Debug   LogLevel = "DBUG"
+	Info    LogLevel = "INFO"
+	Warning LogLevel = "WARN"
+	Error   LogLevel = "ERRO"
 )
 
-func (l Level) toFgColor() AnsiColor {
+func (l LogLevel) toFgColor() LogColor {
 	switch l {
 	case Debug:
 		return FgGreen
@@ -24,7 +24,7 @@ func (l Level) toFgColor() AnsiColor {
 	}
 }
 
-func (l Level) toBgColor() AnsiColor {
+func (l LogLevel) toBgColor() LogColor {
 	switch l {
 	case Debug:
 		return BgGreen

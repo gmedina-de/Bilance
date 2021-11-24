@@ -2,7 +2,7 @@ package repository
 
 import (
 	"Bilance/model"
-	"Bilance/service/database"
+	"Bilance/service"
 	"database/sql"
 	"net/http"
 	"strconv"
@@ -12,7 +12,7 @@ type userRepository struct {
 	baseRepository
 }
 
-func UserRepository(database database.Database) Repository {
+func UserRepository(database service.Database) Repository {
 	return &userRepository{baseRepository{database: database}}
 }
 

@@ -1,20 +1,19 @@
 package controller
 
 import (
-	"Bilance/service/database"
-	"Bilance/service/router"
+	"Bilance/service"
 	"net/http"
 )
 
 type indexController struct {
-	database database.Database
+	database service.Database
 }
 
-func IndexController(database database.Database) Controller {
+func IndexController(database service.Database) Controller {
 	return &indexController{database: database}
 }
 
-func (this *indexController) Routing(router router.Router) {
+func (this *indexController) Routing(router service.Router) {
 	router.Get("/", this.Index)
 }
 

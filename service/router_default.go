@@ -1,20 +1,18 @@
-package router
+package service
 
 import (
-	"Bilance/service/authenticator"
-	"Bilance/service/log"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
 type defaultRouter struct {
-	log           log.Log
-	authenticator authenticator.Authenticator
+	log           Log
+	authenticator Authenticator
 	routes        map[string]Handler
 }
 
-func DefaultRouter(log log.Log, authenticator authenticator.Authenticator) Router {
+func DefaultRouter(log Log, authenticator Authenticator) Router {
 	return &defaultRouter{log: log, authenticator: authenticator, routes: make(map[string]Handler)}
 }
 

@@ -2,7 +2,7 @@ package repository
 
 import (
 	"Bilance/model"
-	"Bilance/service/database"
+	"Bilance/service"
 	"database/sql"
 	"net/http"
 	"strconv"
@@ -12,7 +12,7 @@ type tagRepository struct {
 	baseRepository
 }
 
-func TagRepository(database database.Database) Repository {
+func TagRepository(database service.Database) Repository {
 	return &tagRepository{baseRepository{
 		database: database,
 	}}

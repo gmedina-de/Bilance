@@ -4,35 +4,29 @@ import (
 	"Bilance/application"
 	"Bilance/controller"
 	"Bilance/repository"
-	"Bilance/service/authenticator"
-	"Bilance/service/configuration"
-	"Bilance/service/database"
-	"Bilance/service/log"
-	"Bilance/service/router"
-	server "Bilance/service/server"
+	"Bilance/service"
 )
 
 func main() {
 
-	configuration := configuration.MapConfiguration()
-	log := log.ConsoleLog()
+	configuration := service.MapConfiguration()
+	log := service.ConsoleLog()
+	database := service.SqliteDatabase(log)
+	authenticator := service.BasicAuthenticator(database)
+	router := service.DefaultRouter(log, authenticator)
+	server := service.DefaultServer(router, log, configuration)
 
-	database := database.SqliteDatabase(log)
 	userRepository := repository.UserRepository(database)
-	controller.MyUserRepository = userRepository
 	tagRepository := repository.TagRepository(database)
 	projectRepository := repository.ProjectRepository(database, userRepository)
 
-	authenticator := authenticator.BasicAuthenticator(userRepository)
-	router := router.DefaultRouter(log, authenticator)
-	server := server.DefaultServer(router, log, configuration)
-
+	controller.MyUserRepository = userRepository
 	indexController := controller.IndexController(database)
 	userController := controller.UserController(userRepository)
 	tagController := controller.TagController(tagRepository)
 	projectController := controller.ProjectController(projectRepository)
 
-	application := application.WebApplication(
+	application := application.BilanceApplication(
 		server,
 		router,
 		indexController,

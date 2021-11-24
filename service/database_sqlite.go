@@ -1,7 +1,6 @@
-package database
+package service
 
 import (
-	"Bilance/service/log"
 	"database/sql"
 	"fmt"
 	_ "modernc.org/sqlite"
@@ -10,11 +9,11 @@ import (
 )
 
 type sqliteDatabase struct {
-	log log.Log
+	log Log
 	db  *sql.DB
 }
 
-func SqliteDatabase(log log.Log) Database {
+func SqliteDatabase(log Log) Database {
 	db, _ := sql.Open("sqlite", "./database.db")
 	return &sqliteDatabase{log, db}
 }
