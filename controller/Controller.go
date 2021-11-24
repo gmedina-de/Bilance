@@ -26,7 +26,7 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 	for i, iTemplate := range templates {
 		templates[i] = "view/" + iTemplate + ".html"
 	}
-	templates = append(templates, "view/base.html", "view/navigation.html", "view/header.html")
+	templates = append(templates, "view/base.html", "view/navbar.html", "view/navigation.html")
 	tmpl, err := template.ParseFiles(templates...)
 	if err != nil {
 		panic(err)

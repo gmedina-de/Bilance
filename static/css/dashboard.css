@@ -5,12 +5,11 @@ body {
 
 .feather {
     width: 16px;
-    height: 16px;
+    height: 18px;
     vertical-align: text-bottom;
 }
 
 /* Sidebar */
-
 .sidebar {
     position: fixed;
     top: 0;
@@ -23,6 +22,10 @@ body {
     z-index: 100; /* Behind the navbar */
     padding: 48px 0 0; /* Height of navbar */
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar > div {
+    height: 100vh;
 }
 
 @media (max-width: 767.98px) {
@@ -71,7 +74,6 @@ body {
 }
 
 /* Navbar */
-
 .navbar-brand {
     padding-top: .75rem;
     padding-bottom: .75rem;
@@ -107,8 +109,10 @@ body {
 }
 
 .navbar-toggler:focus {
-    text-decoration: none;
-    outline: 0;
+    box-shadow: 0 0 0 0.05rem;
+}
+
+.navbar-toggler.collapsed {
     box-shadow: none;
 }
 
@@ -126,7 +130,7 @@ body {
     color: black !important;
 }
 
-/* Custom */
+/* Misc */
 .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
