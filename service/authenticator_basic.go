@@ -6,7 +6,6 @@ import (
 	"crypto/subtle"
 	"database/sql"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
@@ -44,7 +43,7 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 			if usernameMatch && passwordMatch {
 				isAdmin := user.Role == model.UserRoleAdmin
 				if !strings.HasPrefix(r.URL.Path, "/admin") || isAdmin {
-					r.Header.Add("userId", strconv.FormatInt(user.Id, 10))
+					r.Header.Add("user", user.Serialize())
 					return true
 				}
 			}
