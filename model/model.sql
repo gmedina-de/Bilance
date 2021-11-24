@@ -31,6 +31,8 @@ create table User
     Role INTEGER default 0 not null
 );
 
+insert into User values (null,'admin','admin',1);
+
 create table ProjectUser
 (
     Id INTEGER
