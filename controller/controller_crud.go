@@ -40,7 +40,7 @@ func (c *baseController) New(writer http.ResponseWriter, request *http.Request) 
 	} else if request.Method == "POST" {
 		request.ParseForm()
 		c.repository.Insert(c.repository.NewFromRequest(request, 0))
-		http.Redirect(writer, request, c.basePath, http.StatusTemporaryRedirect)
+		redirect(writer, request, c.basePath)
 	}
 }
 
@@ -53,7 +53,7 @@ func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request)
 		request.ParseForm()
 		id, _ := strconv.ParseInt(request.Form.Get("Id"), 10, 64)
 		c.repository.Update(c.repository.NewFromRequest(request, id))
-		http.Redirect(writer, request, c.basePath, http.StatusTemporaryRedirect)
+		redirect(writer, request, c.basePath)
 	}
 }
 
@@ -62,7 +62,7 @@ func (c *baseController) Delete(writer http.ResponseWriter, request *http.Reques
 		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
 		item := c.repository.Find(id)
 		c.repository.Delete(item)
-		http.Redirect(writer, request, c.basePath, http.StatusTemporaryRedirect)
+		redirect(writer, request, c.basePath)
 	}
 }
 

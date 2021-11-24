@@ -6,6 +6,7 @@ import (
 	"crypto/subtle"
 	"database/sql"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -24,14 +25,31 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 		passwordHash := sha256.Sum256([]byte(password))
 
 		var users []model.User
-		b.database.Select(&users, func(row *sql.Rows) interface{} {
-			var id int64
-			var Name string
-			var password string
-			var role model.UserRole
-			row.Scan(&id, &Name, &password, &role)
-			return &model.User{id, Name, password, role}
-		}, "WHERE Name = '"+username+"'")
+		b.database.Select(
+			&users,
+			func(row *sql.Rows) interface{} {
+				var id int64
+				var Name string
+				var password string
+				var role model.UserRole
+				row.Scan(&id, &Name, &password, &role)
+				var projects []model.Project
+				b.database.Select(
+					&projects,
+					func(row *sql.Rows) interface{} {
+						var id int64
+						var name string
+						var description string
+						row.Scan(&id, &name, &description)
+						project := model.Project{id, name, description, nil, nil}
+						return &project
+					},
+					"WHERE Id IN (SELECT ProjectId FROM ProjectUser WHERE UserId = "+strconv.FormatInt(id, 10)+")",
+				)
+				return &model.User{id, Name, password, role, projects}
+			},
+			"WHERE Name = '"+username+"'",
+		)
 		if len(users) > 0 {
 			user := users[0]
 			expectedUsernameHash := sha256.Sum256([]byte(user.Name))

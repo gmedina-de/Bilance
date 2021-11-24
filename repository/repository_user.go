@@ -26,7 +26,7 @@ func (r *userRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var password string
 	var role model.UserRole
 	row.Scan(&id, &Name, &password, &role)
-	return &model.User{id, Name, password, role}
+	return &model.User{id, Name, password, role, nil}
 }
 
 func (r *userRepository) NewFromRequest(request *http.Request, id int64) interface{} {
@@ -36,6 +36,7 @@ func (r *userRepository) NewFromRequest(request *http.Request, id int64) interfa
 		request.Form.Get("Name"),
 		request.Form.Get("Password"),
 		model.UserRole(admin),
+		nil,
 	}
 }
 

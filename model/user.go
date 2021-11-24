@@ -11,6 +11,7 @@ type User struct {
 	Name     string
 	Password string
 	Role     UserRole
+	Projects []Project
 }
 
 type UserRole int64

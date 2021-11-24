@@ -35,8 +35,8 @@ func (r *projectRepository) NewFromQuery(row *sql.Rows) interface{} {
 		id,
 		name,
 		description,
-		r.userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE projectId = " + strconv.FormatInt(id, 10) + ")").([]model.User),
-		r.userRepository.List("WHERE Id NOT IN (SELECT UserId FROM ProjectUser WHERE projectId = " + strconv.FormatInt(id, 10) + ")").([]model.User),
+		r.userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + strconv.FormatInt(id, 10) + ")").([]model.User),
+		r.userRepository.List("WHERE Id NOT IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + strconv.FormatInt(id, 10) + ")").([]model.User),
 	}
 	return &project
 }
@@ -96,11 +96,13 @@ func (r *projectRepository) Update(entity interface{}) {
 	for _, oldUser := range oldProject.Users {
 		if !newProjectUserIds.contains(oldUser.Id) {
 			r.database.MultipleDelete("ProjectUser",
-				"WHERE projectId = "+strconv.FormatInt(newProject.Id, 10),
-				"AND userId = "+strconv.FormatInt(oldUser.Id, 10),
+				"WHERE ProjectId = "+strconv.FormatInt(newProject.Id, 10),
+				"AND UserId = "+strconv.FormatInt(oldUser.Id, 10),
 			)
 		}
 	}
+
+	r.database.Update(newProject)
 }
 
 func (r *projectRepository) Delete(entity interface{}) {

@@ -36,7 +36,7 @@ func main() {
 	tagRepository := repository.TagRepository(database)
 	projectRepository := repository.ProjectRepository(database, userRepository)
 
-	indexController := controller.IndexController(database)
+	indexController := controller.IndexController()
 	userController := controller.UserController(userRepository)
 	tagController := controller.TagController(tagRepository)
 	projectController := controller.ProjectController(projectRepository)

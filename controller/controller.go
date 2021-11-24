@@ -6,7 +6,9 @@ import (
 	"Bilance/service"
 	"html/template"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 )
 
 type Controller interface {
@@ -14,13 +16,15 @@ type Controller interface {
 }
 
 type Context struct {
-	Data  interface{}
-	Title string
-	User  *model.User
-	Path  string
+	User              *model.User
+	SelectedProjectId int64
+	Path              string
+	Title             string
+	Data              interface{}
 }
 
 func render(writer http.ResponseWriter, request *http.Request, title string, data interface{}, templates ...string) {
+	// prepare templates
 	for i, iTemplate := range templates {
 		templates[i] = "view/" + iTemplate + ".gohtml"
 	}
@@ -28,14 +32,37 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 	tmpl := template.New("")
 	tmpl.Funcs(template.FuncMap{
 		"translate": localization.Translate,
-		"active":    Active,
+		"active": func(currentPath string, linkPath string) string {
+			if currentPath == "/" && linkPath == "/" || strings.HasPrefix(currentPath, linkPath) && linkPath != "/" {
+				return " active"
+			}
+			return ""
+		},
 	})
 	tmpl, err := tmpl.ParseFiles(templates...)
+	if err != nil {
+		panic(err)
+	}
+
+	// deserialize user
+	user := model.DeserializeUser(request.Header.Get("user"))
+	cookie, err := request.Cookie("SelectedProjectId")
+	var selectedProjectId int64
+	if err != nil {
+		selectedProjectId = user.Projects[0].Id
+		expiration := time.Now().Add(365 * 24 * time.Hour)
+		http.SetCookie(writer, &http.Cookie{Name: "SelectedProjectId", Value: strconv.FormatInt(selectedProjectId, 10), Path: "/", Expires: expiration})
+	} else {
+		selectedProjectId, _ = strconv.ParseInt(cookie.Value, 10, 64)
+	}
+
+	// execute templates
 	context := &Context{
-		data,
-		title,
-		model.DeserializeUser(request.Header.Get("user")),
+		user,
+		selectedProjectId,
 		request.URL.Path,
+		title,
+		data,
 	}
 	err = tmpl.ExecuteTemplate(writer, "base", context)
 	if err != nil {
@@ -43,9 +70,6 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 	}
 }
 
-func Active(currentPath string, linkPath string) string {
-	if currentPath == "/" && linkPath == "/" || strings.HasPrefix(currentPath, linkPath) && linkPath != "/" {
-		return " active"
-	}
-	return ""
+func redirect(writer http.ResponseWriter, request *http.Request, path string) {
+	http.Redirect(writer, request, path, http.StatusTemporaryRedirect)
 }
