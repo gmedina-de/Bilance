@@ -1,11 +1,27 @@
 package main
 
 import (
-	"Bilance/application"
 	"Bilance/controller"
 	"Bilance/repository"
 	"Bilance/service"
 )
+
+type bilance struct {
+	controllers []controller.Controller
+	server      service.Server
+	router      service.Router
+}
+
+func Bilance(server service.Server, router service.Router, controllers ...controller.Controller) *bilance {
+	return &bilance{controllers, server, router}
+}
+
+func (this *bilance) Run() {
+	for _, c := range this.controllers {
+		c.Routing(this.router)
+	}
+	this.server.Start()
+}
 
 func main() {
 
@@ -26,7 +42,7 @@ func main() {
 	tagController := controller.TagController(tagRepository)
 	projectController := controller.ProjectController(projectRepository)
 
-	application := application.BilanceApplication(
+	bilance := Bilance(
 		server,
 		router,
 		indexController,
@@ -34,5 +50,5 @@ func main() {
 		tagController,
 		projectController,
 	)
-	application.Run()
+	bilance.Run()
 }
