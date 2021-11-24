@@ -11,9 +11,10 @@
 
 {{define "options"}}
     <div class="btn-group" role="group" aria-label="Basic outlined example">
-        <a class="btn btn-outline-secondary" onclick="history.back()">{{translate "cancel"}}</a>
+        <a class="btn btn-sm btn-outline-secondary" onclick="history.back()">{{translate "cancel"}}</a>
         {{if .Data.Id}}
-            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" id="deleteConfirmationLabel"
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                    id="deleteConfirmationLabel"
                     data-bs-target="#deleteConfirmationModal">
                 {{translate "delete"}}
             </button>
@@ -31,8 +32,10 @@
                     {{translate "delete_confirmation_description"}}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{translate "cancel"}}</button>
-                    <a type="button" class="btn btn-danger" href="{{.Path}}/delete?Id={{.Data.Id}}">{{translate "delete"}}</a>
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">{{translate "cancel"}}</button>
+                    <a type="button" class="btn btn-danger"
+                       href="{{.Path}}/delete?Id={{.Data.Id}}">{{translate "delete"}}</a>
                 </div>
             </div>
         </div>
