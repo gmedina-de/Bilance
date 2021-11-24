@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 type paymentRepository struct {
@@ -27,7 +26,7 @@ func (r *paymentRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var id int64
 	var name string
 	var amount model.EUR
-	var date time.Time
+	var date model.Date
 	var projectId int64
 	var tagId int64
 	var payerId int64
@@ -54,7 +53,11 @@ func (r *paymentRepository) NewFromRequest(request *http.Request, id int64) inte
 func (r *paymentRepository) Find(id int64) interface{} {
 	var result []model.Payment
 	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
-	return &result[0]
+	if len(result) > 0 {
+		return &result[0]
+	} else {
+		return r.NewEmpty()
+	}
 }
 
 func (r *paymentRepository) List(conditions ...string) interface{} {

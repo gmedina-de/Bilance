@@ -71,7 +71,11 @@ func (r *projectRepository) NewFromRequest(request *http.Request, id int64) inte
 func (r *projectRepository) Find(id int64) interface{} {
 	var result []model.Project
 	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
-	return &result[0]
+	if len(result) > 0 {
+		return &result[0]
+	} else {
+		return r.NewEmpty()
+	}
 }
 
 func (r *projectRepository) List(conditions ...string) interface{} {

@@ -2,14 +2,13 @@ package model
 
 import (
 	"fmt"
-	"time"
 )
 
 type Payment struct {
 	Id        int64
 	Name      string
 	Amount    EUR
-	Date      time.Time
+	Date      Date
 	ProjectId int64
 	Tag       *Tag
 	Payer     *User
@@ -23,3 +22,5 @@ func (m EUR) String() string {
 	x = x / 100
 	return fmt.Sprintf("%.2f €", x)
 }
+
+type Date string

@@ -27,6 +27,11 @@ type l10n struct {
 	id                      string
 	name                    string
 	name_placeholder        string
+	amount                  string
+	date                    string
+	tag                     string
+	payer                   string
+	payee                   string
 	description             string
 	description_placeholder string
 	username                string

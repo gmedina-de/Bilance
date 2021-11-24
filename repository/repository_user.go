@@ -43,7 +43,11 @@ func (r *userRepository) NewFromRequest(request *http.Request, id int64) interfa
 func (r *userRepository) Find(id int64) interface{} {
 	var result []model.User
 	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
-	return &result[0]
+	if len(result) > 0 {
+		return &result[0]
+	} else {
+		return r.NewEmpty()
+	}
 }
 
 func (r *userRepository) List(conditions ...string) interface{} {
