@@ -1,26 +1,18 @@
 {{define "table"}}
     <thead>
     <tr>
-        <th>{{translate "name"}}</th>
-        <th>{{translate "amount"}}</th>
-        <th>{{translate "date"}}</th>
-        <th>{{translate "tag"}}</th>
-        <th>{{translate "payer"}}</th>
-        <th></th>
-        <th>{{translate "payee"}}</th>
+        <th>{{translate "name"}}<br>{{translate "date"}}</th>
+        <th><i>{{translate "tag"}}</i><br><b>{{translate "amount"}}</b></th>
+        <th>{{translate "payer"}}<br>{{translate "payee"}}</th>
     </tr>
     </thead>
     <tbody>
     {{$Path:=.Path}}
     {{range .Data}}
         <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
-            <td>{{.Name}}</td>
-            <td>{{.Amount}}</td>
-            <td>{{.Date}}</td>
-            <td>{{.Tag.Name}}</td>
-            <td>{{.Payer.Name}}</td>
-            <td><span data-feather="arrow-right"></span></td>
-            <td>{{.Payee.Name}}</td>
+            <td>{{.Name}}<br>{{.Date}}</td>
+            <td><i>{{.Tag.Name}}</i><br><b>{{.Amount}}</b></td>
+            <td>{{.Payer.Name}}<span data-feather="arrow-right"></span><br>{{.Payee.Name}}</td>
         </tr>
     {{end}}
     </tbody>
