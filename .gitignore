@@ -7,6 +7,7 @@
 database.db
 go.sum
 main
+build.sh
 
 # Test binary, built with `go test -c`
 *.test
