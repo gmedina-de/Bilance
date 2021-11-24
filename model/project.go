@@ -5,7 +5,7 @@ type Project struct {
 	Name        string
 	Description string
 	Payments    []Payment
-	Tags        []Tag
+	Types       []Type
 	Users       []User
 	NotUsers    []User
 }

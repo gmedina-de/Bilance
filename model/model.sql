@@ -10,10 +10,10 @@ create table Project
 create unique index Project_Name_uindex
     on Project (Name);
 
-create table Tag
+create table Type
 (
     Id INTEGER
-        constraint Tag_pk
+        constraint Type_pk
             primary key autoincrement,
     Name text not null,
     ProjectId INTEGER not null
@@ -21,8 +21,8 @@ create table Tag
             on update cascade on delete cascade
 );
 
-create unique index Tag_Name_uindex
-    on Tag (Name);
+create unique index Type_Name_uindex
+    on Type (Name);
 
 create table User
 (
@@ -43,8 +43,8 @@ create table Payment
     Amount INTEGER not null,
     Date text not null,
     ProjectId INTEGER not null,
-    TagId INTEGER
-        references Tag
+    TypeId INTEGER
+        references Type
                   on update set null on delete set null,
     PayerId INTEGER
         references User

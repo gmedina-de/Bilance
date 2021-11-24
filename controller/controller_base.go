@@ -20,7 +20,7 @@ func (c *baseController) List(writer http.ResponseWriter, request *http.Request)
 	} else {
 		search = c.repository.List()
 	}
-	render(writer, request, c.modelName()+"s", search, "crud_table", c.modelName())
+	render(writer, request, c.modelName(), search, "crud_table", c.modelName())
 }
 
 func (c *baseController) New(writer http.ResponseWriter, request *http.Request) {
@@ -59,5 +59,5 @@ func (c *baseController) modelName() string {
 	empty := c.repository.NewEmpty()
 	of := reflect.TypeOf(empty).Elem()
 	name := of.Name()
-	return strings.ToLower(name)
+	return strings.ToLower(name) + "s"
 }

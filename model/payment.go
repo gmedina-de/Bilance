@@ -10,7 +10,7 @@ type Payment struct {
 	Amount    EUR
 	Date      Date
 	ProjectId int64
-	Tag       *Tag
+	Type      *Type
 	Payer     *User
 	Payee     *User
 }

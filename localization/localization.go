@@ -7,7 +7,7 @@ type l10n struct {
 	dashboard       string
 	payments        string
 	debts           string
-	tags            string
+	types           string
 	admin_functions string
 	users           string
 	projects        string
@@ -29,7 +29,7 @@ type l10n struct {
 	name_placeholder        string
 	amount                  string
 	date                    string
-	tag                     string
+	Type                    string
 	payer                   string
 	payee                   string
 	description             string

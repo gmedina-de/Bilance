@@ -7,20 +7,20 @@ import (
 	"net/http"
 )
 
-type tagController struct {
+type typeController struct {
 	baseController
 }
 
-func TagController(repository repository.Repository) Controller {
-	return &tagController{
+func TypeController(repository repository.Repository) Controller {
+	return &typeController{
 		baseController{
 			repository: repository,
-			basePath:   "/tags",
+			basePath:   "/types",
 		},
 	}
 }
 
-func (c *tagController) Routing(router service.Router) {
+func (c *typeController) Routing(router service.Router) {
 	router.Get(c.basePath, c.List)
 	router.Post(c.basePath, c.List)
 	router.Get(c.basePath+"/new", c.New)
@@ -30,8 +30,8 @@ func (c *tagController) Routing(router service.Router) {
 	router.Get(c.basePath+"/edit/delete", c.Delete)
 }
 
-func (c *tagController) List(writer http.ResponseWriter, request *http.Request) {
+func (c *typeController) List(writer http.ResponseWriter, request *http.Request) {
 	cookie, _ := request.Cookie(model.SelectedProjectIdCookie)
 	search := c.repository.List("WHERE ProjectId = " + cookie.Value)
-	render(writer, request, c.modelName()+"s", search, "crud_table", c.modelName())
+	render(writer, request, c.modelName(), search, "crud_table", c.modelName())
 }
