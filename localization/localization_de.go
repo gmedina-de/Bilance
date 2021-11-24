@@ -3,9 +3,11 @@ package localization
 var l10nDe = l10n{
 	// navigation
 	dashboard:       "Dashboard",
+	payments:        "Zahlungen",
+	debts:           "Schulden",
+	tags:            "Kategorien",
 	admin_functions: "Admin-Funktionen",
 	users:           "Nutzende",
-	tags:            "Kategorien",
 	projects:        "Projekte",
 
 	// actions

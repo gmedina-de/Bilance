@@ -6,16 +6,14 @@ import (
 )
 
 type Payment struct {
-	Id       int64
-	Name     string
-	Amount   EUR
-	Date     time.Time
-	Picture  string
-	Category PaymentCategory
-	Tag      *Tag
-	Payer    *User
-	Payees   *[]User
-	Project  *Project
+	Id        int64
+	Name      string
+	Amount    EUR
+	Date      time.Time
+	ProjectId int64
+	Tag       *Tag
+	Payer     *User
+	Payee     *User
 }
 
 type EUR int64
@@ -25,9 +23,3 @@ func (m EUR) String() string {
 	x = x / 100
 	return fmt.Sprintf("%.2f €", x)
 }
-
-type PaymentCategory int64
-
-const PaymentCategoryExpense = 0
-const PaymentCategoryIncome = 1
-const PaymentCategoryTransfer = 2

@@ -34,6 +34,26 @@ create table User
     Role INTEGER default 0 not null
 );
 
+create table Payment
+(
+    Id INTEGER
+        constraint Payment_pk
+            primary key autoincrement,
+    Name text not null,
+    Amount INTEGER not null,
+    Date text not null,
+    ProjectId INTEGER not null,
+    TagId INTEGER
+        references Tag
+                  on update set null on delete set null,
+    PayerId INTEGER
+        references User
+            on update cascade on delete cascade,
+    PayeeId INTEGER
+        references User
+            on update cascade on delete cascade
+);
+
 create table ProjectUser
 (
     Id INTEGER
@@ -49,4 +69,19 @@ create table ProjectUser
 
 create unique index table_name_username_uindex
     on User (Name);
+
+create table sqlite_master
+(
+    type text,
+    name text,
+    tbl_name text,
+    rootpage int,
+    sql text
+);
+
+create table sqlite_sequence
+(
+    name,
+    seq
+);
 

@@ -11,12 +11,23 @@ import (
 
 type projectRepository struct {
 	baseRepository
-	userRepository Repository
-	tagRepository  Repository
+	paymentRepository Repository
+	userRepository    Repository
+	tagRepository     Repository
 }
 
-func ProjectRepository(database service.Database, userRepository Repository, tagRepository Repository) Repository {
-	return &projectRepository{baseRepository{database: database}, userRepository, tagRepository}
+func ProjectRepository(
+	database service.Database,
+	paymentRepository Repository,
+	userRepository Repository,
+	tagRepository Repository,
+) Repository {
+	return &projectRepository{
+		baseRepository{database: database},
+		paymentRepository,
+		userRepository,
+		tagRepository,
+	}
 }
 
 func (r *projectRepository) NewEmpty() interface{} {
@@ -35,6 +46,7 @@ func (r *projectRepository) NewFromQuery(row *sql.Rows) interface{} {
 		id,
 		name,
 		description,
+		r.paymentRepository.List("WHERE ProjectId = " + idString).([]model.Payment),
 		r.tagRepository.List("WHERE ProjectId = " + idString).([]model.Tag),
 		r.userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")").([]model.User),
 		r.userRepository.List("WHERE Id NOT IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")").([]model.User),
@@ -49,6 +61,7 @@ func (r *projectRepository) NewFromRequest(request *http.Request, id int64) inte
 		id,
 		request.Form.Get("Name"),
 		request.Form.Get("Description"),
+		r.paymentRepository.List("WHERE ProjectId = " + idString).([]model.Payment),
 		r.tagRepository.List("WHERE ProjectId = " + idString).([]model.Tag),
 		r.userRepository.List("WHERE Id IN (" + users + ")").([]model.User),
 		r.userRepository.List("WHERE Id NOT IN (" + users + ")").([]model.User),

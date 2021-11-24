@@ -5,9 +5,11 @@ import "reflect"
 type l10n struct {
 	// navigation
 	dashboard       string
+	payments        string
+	debts           string
+	tags            string
 	admin_functions string
 	users           string
-	tags            string
 	projects        string
 
 	// actions

@@ -29,7 +29,7 @@ func (r *tagRepository) NewFromQuery(row *sql.Rows) interface{} {
 }
 
 func (r *tagRepository) NewFromRequest(request *http.Request, id int64) interface{} {
-	cookie, _ := request.Cookie("SelectedProjectId")
+	cookie, _ := request.Cookie(model.SelectedProjectIdCookie)
 	projectId, _ := strconv.ParseInt(cookie.Value, 10, 64)
 	return &model.Tag{
 		id,

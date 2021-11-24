@@ -15,8 +15,6 @@ type Controller interface {
 	Routing(router service.Router)
 }
 
-const SelectedProjectIdCookie string = "SelectedProjectId"
-
 type Context struct {
 	User              *model.User
 	SelectedProjectId int64
@@ -48,13 +46,13 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 
 	// deserialize user
 	user := model.DeserializeUser(request.Header.Get("user"))
-	cookie, err := request.Cookie(SelectedProjectIdCookie)
+	cookie, err := request.Cookie(model.SelectedProjectIdCookie)
 	var selectedProjectId int64
 	if err != nil {
 		selectedProjectId = user.Projects[0].Id
 		expiration := time.Now().Add(365 * 24 * time.Hour)
 		http.SetCookie(writer, &http.Cookie{
-			Name:    SelectedProjectIdCookie,
+			Name:    model.SelectedProjectIdCookie,
 			Value:   strconv.FormatInt(selectedProjectId, 10),
 			Path:    "/",
 			Expires: expiration,

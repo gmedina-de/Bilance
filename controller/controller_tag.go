@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"Bilance/model"
 	"Bilance/repository"
 	"Bilance/service"
 	"net/http"
@@ -14,7 +15,7 @@ func TagController(repository repository.Repository) Controller {
 	return &tagController{
 		baseController{
 			repository: repository,
-			basePath:   "/tag",
+			basePath:   "/tags",
 		},
 	}
 }
@@ -30,7 +31,7 @@ func (c *tagController) Routing(router service.Router) {
 }
 
 func (c *tagController) List(writer http.ResponseWriter, request *http.Request) {
-	cookie, _ := request.Cookie(SelectedProjectIdCookie)
+	cookie, _ := request.Cookie(model.SelectedProjectIdCookie)
 	search := c.repository.List("WHERE ProjectId = " + cookie.Value)
 	render(writer, request, c.modelName()+"s", search, "crud_table", c.modelName())
 }

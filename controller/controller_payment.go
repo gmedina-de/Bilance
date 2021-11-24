@@ -5,20 +5,20 @@ import (
 	"Bilance/service"
 )
 
-type userController struct {
+type paymentController struct {
 	baseController
 }
 
-func UserController(repository repository.Repository) Controller {
-	return &userController{
+func PaymentController(repository repository.Repository) Controller {
+	return &paymentController{
 		baseController{
 			repository: repository,
-			basePath:   "/admin/users",
+			basePath:   "/payments",
 		},
 	}
 }
 
-func (c *userController) Routing(router service.Router) {
+func (c *paymentController) Routing(router service.Router) {
 	router.Get(c.basePath, c.List)
 	router.Post(c.basePath, c.List)
 	router.Get(c.basePath+"/new", c.New)
