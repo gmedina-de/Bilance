@@ -2,8 +2,10 @@ package service
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	_ "modernc.org/sqlite"
+	"os"
 	"reflect"
 	"strings"
 )
@@ -14,7 +16,17 @@ type sqliteDatabase struct {
 }
 
 func SqliteDatabase(log Log) Database {
-	db, _ := sql.Open("sqlite", "./database.db")
+	path := "./database.db"
+	var db *sql.DB
+
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		os.Create(path)
+		db, _ = sql.Open("sqlite", path)
+		ddl, _ := os.ReadFile("./model/model.sql")
+		db.Exec(string(ddl))
+	} else {
+		db, _ = sql.Open("sqlite", path)
+	}
 	return &sqliteDatabase{log, db}
 }
 
