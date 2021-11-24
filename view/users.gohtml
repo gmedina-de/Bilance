@@ -22,20 +22,27 @@
 
 {{define "form"}}
     <div class="col-sm-6">
-        <label for="name" class="form-label">{{translate "username"}}</label>
-        <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "username_placeholder"}}"
-               value="{{.Data.Name}}" required>
+        <div class="form-floating">
+            <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "username"}}"
+                   value="{{.Data.Name}}" required>
+            <label for="name">{{translate "username"}}</label>
+        </div>
     </div>
+
     <div class="col-sm-6">
-        <label for="password" class="form-label">{{translate "password"}}</label>
-        <input type="text" class="form-control" name="Password" id="password"
-               placeholder="{{translate "password_placeholder"}}" minlength="5" value="{{.Data.Password}}" required>
+        <div class="form-floating">
+            <input type="text" class="form-control" name="Password" id="password"
+                   placeholder="{{translate "password_placeholder"}}" minlength="5" value="{{.Data.Password}}" required>
+            <label for="password">{{translate "password"}}</label>
+        </div>
     </div>
     <div class="col-12">
-        <label for="role" class="form-label">{{translate "role"}}</label>
-        <select class="form-select" id="role" name="Role" required>
-            <option value="0" {{if not .Data.Role}} selected {{end}}>{{translate "role_normal"}}</option>
-            <option value="1" {{if .Data.Role}} selected {{end}}>{{translate "role_admin"}}</option>
-        </select>
+        <div class="form-floating">
+            <select class="form-select" id="role" name="Role" required>
+                <option value="0" {{if not .Data.Role}} selected {{end}}>{{translate "role_normal"}}</option>
+                <option value="1" {{if .Data.Role}} selected {{end}}>{{translate "role_admin"}}</option>
+            </select>
+            <label for="role">{{translate "role"}}</label>
+        </div>
     </div>
 {{end}}

@@ -20,7 +20,7 @@ type EUR int64
 func (m EUR) String() string {
 	x := float64(m)
 	x = x / 100
-	return fmt.Sprintf("%.2f€", x)
+	return fmt.Sprintf("%.2f", x)
 }
 
 type Date string

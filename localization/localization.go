@@ -24,23 +24,19 @@ type l10n struct {
 	delete_confirmation_description string
 
 	// fields
-	id                      string
-	name                    string
-	name_placeholder        string
-	amount                  string
-	date                    string
-	Type                    string
-	payer                   string
-	payee                   string
-	description             string
-	description_placeholder string
-	username                string
-	username_placeholder    string
-	password                string
-	password_placeholder    string
-	role                    string
-	role_normal             string
-	role_admin              string
+	id          string
+	name        string
+	amount      string
+	date        string
+	Type        string
+	payer       string
+	payee       string
+	description string
+	username    string
+	password    string
+	role        string
+	role_normal string
+	role_admin  string
 
 	// filters
 	this_week string
