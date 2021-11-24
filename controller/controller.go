@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type Controller interface {
@@ -15,10 +16,10 @@ type Controller interface {
 }
 
 type Context struct {
-	Data        interface{}
-	Title       string
-	User        *model.User
-	CurrentPath string
+	Data  interface{}
+	Title string
+	User  *model.User
+	Path  string
 }
 
 var MyLog service.Log
@@ -32,6 +33,7 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 	tmpl := template.New("")
 	tmpl.Funcs(template.FuncMap{
 		"translate": localization.Translate,
+		"active":    Active,
 	})
 	tmpl, err := tmpl.ParseFiles(templates...)
 	parseInt, _ := strconv.ParseInt(request.Header.Get("userId"), 10, 64)
@@ -45,4 +47,11 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 	if err != nil {
 		MyLog.Error(err.Error())
 	}
+}
+
+func Active(currentPath string, linkPath string) string {
+	if currentPath == "/" && linkPath == "/" || strings.HasPrefix(currentPath, linkPath) && linkPath != "/" {
+		return " active"
+	}
+	return ""
 }

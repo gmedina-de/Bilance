@@ -43,6 +43,5 @@ var l10nMap = map[string]l10n{
 
 func Translate(message string) string {
 	//todo: generalize function for allowing more languages, depending on user configuration / request parameters
-	name := reflect.ValueOf(l10nDe).FieldByName(message)
-	return name.String()
+	return reflect.ValueOf(l10nDe).FieldByName(message).String()
 }

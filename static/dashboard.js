@@ -1,3 +1,11 @@
+document.querySelector("#logout").addEventListener("click", function (e){
+  e.preventDefault();
+  let request = new XMLHttpRequest();
+  request.open("get", "/logout", false, "false", "false");
+  request.send();
+  window.location.replace("/");
+});
+
 /* globals Chart:false, feather:false */
 
 (function () {
@@ -51,11 +59,3 @@
     }
   })
 })()
-
-document.querySelector("#logout").addEventListener("click", function (e){
-  e.preventDefault();
-  let request = new XMLHttpRequest();
-  request.open("get", "/logout", false, "false", "false");
-  request.send();
-  window.location.replace("/");
-});

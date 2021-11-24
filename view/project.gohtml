@@ -7,9 +7,9 @@
     </tr>
     </thead>
     <tbody>
-    {{$CurrentPath:=.CurrentPath}}
+    {{$Path:=.Path}}
     {{range .Data}}
-        <tr onclick="window.location.href='{{$CurrentPath}}/edit?Id={{.Id}}';">
+        <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
             <td>{{.Id}}</td>
             <td>{{.Name}}</td>
             <td>{{.Description}}</td>

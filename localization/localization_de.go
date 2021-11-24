@@ -5,7 +5,7 @@ var l10nDe = l10n{
 	dashboard:       "Dashboard",
 	admin_functions: "Admin-Funktionen",
 	users:           "Nutzende",
-	tags:            "Tags",
+	tags:            "Kategorien",
 	projects:        "Projekte",
 
 	// actions

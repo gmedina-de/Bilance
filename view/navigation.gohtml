@@ -3,8 +3,9 @@
         <div class="position-sticky pt-3">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/"><span
-                                data-feather="home"></span>{{translate "dashboard"}}</a>
+                    <a class="nav-link{{active .Path "/"}}" href="/">
+                        <span data-feather="home"></span>{{translate "dashboard"}}
+                    </a>
                 </li>
                 <!--            <li class="nav-item">-->
                 <!--                <a class="nav-link" href="#"><span data-feather="file"></span>Orders</a>-->
@@ -28,15 +29,19 @@
                 </h6>
                 <ul class="nav flex-column mb-2">
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/user"><span data-feather="users"></span>{{translate "users"}}
+                        <a class="nav-link{{active .Path "/admin/user"}}" href="/admin/user">
+                            <span data-feather="users"></span>{{translate "users"}}
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/tag"><span data-feather="tag"></span>{{translate "tags"}}</a>
+                        <a class="nav-link{{active .Path "/admin/tag"}}" href="/admin/tag">
+                            <span data-feather="tag"></span>{{translate "tags"}}
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/project"><span
-                                    data-feather="layers"></span>{{translate "projects"}}</a>
+                        <a class="nav-link{{active .Path "/admin/project"}}" href="/admin/project">
+                            <span data-feather="layers"></span>{{translate "projects"}}
+                        </a>
                     </li>
                 </ul>
             {{end}}
