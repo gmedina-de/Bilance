@@ -25,12 +25,11 @@ func (this *bilance) Run() {
 
 func main() {
 
-	configuration := service.MapConfiguration()
 	log := service.ConsoleLog()
 	database := service.SqliteDatabase(log)
 	authenticator := service.BasicAuthenticator(database)
 	router := service.DefaultRouter(log, authenticator)
-	server := service.DefaultServer(router, log, configuration)
+	server := service.DefaultServer(router, log)
 
 	userRepository := repository.UserRepository(database)
 	tagRepository := repository.TagRepository(database)

@@ -3,7 +3,6 @@ package service
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 )
 
 type defaultServer struct {
@@ -12,14 +11,8 @@ type defaultServer struct {
 	port   int
 }
 
-func DefaultServer(router Router, log Log, configuration Configuration) Server {
-	var port int
-	var error error
-	port, error = strconv.Atoi(configuration.Get(Port))
-	if error != nil {
-		port = 8080
-	}
-	return &defaultServer{router: router, log: log, port: port}
+func DefaultServer(router Router, log Log) Server {
+	return &defaultServer{router: router, log: log, port: 8080}
 }
 
 func (this *defaultServer) Start() {
