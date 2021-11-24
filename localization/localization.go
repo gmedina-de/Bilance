@@ -11,13 +11,15 @@ type l10n struct {
 	projects        string
 
 	// actions
-	logout string
-	search string
-	new    string
-	edit   string
-	save   string
-	cancel string
-	delete string
+	logout                          string
+	search                          string
+	new                             string
+	edit                            string
+	save                            string
+	cancel                          string
+	delete                          string
+	delete_confirmation             string
+	delete_confirmation_description string
 
 	// fields
 	id                      string

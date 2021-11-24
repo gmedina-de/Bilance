@@ -24,6 +24,7 @@ func SqliteDatabase(log Log) Database {
 		db, _ = sql.Open("sqlite", path)
 		ddl, _ := os.ReadFile("./model/model.sql")
 		db.Exec(string(ddl))
+		db.Exec("insert into User values (null,'admin','admin',1);")
 	} else {
 		db, _ = sql.Open("sqlite", path)
 	}

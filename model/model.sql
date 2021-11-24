@@ -15,7 +15,10 @@ create table Tag
     Id INTEGER
         constraint Tag_pk
             primary key autoincrement,
-    Name text not null
+    Name text not null,
+    ProjectId INTEGER not null
+        references Project
+            on update cascade on delete cascade
 );
 
 create unique index Tag_Name_uindex
@@ -30,8 +33,6 @@ create table User
     Password text not null,
     Role INTEGER default 0 not null
 );
-
-insert into User values (null,'admin','admin',1);
 
 create table ProjectUser
 (
@@ -48,3 +49,4 @@ create table ProjectUser
 
 create unique index table_name_username_uindex
     on User (Name);
+

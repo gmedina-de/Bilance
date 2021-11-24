@@ -19,10 +19,15 @@ func (this *indexController) Routing(router service.Router) {
 
 func (this *indexController) Index(writer http.ResponseWriter, request *http.Request) {
 
-	selectedProjectId, ok := request.URL.Query()["SelectedProjectId"]
+	selectedProjectId, ok := request.URL.Query()[SelectedProjectIdCookie]
 	if ok {
 		expiration := time.Now().Add(365 * 24 * time.Hour)
-		http.SetCookie(writer, &http.Cookie{Name: "SelectedProjectId", Value: selectedProjectId[0], Path: "/", Expires: expiration})
+		http.SetCookie(writer, &http.Cookie{
+			Name:    SelectedProjectIdCookie,
+			Value:   selectedProjectId[0],
+			Path:    "/",
+			Expires: expiration,
+		})
 		redirect(writer, request, "/")
 	}
 

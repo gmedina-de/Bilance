@@ -13,9 +13,7 @@ type tagRepository struct {
 }
 
 func TagRepository(database service.Database) Repository {
-	return &tagRepository{baseRepository{
-		database: database,
-	}}
+	return &tagRepository{baseRepository{database: database}}
 }
 
 func (r *tagRepository) NewEmpty() interface{} {
@@ -25,14 +23,18 @@ func (r *tagRepository) NewEmpty() interface{} {
 func (r *tagRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var id int64
 	var name string
-	row.Scan(&id, &name)
-	return &model.Tag{id, name}
+	var projectId int64
+	row.Scan(&id, &name, &projectId)
+	return &model.Tag{id, name, projectId}
 }
 
 func (r *tagRepository) NewFromRequest(request *http.Request, id int64) interface{} {
+	cookie, _ := request.Cookie("SelectedProjectId")
+	projectId, _ := strconv.ParseInt(cookie.Value, 10, 64)
 	return &model.Tag{
 		id,
 		request.Form.Get("Name"),
+		projectId,
 	}
 }
 

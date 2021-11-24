@@ -24,6 +24,7 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 		usernameHash := sha256.Sum256([]byte(username))
 		passwordHash := sha256.Sum256([]byte(password))
 
+		// user retrieval
 		var users []model.User
 		b.database.Select(
 			&users,
@@ -41,7 +42,7 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 						var name string
 						var description string
 						row.Scan(&id, &name, &description)
-						project := model.Project{id, name, description, nil, nil}
+						project := model.Project{id, name, description, nil, nil, nil}
 						return &project
 					},
 					"WHERE Id IN (SELECT ProjectId FROM ProjectUser WHERE UserId = "+strconv.FormatInt(id, 10)+")",
@@ -50,6 +51,8 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 			},
 			"WHERE Name = '"+username+"'",
 		)
+
+		// basic authentication
 		if len(users) > 0 {
 			user := users[0]
 			expectedUsernameHash := sha256.Sum256([]byte(user.Name))

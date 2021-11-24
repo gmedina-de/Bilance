@@ -34,7 +34,7 @@ func main() {
 
 	userRepository := repository.UserRepository(database)
 	tagRepository := repository.TagRepository(database)
-	projectRepository := repository.ProjectRepository(database, userRepository)
+	projectRepository := repository.ProjectRepository(database, userRepository, tagRepository)
 
 	indexController := controller.IndexController()
 	userController := controller.UserController(userRepository)

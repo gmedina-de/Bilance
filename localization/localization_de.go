@@ -9,13 +9,15 @@ var l10nDe = l10n{
 	projects:        "Projekte",
 
 	// actions
-	logout: "Ausloggen",
-	search: "Suchen",
-	new:    "Erstellen",
-	edit:   "Editieren",
-	save:   "Speichern",
-	cancel: "Abbrechen",
-	delete: "Entfernen",
+	logout:                          "Ausloggen",
+	search:                          "Suchen",
+	new:                             "Erstellen",
+	edit:                            "Editieren",
+	save:                            "Speichern",
+	cancel:                          "Abbrechen",
+	delete:                          "Entfernen",
+	delete_confirmation:             "Löschbestätigung",
+	delete_confirmation_description: "Sind Sie sicher, dass Sie dieses Element entfernen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
 
 	// fields
 	id:                      "#",

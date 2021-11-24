@@ -12,12 +12,11 @@ import (
 type projectRepository struct {
 	baseRepository
 	userRepository Repository
+	tagRepository  Repository
 }
 
-func ProjectRepository(database service.Database, userRepository Repository) Repository {
-	return &projectRepository{baseRepository{
-		database: database,
-	}, userRepository}
+func ProjectRepository(database service.Database, userRepository Repository, tagRepository Repository) Repository {
+	return &projectRepository{baseRepository{database: database}, userRepository, tagRepository}
 }
 
 func (r *projectRepository) NewEmpty() interface{} {
@@ -31,22 +30,26 @@ func (r *projectRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var name string
 	var description string
 	row.Scan(&id, &name, &description)
+	idString := strconv.FormatInt(id, 10)
 	project := model.Project{
 		id,
 		name,
 		description,
-		r.userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + strconv.FormatInt(id, 10) + ")").([]model.User),
-		r.userRepository.List("WHERE Id NOT IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + strconv.FormatInt(id, 10) + ")").([]model.User),
+		r.tagRepository.List("WHERE ProjectId = " + idString).([]model.Tag),
+		r.userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")").([]model.User),
+		r.userRepository.List("WHERE Id NOT IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")").([]model.User),
 	}
 	return &project
 }
 
 func (r *projectRepository) NewFromRequest(request *http.Request, id int64) interface{} {
 	users := strings.Join(request.Form["Users"], ",")
+	idString := strconv.FormatInt(id, 10)
 	return &model.Project{
 		id,
 		request.Form.Get("Name"),
 		request.Form.Get("Description"),
+		r.tagRepository.List("WHERE ProjectId = " + idString).([]model.Tag),
 		r.userRepository.List("WHERE Id IN (" + users + ")").([]model.User),
 		r.userRepository.List("WHERE Id NOT IN (" + users + ")").([]model.User),
 	}
