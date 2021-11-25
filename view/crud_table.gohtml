@@ -1,7 +1,11 @@
 {{define "content"}}
-    <table class="table">
-        {{template "table" .}}
-    </table>
+    {{if .Data}}
+        <table class="table">
+            {{template "table" .}}
+        </table>
+    {{else}}
+        asdf
+    {{end}}
 {{end}}
 
 {{define "options"}}

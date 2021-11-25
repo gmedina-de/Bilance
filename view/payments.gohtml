@@ -36,7 +36,7 @@
 
     <div class="col-5">
         <div class="form-floating">
-            <select class="form-control" name="Name" id="name" required>
+            <select class="form-control form-select-lg" name="Name" id="name" required>
                 <option>User</option>
                 <option>User2</option>
             </select>
@@ -48,8 +48,8 @@
     </div>
     <div class="col-5">
         <div class="form-floating">
-            <select class="form-control" name="Name" id="name" required>
-                <option>User</option>
+            <select class="form-control form-select-lg" name="Name" id="name" disabled required>
+                <option>Außenwelt</option>
                 <option>User2</option>
             </select>
             <label for="name">{{translate "payee"}}</label>
@@ -75,11 +75,11 @@
     </div>
 
     <div class="col-sm-6">
-        <div class="form-floating input-group">
-            <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "amount"}}"
+        <div class="input-group form-floating">
+            <input type="text" class="form-control" name="Amount" id="amount" placeholder="{{translate "amount"}}"
                    value="{{.Data.Amount}}" required>
             <span class="input-group-text">€</span>
-            <label for="name">{{translate "amount"}}</label>
+            <label for="amount" style="z-index: 10;">{{translate "amount"}}</label>
         </div>
     </div>
 
