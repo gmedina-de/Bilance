@@ -36,6 +36,7 @@ type l10n struct {
 	amount      string
 	date        string
 	category    string
+	color       string
 	payer       string
 	payee       string
 	description string

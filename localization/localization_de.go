@@ -34,6 +34,7 @@ var l10nDe = l10n{
 	amount:      "Betrag",
 	date:        "Datum",
 	category:    "Kategorie",
+	color:       "Farbe",
 	payer:       "Zahler",
 	payee:       "Empfänger",
 	description: "Beschreibung",

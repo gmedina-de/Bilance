@@ -23,9 +23,10 @@ func (r *typeRepository) NewEmpty() interface{} {
 func (r *typeRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var id int64
 	var name string
+	var color string
 	var projectId int64
-	row.Scan(&id, &name, &projectId)
-	return &model.Category{id, name, projectId}
+	row.Scan(&id, &name, &color, &projectId)
+	return &model.Category{id, name, color, projectId}
 }
 
 func (r *typeRepository) NewFromRequest(request *http.Request, id int64) interface{} {
@@ -34,6 +35,7 @@ func (r *typeRepository) NewFromRequest(request *http.Request, id int64) interfa
 	return &model.Category{
 		id,
 		request.Form.Get("Name"),
+		request.Form.Get("Color"),
 		projectId,
 	}
 }
