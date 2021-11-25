@@ -48,6 +48,9 @@ type l10n struct {
 
 	// filters
 	this_week string
+
+	// misc
+	outside_world string
 }
 
 var l10nMap = map[string]l10n{
@@ -56,5 +59,10 @@ var l10nMap = map[string]l10n{
 
 func Translate(message string) string {
 	//todo: generalize function for allowing more languages, depending on user configuration / request parameters
-	return reflect.ValueOf(l10nDe).FieldByName(message).String()
+	name := reflect.ValueOf(l10nDe).FieldByName(message)
+	if name.IsValid() {
+		return name.String()
+	} else {
+		return message
+	}
 }

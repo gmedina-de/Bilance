@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"Bilance/model"
 	"Bilance/repository"
 	"Bilance/service"
-	"net/http"
 )
 
 type typeController struct {
@@ -26,9 +24,4 @@ func (c *typeController) Routing(router service.Router) {
 	router.Get(c.basePath+"/edit", c.Edit)
 	router.Post(c.basePath+"/edit", c.Edit)
 	router.Get(c.basePath+"/edit/delete", c.Delete)
-}
-
-func (c *typeController) List(writer http.ResponseWriter, request *http.Request) {
-	cookie, _ := request.Cookie(model.SelectedProjectIdCookie)
-	render(writer, request, &Parameters{Model: c.repository.List("WHERE ProjectId = " + cookie.Value)}, c.modelName(), "crud_table", c.modelName())
 }

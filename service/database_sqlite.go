@@ -64,13 +64,21 @@ func (s *sqliteDatabase) Insert(model interface{}) sql.Result {
 	for i := 0; i < modelValue.NumField(); i++ {
 		field := modelType.Field(i)
 		column := field.Name
+		value := modelValue.Field(i)
+
 		// Many-To-Many-Relationships
 		if column == "Id" || field.Type.Kind() == reflect.Slice {
 			continue
 		}
+
+		// One-To-Many-Relationships
+		if field.Type.Kind() == reflect.Ptr {
+			column += "Id"
+			value = value.Elem().FieldByName("Id")
+		}
+
 		columns = append(columns, column)
-		value := fmt.Sprintf("'%v'", modelValue.Field(i).Interface())
-		values = append(values, value)
+		values = append(values, fmt.Sprintf("'%v'", value.Interface()))
 	}
 	return s.execute(`INSERT INTO ` + modelType.Name() + `(` + strings.Join(columns, ",") + `) VALUES (` + strings.Join(values, ",") + `)`)
 }
@@ -83,15 +91,24 @@ func (s *sqliteDatabase) Update(model interface{}) sql.Result {
 	for i := 0; i < modelValue.NumField(); i++ {
 		field := modelType.Field(i)
 		column := field.Name
-		value := fmt.Sprintf("'%v'", modelValue.Field(i).Interface())
+		value := modelValue.Field(i)
+
 		// Many-To-Many-Relationships
 		if field.Type.Kind() == reflect.Slice {
 			continue
 		}
+
+		// One-To-Many-Relationships
+		if field.Type.Kind() == reflect.Ptr {
+			column += "Id"
+			value = value.Elem().FieldByName("Id")
+		}
+
+		valueString := fmt.Sprintf("'%v'", value.Interface())
 		if column == "Id" {
-			id = value
+			id = valueString
 		} else {
-			sets = append(sets, column+"="+value)
+			sets = append(sets, column+"="+valueString)
 		}
 	}
 	return s.execute(`UPDATE ` + modelType.Name() + ` SET ` + strings.Join(sets, ",") + ` WHERE Id = ` + id)

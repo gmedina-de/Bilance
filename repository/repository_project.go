@@ -38,7 +38,7 @@ func (r *projectRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var id int64
 	var name string
 	var description string
-	row.Scan(&id, &name, &description)
+	ScanAndPanic(row, &id, &name, &description)
 	idString := strconv.FormatInt(id, 10)
 	project := model.Project{
 		id,

@@ -46,4 +46,7 @@ var l10nDe = l10n{
 
 	// filters
 	this_week: "Diese Woche",
+
+	// misc
+	outside_world: "Außenwelt",
 }

@@ -1,17 +1,18 @@
 {{define "table"}}
     <thead>
     <tr>
-        <th>{{translate "name"}}<br>{{translate "date"}}</th>
-        <th><i>{{translate "category"}}</i><br><b>{{translate "amount"}}</b></th>
-        <th>{{translate "payer"}}<br>{{translate "payee"}}</th>
+        <th>{{translate "name"}}<br><span data-feather="calendar"></span> {{translate "date"}}</th>
+        <th><i>{{translate "category"}}</i><br><b>{{translate "amount"}} €</b></th>
+        <th>{{translate "payer"}}<span data-feather="arrow-right"></span><br>{{translate "payee"}}</th>
     </tr>
     </thead>
     <tbody>
     {{$Path:=.Path}}
     {{range .Parameters.Model}}
         <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
-            <td>{{.Name}}<br>{{.Date}}</td>
-            <td><i>{{.Category.Name}}</i><br><b>{{.Amount}}</b></td>
+            <td>{{.Name}}<br><span data-feather="calendar"></span> {{.Date.Format}}</td>
+            <td><i style="color: {{.Category.Color}}">{{.Category.Name}}</i><br><b>{{.Amount.FormatWithCurrency}}</b>
+            </td>
             <td>{{.Payer.Name}}<span data-feather="arrow-right"></span><br>{{.Payee.Name}}</td>
         </tr>
     {{end}}
@@ -19,43 +20,40 @@
 {{end}}
 
 {{define "form"}}
-    <div class="col-12">
-
-        <ul class="nav nav-pills nav-fill">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Ausgabe</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Geldtransfer</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Einnahme</a>
-            </li>
-        </ul>
-    </div>
-
     <div class="col-5">
         <div class="form-floating">
-            <select class="form-control form-select-lg" name="Name" id="name" required>
-                <option>User</option>
-                <option>User2</option>
+            <select class="form-select" name="PayerId" id="payer" required>
+                {{if .Parameters.Model.Payee.Id}}
+                    {{$selectedPayer := .Parameters.Model.Payee.Id}}
+                    {{range .Parameters.Data.Users}}
+                        <option value="{{.Id}}"{{if eq $selectedPayer .Id}} selected{{end}}>{{.Name}}</option>
+                    {{end}}
+                {{else}}
+                    {{$selectedPayer := .User.Id}}
+                    {{range .Parameters.Data.Users}}
+                        <option value="{{.Id}}"{{if eq $selectedPayer .Id}} selected{{end}}>{{.Name}}</option>
+                    {{end}}
+                {{end}}
             </select>
-            <label for="name">{{translate "payer"}}</label>
+            <label for="payer">{{translate "payer"}}</label>
         </div>
     </div>
-    <div class="col-2">
-        <span data-feather="arrow-right" style="width:100%;height:2rem;margin-top: 1rem;"></span>
-    </div>
+    <div class="col-2"><span data-feather="arrow-right" style="width:100%;height:2rem;margin-top: 1rem;"></span></div>
     <div class="col-5">
         <div class="form-floating">
-            <select class="form-control form-select-lg" name="Name" id="name" disabled required>
-                <option>Außenwelt</option>
-                <option>User2</option>
+            <select class="form-select" name="PayeeId" id="payee" required>
+                <option>{{translate "outside_world"}}</option>
+                {{$selectedPayer := .User.Id}}
+                {{$selectedPayee := .Parameters.Model.Payee.Id}}
+                {{range .Parameters.Data.Users}}
+                    {{if not (eq $selectedPayer .Id)}}
+                        <option value="{{.Id}}"{{if eq $selectedPayee .Id}} selected{{end}}>{{.Name}}</option>
+                    {{end}}
+                {{end}}
             </select>
-            <label for="name">{{translate "payee"}}</label>
+            <label for="payee">{{translate "payee"}}</label>
         </div>
     </div>
-
     <div class="col-sm-6">
         <div class="form-floating">
             <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "name"}}"
@@ -63,32 +61,32 @@
             <label for="name">{{translate "name"}}</label>
         </div>
     </div>
-
     <div class="col-sm-6">
         <div class="form-floating">
-            <select class="form-control" name="Name" id="name" required>
-                <option>Type1</option>
-                <option>Type2</option>
+            <select class="form-select" name="CategoryId" id="category">
+                <option></option>
+                {{$selectedCategoryId := .Parameters.Model.Category.Id}}
+                {{range .Parameters.Data.Categories}}
+                    <option value="{{.Id}}"{{if eq $selectedCategoryId .Id}} selected{{end}}>{{.Name}}</option>
+                {{end}}
             </select>
-            <label for="name">{{translate "category"}}</label>
+            <label for="category">{{translate "category"}}</label>
         </div>
     </div>
-
     <div class="col-sm-6">
         <div class="input-group form-floating">
             <input type="number" class="form-control" min="0.00" max="100000.00" step="0.01" name="Amount" id="amount"
                    placeholder="{{translate "amount"}}"
-                   value="{{.Parameters.Model.Amount}}" required>
+                   value="{{if .Parameters.Model.Amount}}{{.Parameters.Model.Amount.Format}}{{end}}" required>
             <span class="input-group-text">€</span>
             <label for="amount" style="z-index: 10;">{{translate "amount"}}</label>
         </div>
     </div>
-
     <div class="col-sm-6">
         <div class="form-floating">
-            <input type="date" class="form-control" name="Name" id="name" placeholder="{{translate "date"}}"
+            <input type="date" class="form-control" name="Date" id="date" placeholder="{{translate "date"}}"
                    value="{{.Parameters.Model.Date}}" required>
-            <label for="name">{{translate "date"}}</label>
+            <label for="date">{{translate "date"}}</label>
         </div>
     </div>
 {{end}}

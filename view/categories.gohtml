@@ -2,7 +2,6 @@
     <thead>
     <tr>
         <th>{{translate "name"}}</th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -10,7 +9,6 @@
     {{range .Parameters.Model}}
         <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
             <td style="color: {{.Color}}">{{.Name}}</td>
-            <td style="background-color: {{.Color}}"></td>
         </tr>
     {{end}}
     </tbody>

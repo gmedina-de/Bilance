@@ -25,7 +25,7 @@ func (r *userRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var Name string
 	var password string
 	var role model.UserRole
-	row.Scan(&id, &Name, &password, &role)
+	ScanAndPanic(row, &id, &Name, &password, &role)
 	return &model.User{id, Name, password, role, nil}
 }
 

@@ -21,7 +21,8 @@
 {{define "form"}}
     <div class="col-12">
         <div class="form-floating">
-            <input type="text" class="form-control" name="Name" maxlength="8" id="name" placeholder="{{translate "name"}}" value="{{.Parameters.Model.Name}}" required>
+            <input type="text" class="form-control" name="Name" maxlength="8" id="name"
+                   placeholder="{{translate "name"}}" value="{{.Parameters.Model.Name}}" required>
             <label for="name">{{translate "name"}}</label>
         </div>
     </div>
@@ -36,7 +37,7 @@
 
     <div class="col-12">
         <label for="Users" class="form-label">{{translate "users"}}</label>
-        <select id="Users" name="Users" multiple class="form-control">
+        <select class="form-select" id="Users" name="Users" multiple>
             {{range .Parameters.Model.Users}}
                 <option value="{{.Id}}" selected>{{.Name}}</option>
             {{end}}

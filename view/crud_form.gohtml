@@ -11,12 +11,14 @@
 
 {{define "options"}}
     <div class="btn-group" role="group" aria-label="Basic outlined example">
-        <a class="btn btn-sm btn-outline-secondary" onclick="history.back()">{{translate "cancel"}}</a>
+        <a class="btn btn-sm btn-outline-secondary" onclick="history.back()">
+            <span data-feather="x-square"></span> {{translate "cancel"}}
+        </a>
         {{if .Parameters.Model.Id}}
             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
                     id="deleteConfirmationLabel"
                     data-bs-target="#deleteConfirmationModal">
-                {{translate "delete"}}
+                <span data-feather="trash-2"></span> {{translate "delete"}}
             </button>
             <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationLabel"
                  aria-hidden="true">

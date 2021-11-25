@@ -25,7 +25,7 @@ func (r *typeRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var name string
 	var color string
 	var projectId int64
-	row.Scan(&id, &name, &color, &projectId)
+	ScanAndPanic(row, &id, &name, &color, &projectId)
 	return &model.Category{id, name, color, projectId}
 }
 
