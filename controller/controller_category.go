@@ -11,11 +11,11 @@ type typeController struct {
 	baseController
 }
 
-func TypeController(repository repository.Repository) Controller {
+func CategoryController(repository repository.Repository) Controller {
 	return &typeController{
 		baseController{
 			repository: repository,
-			basePath:   "/types",
+			basePath:   "/categories",
 		},
 	}
 }

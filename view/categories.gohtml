@@ -18,8 +18,11 @@
 
 {{define "form"}}
     <div class="col-12">
-        <div class="form-floating">
+        <div class="input-group form-floating">
             <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "name"}}" value="{{.Data.Name}}" required>
+            <span class="input-group-text">
+                <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#563d7c" title="Choose your color">
+            </span>
             <label for="name">{{translate "name"}}</label>
         </div>
     </div>

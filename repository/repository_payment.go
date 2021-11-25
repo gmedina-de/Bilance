@@ -38,7 +38,7 @@ func (r *paymentRepository) NewFromQuery(row *sql.Rows) interface{} {
 		amount,
 		date,
 		projectId,
-		r.typeRepository.Find(typeId).(*model.Type),
+		r.typeRepository.Find(typeId).(*model.Category),
 		r.userRepository.Find(payerId).(*model.User),
 		r.userRepository.Find(payeeId).(*model.User),
 	}

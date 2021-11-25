@@ -32,14 +32,14 @@ func main() {
 	server := service.DefaultServer(router, log)
 
 	userRepository := repository.UserRepository(database)
-	typeRepository := repository.TypeRepository(database)
+	typeRepository := repository.CategoryRepository(database)
 	paymentRepository := repository.PaymentRepository(database, userRepository, typeRepository)
 	projectRepository := repository.ProjectRepository(database, paymentRepository, userRepository, typeRepository)
 
 	indexController := controller.IndexController()
 	analysisController := controller.AnalysisController()
 	userController := controller.UserController(userRepository)
-	typeController := controller.TypeController(typeRepository)
+	categoryController := controller.CategoryController(typeRepository)
 	paymentController := controller.PaymentController(paymentRepository)
 	projectController := controller.ProjectController(projectRepository)
 
@@ -49,7 +49,7 @@ func main() {
 		indexController,
 		analysisController,
 		userController,
-		typeController,
+		categoryController,
 		paymentController,
 		projectController,
 	)

@@ -1,3 +1,4 @@
+-- we don't know how to generate root <with-no-name> (class Root) :(
 create table Project
 (
     Id INTEGER
@@ -7,22 +8,26 @@ create table Project
     Description text
 );
 
-create unique index Project_Name_uindex
-    on Project (Name);
-
-create table Type
+create table Category
 (
     Id INTEGER
-        constraint Type_pk
+        constraint Category_pk
             primary key autoincrement,
-    Name text not null,
+    Name TEXT not null,
+    Color TEXT not null,
     ProjectId INTEGER not null
         references Project
             on update cascade on delete cascade
 );
 
-create unique index Type_Name_uindex
-    on Type (Name);
+create unique index Category_Color_uindex
+    on Category (Color);
+
+create unique index Category_Name_uindex
+    on Category (Name);
+
+create unique index Project_Name_uindex
+    on Project (Name);
 
 create table User
 (
@@ -43,8 +48,8 @@ create table Payment
     Amount INTEGER not null,
     Date text not null,
     ProjectId INTEGER not null,
-    TypeId INTEGER
-        references Type
+    CategoryId INTEGER
+        references Category
                   on update set null on delete set null,
     PayerId INTEGER
         references User
@@ -69,19 +74,4 @@ create table ProjectUser
 
 create unique index table_name_username_uindex
     on User (Name);
-
-create table sqlite_master
-(
-    type text,
-    name text,
-    tbl_name text,
-    rootpage int,
-    sql text
-);
-
-create table sqlite_sequence
-(
-    name,
-    seq
-);
 

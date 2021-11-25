@@ -59,5 +59,9 @@ func (c *baseController) modelName() string {
 	empty := c.repository.NewEmpty()
 	of := reflect.TypeOf(empty).Elem()
 	name := of.Name()
-	return strings.ToLower(name) + "s"
+	lower := strings.ToLower(name)
+	if strings.HasSuffix(lower, "y") {
+		return lower[:len(lower)-1] + "ies"
+	}
+	return lower + "s"
 }

@@ -2,7 +2,7 @@
     <thead>
     <tr>
         <th>{{translate "name"}}<br>{{translate "date"}}</th>
-        <th><i>{{translate "Type"}}</i><br><b>{{translate "amount"}}</b></th>
+        <th><i>{{translate "category"}}</i><br><b>{{translate "amount"}}</b></th>
         <th>{{translate "payer"}}<br>{{translate "payee"}}</th>
     </tr>
     </thead>
@@ -11,7 +11,7 @@
     {{range .Data}}
         <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
             <td>{{.Name}}<br>{{.Date}}</td>
-            <td><i>{{.Type.Name}}</i><br><b>{{.Amount}}</b></td>
+            <td><i>{{.Category.Name}}</i><br><b>{{.Amount}}</b></td>
             <td>{{.Payer.Name}}<span data-feather="arrow-right"></span><br>{{.Payee.Name}}</td>
         </tr>
     {{end}}
@@ -70,7 +70,7 @@
                 <option>Type1</option>
                 <option>Type2</option>
             </select>
-            <label for="name">{{translate "Type"}}</label>
+            <label for="name">{{translate "category"}}</label>
         </div>
     </div>
 

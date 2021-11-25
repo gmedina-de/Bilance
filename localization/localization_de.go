@@ -4,7 +4,7 @@ var l10nDe = l10n{
 	// navigation
 	dashboard:       "Dashboard",
 	payments:        "Zahlungen",
-	types:           "Kategorien",
+	categories:      "Kategorien",
 	debts:           "Schulden",
 	analysis:        "Analysen",
 	admin_functions: "Admin-Funktionen",
@@ -14,6 +14,8 @@ var l10nDe = l10n{
 	// actions
 	logout:                          "Ausloggen",
 	search:                          "Suchen",
+	filter:                          "Filtern",
+	date_filter:                     "Nach Datum filtern",
 	new:                             "Erstellen",
 	edit:                            "Editieren",
 	save:                            "Speichern",
@@ -31,7 +33,7 @@ var l10nDe = l10n{
 	name:        "Name",
 	amount:      "Betrag",
 	date:        "Datum",
-	Type:        "Kategorie",
+	category:    "Kategorie",
 	payer:       "Zahler",
 	payee:       "Empfänger",
 	description: "Beschreibung",

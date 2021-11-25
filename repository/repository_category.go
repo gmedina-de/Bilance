@@ -12,12 +12,12 @@ type typeRepository struct {
 	baseRepository
 }
 
-func TypeRepository(database service.Database) Repository {
+func CategoryRepository(database service.Database) Repository {
 	return &typeRepository{baseRepository{database: database}}
 }
 
 func (r *typeRepository) NewEmpty() interface{} {
-	return &model.Type{}
+	return &model.Category{}
 }
 
 func (r *typeRepository) NewFromQuery(row *sql.Rows) interface{} {
@@ -25,13 +25,13 @@ func (r *typeRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var name string
 	var projectId int64
 	row.Scan(&id, &name, &projectId)
-	return &model.Type{id, name, projectId}
+	return &model.Category{id, name, projectId}
 }
 
 func (r *typeRepository) NewFromRequest(request *http.Request, id int64) interface{} {
 	cookie, _ := request.Cookie(model.SelectedProjectIdCookie)
 	projectId, _ := strconv.ParseInt(cookie.Value, 10, 64)
-	return &model.Type{
+	return &model.Category{
 		id,
 		request.Form.Get("Name"),
 		projectId,
@@ -39,7 +39,7 @@ func (r *typeRepository) NewFromRequest(request *http.Request, id int64) interfa
 }
 
 func (r *typeRepository) Find(id int64) interface{} {
-	var result []model.Type
+	var result []model.Category
 	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
 	if len(result) > 0 {
 		return &result[0]
@@ -49,7 +49,7 @@ func (r *typeRepository) Find(id int64) interface{} {
 }
 
 func (r *typeRepository) List(conditions ...string) interface{} {
-	var result []model.Type
+	var result []model.Category
 	conditions = append(conditions, "ORDER BY Id")
 	r.database.Select(&result, r.NewFromQuery, conditions...)
 	return result

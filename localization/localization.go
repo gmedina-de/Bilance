@@ -6,7 +6,7 @@ type l10n struct {
 	// navigation
 	dashboard       string
 	payments        string
-	types           string
+	categories      string
 	debts           string
 	analysis        string
 	admin_functions string
@@ -16,6 +16,8 @@ type l10n struct {
 	// actions
 	logout                          string
 	search                          string
+	filter                          string
+	date_filter                     string
 	new                             string
 	edit                            string
 	save                            string
@@ -33,7 +35,7 @@ type l10n struct {
 	name        string
 	amount      string
 	date        string
-	Type        string
+	category    string
 	payer       string
 	payee       string
 	description string
