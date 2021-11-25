@@ -17,5 +17,5 @@ func (this *analysisController) Routing(router service.Router) {
 }
 
 func (this *analysisController) Analysis(writer http.ResponseWriter, request *http.Request) {
-	render(writer, request, "analysis", nil, "analysis")
+	render(writer, request, &Parameters{}, "analysis", "analysis")
 }

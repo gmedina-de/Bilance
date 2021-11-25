@@ -9,7 +9,7 @@
     </thead>
     <tbody>
     {{$Path:=.Path}}
-    {{range .Data}}
+    {{range .Parameters.Model}}
         <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
             <td>{{.Id}}</td>
             <td>{{.Name}}</td>
@@ -24,7 +24,7 @@
     <div class="col-sm-6">
         <div class="form-floating">
             <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "username"}}"
-                   value="{{.Data.Name}}" required>
+                   value="{{.Parameters.Model.Name}}" required>
             <label for="name">{{translate "username"}}</label>
         </div>
     </div>
@@ -32,15 +32,15 @@
     <div class="col-sm-6">
         <div class="form-floating">
             <input type="text" class="form-control" name="Password" id="password"
-                   placeholder="{{translate "password_placeholder"}}" minlength="5" value="{{.Data.Password}}" required>
+                   placeholder="{{translate "password_placeholder"}}" minlength="5" value="{{.Parameters.Model.Password}}" required>
             <label for="password">{{translate "password"}}</label>
         </div>
     </div>
     <div class="col-12">
         <div class="form-floating">
             <select class="form-select" id="role" name="Role" required>
-                <option value="0" {{if not .Data.Role}} selected {{end}}>{{translate "role_normal"}}</option>
-                <option value="1" {{if .Data.Role}} selected {{end}}>{{translate "role_admin"}}</option>
+                <option value="0" {{if not .Parameters.Model.Role}} selected {{end}}>{{translate "role_normal"}}</option>
+                <option value="1" {{if .Parameters.Model.Role}} selected {{end}}>{{translate "role_admin"}}</option>
             </select>
             <label for="role">{{translate "role"}}</label>
         </div>

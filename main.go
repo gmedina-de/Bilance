@@ -41,7 +41,7 @@ func main() {
 	userController := controller.UserController(userRepository)
 	categoryController := controller.CategoryController(typeRepository)
 	paymentController := controller.PaymentController(paymentRepository)
-	projectController := controller.ProjectController(projectRepository)
+	projectController := controller.ProjectController(projectRepository, userRepository)
 
 	bilance := Bilance(
 		server,

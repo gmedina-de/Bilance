@@ -1,5 +1,5 @@
 {{define "content"}}
-    {{if .Data}}
+    {{if .Parameters.Model}}
         <table class="table">
             {{template "table" .}}
         </table>
@@ -9,5 +9,5 @@
 {{end}}
 
 {{define "options"}}
-    <a class="btn btn-sm btn-success" href="{{.Path}}/new">{{translate "new"}}</a>
+    <a class="btn btn-sm btn-success" href="{{.Path}}/edit">{{translate "new"}}</a>
 {{end}}

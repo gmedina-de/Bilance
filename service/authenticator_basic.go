@@ -72,7 +72,6 @@ func (b *basicAuthenticator) retrieveUser(username string) (model.User, bool) {
 						nil,
 						nil,
 						nil,
-						nil,
 					}
 					return &project
 				},

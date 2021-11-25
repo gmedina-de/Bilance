@@ -7,7 +7,6 @@ type Project struct {
 	Payments    []Payment
 	Categories  []Category
 	Users       []User
-	NotUsers    []User
 }
 
 type ProjectUser struct {

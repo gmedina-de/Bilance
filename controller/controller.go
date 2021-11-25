@@ -20,36 +20,56 @@ type Context struct {
 	SelectedProjectId int64
 	Path              string
 	Title             string
-	Toast             string
-	Data              interface{}
+	Parameters        *Parameters
 }
 
-func render(writer http.ResponseWriter, request *http.Request, title string, data interface{}, templates ...string) {
+type Parameters struct {
+	Model interface{}
+	Data  interface{}
+	Toast string
+}
+
+func render(writer http.ResponseWriter, request *http.Request, parameters *Parameters, title string, templates ...string) {
 	// prepare templates
 	for i, iTemplate := range templates {
 		templates[i] = "view/" + iTemplate + ".gohtml"
 	}
 	templates = append(templates, "view/base.gohtml", "view/navbar.gohtml", "view/navigation.gohtml")
 	tmpl := template.New("")
+	f := func(currentPath string, linkPath string) string {
+		if currentPath == "/" && linkPath == "/" || strings.HasPrefix(currentPath, linkPath) && linkPath != "/" {
+			return " active"
+		}
+		return ""
+	}
 	tmpl.Funcs(template.FuncMap{
 		"translate": localization.Translate,
-		"active": func(currentPath string, linkPath string) string {
-			if currentPath == "/" && linkPath == "/" || strings.HasPrefix(currentPath, linkPath) && linkPath != "/" {
-				return " active"
-			}
-			return ""
-		},
+		"active":    f,
 	})
 	tmpl, err := tmpl.ParseFiles(templates...)
 	if err != nil {
 		panic(err)
 	}
-
-	// deserialize user
 	user := model.DeserializeUser(request.Header.Get("user"))
+
+	// execute templates
+	err = tmpl.ExecuteTemplate(writer, "base", &Context{
+		user,
+		handleSelectedProjectId(writer, request, user),
+		request.URL.Path,
+		title,
+		parameters,
+	})
+	if err != nil {
+		panic(err)
+	}
+}
+
+func handleSelectedProjectId(writer http.ResponseWriter, request *http.Request, user *model.User) int64 {
 	cookie, err := request.Cookie(model.SelectedProjectIdCookie)
 	var selectedProjectId int64
 	if err != nil {
+		user := model.DeserializeUser(request.Header.Get("user"))
 		selectedProjectId = user.Projects[0].Id
 		expiration := time.Now().Add(365 * 24 * time.Hour)
 		http.SetCookie(writer, &http.Cookie{
@@ -62,20 +82,7 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 	} else {
 		selectedProjectId, _ = strconv.ParseInt(cookie.Value, 10, 64)
 	}
-
-	// execute templates
-	context := &Context{
-		user,
-		selectedProjectId,
-		request.URL.Path,
-		title,
-		"record_saved_successfully",
-		data,
-	}
-	err = tmpl.ExecuteTemplate(writer, "base", context)
-	if err != nil {
-		panic(err)
-	}
+	return selectedProjectId
 }
 
 func redirect(writer http.ResponseWriter, request *http.Request, path string) {

@@ -14,35 +14,35 @@ type baseController struct {
 }
 
 func (c *baseController) List(writer http.ResponseWriter, request *http.Request) {
-	var search interface{}
-	if request.URL.Query().Has("Search") {
-		search = c.repository.List("WHERE Name LIKE '%" + request.URL.Query().Get("Search") + "%'")
-	} else {
-		search = c.repository.List()
+	var toast string
+	if request.URL.Query().Has("success") {
+		toast = "record_saved_successfully"
 	}
-	render(writer, request, c.modelName(), search, "crud_table", c.modelName())
-}
-
-func (c *baseController) New(writer http.ResponseWriter, request *http.Request) {
-	if request.Method == "GET" {
-		render(writer, request, "new", c.repository.NewEmpty(), "crud_form", c.modelName())
-	} else if request.Method == "POST" {
-		request.ParseForm()
-		c.repository.Insert(c.repository.NewFromRequest(request, 0))
-		redirect(writer, request, c.basePath)
-	}
+	render(writer, request, &Parameters{Model: c.repository.List(), Toast: toast}, c.modelName(), "crud_table", c.modelName())
 }
 
 func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request) {
-	if request.Method == "GET" && request.URL.Query().Has("Id") {
-		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
-		item := c.repository.Find(id)
-		render(writer, request, "edit", item, "crud_form", c.modelName())
+	if request.Method == "GET" {
+		if request.URL.Query().Has("Id") {
+			idString := request.URL.Query().Get("Id")
+			id, _ := strconv.ParseInt(idString, 10, 64)
+			item := c.repository.Find(id)
+			render(writer, request, &Parameters{Model: item}, "edit", "crud_form", c.modelName())
+		} else {
+			render(writer, request, &Parameters{Model: c.repository.NewEmpty()}, "new", "crud_form", c.modelName())
+		}
 	} else if request.Method == "POST" {
-		request.ParseForm()
-		id, _ := strconv.ParseInt(request.Form.Get("Id"), 10, 64)
-		c.repository.Update(c.repository.NewFromRequest(request, id))
-		redirect(writer, request, c.basePath)
+		err := request.ParseForm()
+		if err != nil {
+			panic(err)
+		}
+		if request.Form.Has("Id") {
+			id, _ := strconv.ParseInt(request.Form.Get("Id"), 10, 64)
+			c.repository.Update(c.repository.NewFromRequest(request, id))
+		} else {
+			c.repository.Insert(c.repository.NewFromRequest(request, 0))
+		}
+		redirect(writer, request, c.basePath+"?success")
 	}
 }
 

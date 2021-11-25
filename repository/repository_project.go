@@ -31,9 +31,7 @@ func ProjectRepository(
 }
 
 func (r *projectRepository) NewEmpty() interface{} {
-	p := &model.Project{}
-	p.NotUsers = r.userRepository.List().([]model.User)
-	return p
+	return &model.Project{}
 }
 
 func (r *projectRepository) NewFromQuery(row *sql.Rows) interface{} {
@@ -49,7 +47,6 @@ func (r *projectRepository) NewFromQuery(row *sql.Rows) interface{} {
 		r.paymentRepository.List("WHERE ProjectId = " + idString).([]model.Payment),
 		r.typeRepository.List("WHERE ProjectId = " + idString).([]model.Category),
 		r.userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")").([]model.User),
-		r.userRepository.List("WHERE Id NOT IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")").([]model.User),
 	}
 	return &project
 }
@@ -64,7 +61,6 @@ func (r *projectRepository) NewFromRequest(request *http.Request, id int64) inte
 		r.paymentRepository.List("WHERE ProjectId = " + idString).([]model.Payment),
 		r.typeRepository.List("WHERE ProjectId = " + idString).([]model.Category),
 		r.userRepository.List("WHERE Id IN (" + users + ")").([]model.User),
-		r.userRepository.List("WHERE Id NOT IN (" + users + ")").([]model.User),
 	}
 }
 

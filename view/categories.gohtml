@@ -7,7 +7,7 @@
     </thead>
     <tbody>
     {{$Path:=.Path}}
-    {{range .Data}}
+    {{range .Parameters.Model}}
         <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
             <td style="color: {{.Color}}">{{.Name}}</td>
             <td style="background-color: {{.Color}}"></td>
@@ -19,9 +19,9 @@
 {{define "form"}}
     <div class="col-12">
         <div class="input-group form-floating">
-            <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "name"}}" value="{{.Data.Name}}" required>
+            <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "name"}}" value="{{.Parameters.Model.Name}}" required>
             <span class="input-group-text">
-                <input name="Color" type="color" class="form-control form-control-color" id="color" value="{{.Data.Color}}">
+                <input name="Color" type="color" class="form-control form-control-color" id="color" value="{{.Parameters.Model.Color}}">
             </span>
             <label for="name" style="z-index: 10">{{translate "name"}}</label>
         </div>

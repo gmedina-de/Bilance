@@ -8,7 +8,7 @@
     </thead>
     <tbody>
     {{$Path:=.Path}}
-    {{range .Data}}
+    {{range .Parameters.Model}}
         <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
             <td>{{.Name}}<br>{{.Date}}</td>
             <td><i>{{.Category.Name}}</i><br><b>{{.Amount}}</b></td>
@@ -59,7 +59,7 @@
     <div class="col-sm-6">
         <div class="form-floating">
             <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "name"}}"
-                   value="{{.Data.Name}}" required>
+                   value="{{.Parameters.Model.Name}}" required>
             <label for="name">{{translate "name"}}</label>
         </div>
     </div>
@@ -76,8 +76,9 @@
 
     <div class="col-sm-6">
         <div class="input-group form-floating">
-            <input type="text" class="form-control" name="Amount" id="amount" placeholder="{{translate "amount"}}"
-                   value="{{.Data.Amount}}" required>
+            <input type="number" class="form-control" min="0.00" max="100000.00" step="0.01" name="Amount" id="amount"
+                   placeholder="{{translate "amount"}}"
+                   value="{{.Parameters.Model.Amount}}" required>
             <span class="input-group-text">€</span>
             <label for="amount" style="z-index: 10;">{{translate "amount"}}</label>
         </div>
@@ -86,7 +87,7 @@
     <div class="col-sm-6">
         <div class="form-floating">
             <input type="date" class="form-control" name="Name" id="name" placeholder="{{translate "date"}}"
-                   value="{{.Data.Date}}" required>
+                   value="{{.Parameters.Model.Date}}" required>
             <label for="name">{{translate "date"}}</label>
         </div>
     </div>
