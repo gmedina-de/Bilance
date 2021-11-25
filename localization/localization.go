@@ -6,8 +6,9 @@ type l10n struct {
 	// navigation
 	dashboard       string
 	payments        string
-	debts           string
 	types           string
+	debts           string
+	analysis        string
 	admin_functions string
 	users           string
 	projects        string

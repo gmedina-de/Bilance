@@ -4,8 +4,9 @@ var l10nDe = l10n{
 	// navigation
 	dashboard:       "Dashboard",
 	payments:        "Zahlungen",
-	debts:           "Schulden",
 	types:           "Kategorien",
+	debts:           "Schulden",
+	analysis:        "Analysen",
 	admin_functions: "Admin-Funktionen",
 	users:           "Nutzende",
 	projects:        "Projekte",

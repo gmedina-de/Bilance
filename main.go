@@ -37,6 +37,7 @@ func main() {
 	projectRepository := repository.ProjectRepository(database, paymentRepository, userRepository, typeRepository)
 
 	indexController := controller.IndexController()
+	analysisController := controller.AnalysisController()
 	userController := controller.UserController(userRepository)
 	typeController := controller.TypeController(typeRepository)
 	paymentController := controller.PaymentController(paymentRepository)
@@ -46,10 +47,11 @@ func main() {
 		server,
 		router,
 		indexController,
+		analysisController,
+		userController,
+		typeController,
 		paymentController,
 		projectController,
-		typeController,
-		userController,
 	)
 	bilance.Run()
 }
