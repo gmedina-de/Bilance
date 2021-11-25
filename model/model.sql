@@ -20,12 +20,6 @@ create table Category
             on update cascade on delete cascade
 );
 
-create unique index Category_Color_uindex
-    on Category (Color);
-
-create unique index Category_Name_uindex
-    on Category (Name);
-
 create unique index Project_Name_uindex
     on Project (Name);
 
