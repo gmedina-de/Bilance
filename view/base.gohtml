@@ -31,6 +31,14 @@
             </main>
         </div>
     </div>
+
+    {{if .Toast}}
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div class="alert alert-info fade show" role="alert"><span data-feather="info"></span> {{translate .Toast}}</div>
+    </div>
+    {{end}}
+
+
     <script src="/static/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
             integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"

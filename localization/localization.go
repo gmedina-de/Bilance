@@ -24,6 +24,10 @@ type l10n struct {
 	delete_confirmation             string
 	delete_confirmation_description string
 
+	// alerts
+	no_records_found          string
+	record_saved_successfully string
+
 	// fields
 	id          string
 	name        string

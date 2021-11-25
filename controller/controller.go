@@ -20,6 +20,7 @@ type Context struct {
 	SelectedProjectId int64
 	Path              string
 	Title             string
+	Toast             string
 	Data              interface{}
 }
 
@@ -68,6 +69,7 @@ func render(writer http.ResponseWriter, request *http.Request, title string, dat
 		selectedProjectId,
 		request.URL.Path,
 		title,
+		"record_saved_successfully",
 		data,
 	}
 	err = tmpl.ExecuteTemplate(writer, "base", context)

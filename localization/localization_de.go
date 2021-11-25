@@ -22,6 +22,10 @@ var l10nDe = l10n{
 	delete_confirmation:             "Löschbestätigung",
 	delete_confirmation_description: "Sind Sie sicher, dass Sie dieses Element entfernen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
 
+	// alerts
+	no_records_found:          "Keine Einträge gefunden",
+	record_saved_successfully: "Eintrag erfolgreich gespeichert",
+
 	// fields
 	id:          "#",
 	name:        "Name",
