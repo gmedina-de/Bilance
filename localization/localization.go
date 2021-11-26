@@ -45,6 +45,7 @@ type l10n struct {
 	role_admin    string
 	outside_world string
 	total         string
+	uncategorized string
 	// calendar
 	this_week  string
 	this_month string

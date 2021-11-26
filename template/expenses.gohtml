@@ -76,7 +76,7 @@
         {{range $i, $e := $GraphDataX}}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 {{index $GraphDataX $i}}
-                <span class="badge rounded-pill bg-secondary" style="background-color: {{index $GraphDataZ $i}}">
+                <span class="badge rounded-pill bg-secondary" style="background-color: {{index $GraphDataZ $i}}!important;">
                     {{(index $GraphDataY $i).FormatWithCurrency}}
                 </span>
             </li>
@@ -89,8 +89,6 @@
 {{end}}
 
 {{define "options"}}
-
-
     <div class="btn-group">
         <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
             <span data-feather="calendar"></span>

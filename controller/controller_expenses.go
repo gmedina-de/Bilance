@@ -48,6 +48,7 @@ func (c *expensesController) prepareGraphData(request *http.Request) *GraphData 
 	} else if strings.HasPrefix(request.URL.Path, "/by_category/") {
 		graphData.Type = "doughnut"
 		categories := c.categoryRepository.List("WHERE ProjectId = " + projectId).([]model.Category)
+		categories = append(categories, model.Category{0, localization.Translate("uncategorized"), "#6c757d", 0})
 		c.fillByCategoryGraphData(start, end, categories, &graphData, projectId)
 	}
 

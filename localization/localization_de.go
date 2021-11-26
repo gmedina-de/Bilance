@@ -43,6 +43,7 @@ var l10nDe = l10n{
 	role_admin:    "Admin",
 	outside_world: "Außenwelt",
 	total:         "Gesamt",
+	uncategorized: "Nicht kategorisiert",
 	// calendar
 	this_week:  "Diese Woche",
 	this_month: "Dieser Monat",
