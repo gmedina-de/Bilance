@@ -17,8 +17,7 @@ func PaymentController(repository repository.Repository, categoryRepository repo
 			repository: repository,
 			basePath:   "/payments",
 			dataProvider: func(request *http.Request) interface{} {
-				cookie, _ := request.Cookie(model.SelectedProjectIdCookie)
-				projectId := cookie.Value
+				projectId := model.GetSelectedProjectIdString(request)
 				return struct {
 					Categories []model.Category
 					Users      []model.User

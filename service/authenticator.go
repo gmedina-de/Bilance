@@ -5,5 +5,5 @@ import (
 )
 
 type Authenticator interface {
-	Authenticate(w http.ResponseWriter, r *http.Request) bool
+	Authenticate(writer http.ResponseWriter, request *http.Request) bool
 }

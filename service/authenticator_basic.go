@@ -18,8 +18,8 @@ func BasicAuthenticator(database Database) Authenticator {
 	return &basicAuthenticator{database}
 }
 
-func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request) bool {
-	username, password, ok := r.BasicAuth()
+func (b *basicAuthenticator) Authenticate(writer http.ResponseWriter, request *http.Request) bool {
+	username, password, ok := request.BasicAuth()
 	if ok {
 		usernameHash := sha256.Sum256([]byte(username))
 		passwordHash := sha256.Sum256([]byte(password))
@@ -33,17 +33,18 @@ func (b *basicAuthenticator) Authenticate(w http.ResponseWriter, r *http.Request
 			passwordMatch := subtle.ConstantTimeCompare(passwordHash[:], expectedPasswordHash[:]) == 1
 
 			if usernameMatch && passwordMatch {
-				isAdmin := user.Role == model.UserRoleAdmin
-				if !strings.HasPrefix(r.URL.Path, "/admin") || isAdmin {
-					r.Header.Add("user", user.Serialize())
-					return true
+				if !strings.HasPrefix(request.URL.Path, "/admin") || user.Role == model.UserRoleAdmin {
+					if b.isProjectAccessible(user, writer, request) {
+						request.Header.Add("user", user.Serialize())
+						return true
+					}
 				}
 			}
 		}
 	}
 
-	w.Header().Set("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
-	http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	writer.Header().Set("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
+	http.Error(writer, "Unauthorized", http.StatusUnauthorized)
 	return false
 }
 
@@ -86,4 +87,22 @@ func (b *basicAuthenticator) retrieveUser(username string) (model.User, bool) {
 	} else {
 		return model.User{}, false
 	}
+}
+
+func (b *basicAuthenticator) isProjectAccessible(user model.User, writer http.ResponseWriter, request *http.Request) bool {
+	projectId := model.GetSelectedProjectId(request)
+	for _, project := range user.Projects {
+		if project.Id == projectId {
+			return true
+		}
+	}
+	if len(user.Projects) > 0 {
+		selectedProjectId := strconv.FormatInt(user.Projects[0].Id, 10)
+		model.SetSelectedProjectId(writer, selectedProjectId)
+		return true
+	} else if user.Role == model.UserRoleAdmin {
+		model.SetSelectedProjectId(writer, "0")
+		return true
+	}
+	return false
 }

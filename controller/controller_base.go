@@ -4,9 +4,7 @@ import (
 	"Bilance/model"
 	"Bilance/repository"
 	"net/http"
-	"reflect"
 	"strconv"
-	"strings"
 )
 
 type baseController struct {
@@ -21,13 +19,13 @@ func (c *baseController) List(writer http.ResponseWriter, request *http.Request)
 		toast = "record_saved_successfully"
 	}
 	var list interface{}
-	if c.modelNamePlural() == "categories" || c.modelNamePlural() == "payments" {
-		cookie, _ := request.Cookie(model.SelectedProjectIdCookie)
-		list = c.repository.List("WHERE ProjectId = " + cookie.Value)
+	modelName := model.ModelNamePlural(c.repository.NewEmpty())
+	if modelName == "categories" || modelName == "payments" {
+		list = c.repository.List("WHERE ProjectId = " + model.GetSelectedProjectIdString(request))
 	} else {
 		list = c.repository.List()
 	}
-	render(writer, request, &Parameters{Model: list, Toast: toast}, c.modelNamePlural(), "crud_table", c.modelNamePlural())
+	render(writer, request, &Parameters{Model: list, Toast: toast}, modelName, "crud_table", modelName)
 }
 
 func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request) {
@@ -36,13 +34,14 @@ func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request)
 		if c.dataProvider != nil {
 			data = c.dataProvider(request)
 		}
+		modelName := model.ModelNamePlural(c.repository.NewEmpty())
 		if request.URL.Query().Has("Id") {
 			idString := request.URL.Query().Get("Id")
 			id, _ := strconv.ParseInt(idString, 10, 64)
 			model := c.repository.Find(id)
-			render(writer, request, &Parameters{Model: model, Data: data}, "edit", "crud_form", c.modelNamePlural())
+			render(writer, request, &Parameters{Model: model, Data: data}, "edit", "crud_form", modelName)
 		} else {
-			render(writer, request, &Parameters{Model: c.repository.NewEmpty(), Data: data}, "new", "crud_form", c.modelNamePlural())
+			render(writer, request, &Parameters{Model: c.repository.NewEmpty(), Data: data}, "new", "crud_form", modelName)
 		}
 	} else if request.Method == "POST" {
 		err := request.ParseForm()
@@ -66,15 +65,4 @@ func (c *baseController) Delete(writer http.ResponseWriter, request *http.Reques
 		c.repository.Delete(item)
 		redirect(writer, request, c.basePath)
 	}
-}
-
-func (c *baseController) modelNamePlural() string {
-	empty := c.repository.NewEmpty()
-	of := reflect.TypeOf(empty).Elem()
-	name := of.Name()
-	lower := strings.ToLower(name)
-	if strings.HasSuffix(lower, "y") {
-		return lower[:len(lower)-1] + "ies"
-	}
-	return lower + "s"
 }

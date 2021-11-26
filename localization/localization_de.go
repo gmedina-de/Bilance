@@ -17,7 +17,7 @@ var l10nDe = l10n{
 	filter:                          "Filtern",
 	date_filter:                     "Nach Datum filtern",
 	new:                             "Erstellen",
-	edit:                            "Editieren",
+	edit:                            "Bearbeiten",
 	save:                            "Speichern",
 	cancel:                          "Abbrechen",
 	delete:                          "Entfernen",

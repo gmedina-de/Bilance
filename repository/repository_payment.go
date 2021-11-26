@@ -57,8 +57,7 @@ func (r *paymentRepository) NewFromQuery(row *sql.Rows) interface{} {
 func (r *paymentRepository) NewFromRequest(request *http.Request, id int64) interface{} {
 	name := request.Form.Get("Name")
 	date := request.Form.Get("Date")
-	cookie, _ := request.Cookie(model.SelectedProjectIdCookie)
-	projectId, _ := strconv.ParseInt(cookie.Value, 10, 64)
+	projectId := model.GetSelectedProjectId(request)
 	amountInput := request.Form.Get("Amount")
 	amountString := strings.Replace(amountInput, ".", "", 1)
 	amount, _ := strconv.ParseInt(amountString, 10, 64)

@@ -30,8 +30,7 @@ func (r *typeRepository) NewFromQuery(row *sql.Rows) interface{} {
 }
 
 func (r *typeRepository) NewFromRequest(request *http.Request, id int64) interface{} {
-	cookie, _ := request.Cookie(model.SelectedProjectIdCookie)
-	projectId, _ := strconv.ParseInt(cookie.Value, 10, 64)
+	projectId := model.GetSelectedProjectId(request)
 	return &model.Category{
 		id,
 		request.Form.Get("Name"),
