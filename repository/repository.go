@@ -6,6 +6,7 @@ import (
 )
 
 type Repository interface {
+	ModelNamePlural() string
 	NewEmpty() interface{}
 	NewFromRequest(request *http.Request, id int64) interface{}
 	NewFromQuery(row *sql.Rows) interface{}

@@ -16,6 +16,10 @@ func UserRepository(database service.Database) Repository {
 	return &userRepository{baseRepository{database: database}}
 }
 
+func (r *userRepository) ModelNamePlural() string {
+	return "users"
+}
+
 func (r *userRepository) NewEmpty() interface{} {
 	return &model.User{}
 }

@@ -19,7 +19,7 @@ func (c *baseController) List(writer http.ResponseWriter, request *http.Request)
 		toast = "record_saved_successfully"
 	}
 	var list interface{}
-	modelName := model.NamePlural(c.repository.NewEmpty())
+	modelName := c.repository.ModelNamePlural()
 	if modelName == "categories" || modelName == "payments" {
 		list = c.repository.List("WHERE ProjectId = " + model.GetSelectedProjectIdString(request))
 	} else {
@@ -34,7 +34,7 @@ func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request)
 		if c.dataProvider != nil {
 			data = c.dataProvider(request)
 		}
-		modelName := model.NamePlural(c.repository.NewEmpty())
+		modelName := c.repository.ModelNamePlural()
 		if request.URL.Query().Has("Id") {
 			idString := request.URL.Query().Get("Id")
 			id, _ := strconv.ParseInt(idString, 10, 64)

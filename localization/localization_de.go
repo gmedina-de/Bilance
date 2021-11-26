@@ -14,6 +14,7 @@ var l10nDe = l10n{
 	// actions
 	logout:                          "Ausloggen",
 	search:                          "Suchen",
+	search_results:                  "Suchergebnisse",
 	filter:                          "Filtern",
 	date_filter:                     "Nach Datum filtern",
 	new:                             "Erstellen",
@@ -24,6 +25,7 @@ var l10nDe = l10n{
 	delete_confirmation:             "Löschbestätigung",
 	delete_confirmation_description: "Sind Sie sicher, dass Sie dieses Element entfernen wollen? Diese Aktion kann nicht rückgängig gemacht werden.",
 	// alerts
+	records_found:             "Einträge gefunden",
 	no_records_found:          "Keine Einträge gefunden",
 	record_saved_successfully: "Eintrag erfolgreich gespeichert",
 	// fields

@@ -16,6 +16,7 @@ type l10n struct {
 	// actions
 	logout                          string
 	search                          string
+	search_results                  string
 	filter                          string
 	date_filter                     string
 	new                             string
@@ -26,6 +27,7 @@ type l10n struct {
 	delete_confirmation             string
 	delete_confirmation_description string
 	// alerts
+	records_found             string
 	no_records_found          string
 	record_saved_successfully string
 	// fields

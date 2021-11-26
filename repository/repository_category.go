@@ -8,19 +8,23 @@ import (
 	"strconv"
 )
 
-type typeRepository struct {
+type categoryRepository struct {
 	baseRepository
 }
 
 func CategoryRepository(database service.Database) Repository {
-	return &typeRepository{baseRepository{database: database}}
+	return &categoryRepository{baseRepository{database: database}}
 }
 
-func (r *typeRepository) NewEmpty() interface{} {
+func (r *categoryRepository) ModelNamePlural() string {
+	return "categories"
+}
+
+func (r *categoryRepository) NewEmpty() interface{} {
 	return &model.Category{}
 }
 
-func (r *typeRepository) NewFromQuery(row *sql.Rows) interface{} {
+func (r *categoryRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var id int64
 	var name string
 	var color string
@@ -29,7 +33,7 @@ func (r *typeRepository) NewFromQuery(row *sql.Rows) interface{} {
 	return &model.Category{id, name, color, projectId}
 }
 
-func (r *typeRepository) NewFromRequest(request *http.Request, id int64) interface{} {
+func (r *categoryRepository) NewFromRequest(request *http.Request, id int64) interface{} {
 	projectId := model.GetSelectedProjectId(request)
 	return &model.Category{
 		id,
@@ -39,7 +43,7 @@ func (r *typeRepository) NewFromRequest(request *http.Request, id int64) interfa
 	}
 }
 
-func (r *typeRepository) Find(id int64) interface{} {
+func (r *categoryRepository) Find(id int64) interface{} {
 	var result []model.Category
 	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
 	if len(result) > 0 {
@@ -49,7 +53,7 @@ func (r *typeRepository) Find(id int64) interface{} {
 	}
 }
 
-func (r *typeRepository) List(conditions ...string) interface{} {
+func (r *categoryRepository) List(conditions ...string) interface{} {
 	var result []model.Category
 	conditions = append(conditions, "ORDER BY Id")
 	r.database.Select(&result, r.NewFromQuery, conditions...)

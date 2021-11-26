@@ -20,6 +20,10 @@ func PaymentRepository(database service.Database, userRepository Repository, typ
 	return &paymentRepository{baseRepository{database: database}, userRepository, typeRepository}
 }
 
+func (r *paymentRepository) ModelNamePlural() string {
+	return "payments"
+}
+
 func (r *paymentRepository) NewEmpty() interface{} {
 	return &model.Payment{
 		Category: &model.Category{},

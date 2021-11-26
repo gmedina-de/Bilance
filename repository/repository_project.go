@@ -30,6 +30,10 @@ func ProjectRepository(
 	}
 }
 
+func (r *projectRepository) ModelNamePlural() string {
+	return "projects"
+}
+
 func (r *projectRepository) NewEmpty() interface{} {
 	return &model.Project{}
 }
