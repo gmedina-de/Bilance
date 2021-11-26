@@ -18,7 +18,6 @@ type l10n struct {
 	search                          string
 	search_results                  string
 	filter                          string
-	date_filter                     string
 	new                             string
 	edit                            string
 	save                            string

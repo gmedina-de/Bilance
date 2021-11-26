@@ -16,7 +16,6 @@ var l10nDe = l10n{
 	search:                          "Suchen",
 	search_results:                  "Suchergebnisse",
 	filter:                          "Filtern",
-	date_filter:                     "Nach Datum filtern",
 	new:                             "Erstellen",
 	edit:                            "Bearbeiten",
 	save:                            "Speichern",
