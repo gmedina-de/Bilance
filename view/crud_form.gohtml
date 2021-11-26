@@ -20,26 +20,26 @@
                     data-bs-target="#deleteConfirmationModal">
                 <span data-feather="trash-2"></span> {{translate "delete"}}
             </button>
-            <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">{{translate "delete_confirmation"}}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            {{translate "delete_confirmation_description"}}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">{{translate "cancel"}}</button>
-                            <a type="button" class="btn btn-danger"
-                               href="{{.Path}}/delete?Id={{.Parameters.Model.Id}}">{{translate "delete"}}</a>
-                        </div>
-                    </div>
+        {{end}}
+    </div>
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{translate "delete_confirmation"}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{translate "delete_confirmation_description"}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">{{translate "cancel"}}</button>
+                    <a type="button" class="btn btn-danger"
+                       href="{{.Path}}/delete?Id={{.Parameters.Model.Id}}">{{translate "delete"}}</a>
                 </div>
             </div>
-        {{end}}
+        </div>
     </div>
 {{end}}
