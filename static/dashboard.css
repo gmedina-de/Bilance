@@ -153,6 +153,11 @@ tbody > tr {
     cursor: pointer;
 }
 
+tbody {
+    background-color: white;
+    border-bottom: 2px solid black;
+}
+
 tbody > tr:hover {
     --bs-table-bg: #cfe2ff;
     --bs-table-striped-bg: #c5d7f2;
@@ -162,7 +167,6 @@ tbody > tr:hover {
     --bs-table-hover-bg: #bfd1ec;
     --bs-table-hover-color: #000;
     color: #000;
-    border-color: #bacbe6;
 }
 
 .list-group-item:hover {
