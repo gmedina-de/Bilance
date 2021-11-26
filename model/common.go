@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func ModelNamePlural(model interface{}) string {
+func NamePlural(model interface{}) string {
 	of := reflect.TypeOf(model).Elem()
 	name := of.Name()
 	lower := strings.ToLower(name)

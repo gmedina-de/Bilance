@@ -1,8 +1,8 @@
 {{define "content"}}
-    {{$GraphDataType := .Parameters.Model.GraphDataType}}
-    {{$GraphDataX := .Parameters.Model.GraphDataX}}
-    {{$GraphDataY := .Parameters.Model.GraphDataY}}
-    {{$GraphDataZ := .Parameters.Model.GraphDataZ}}
+    {{$GraphDataType := .Parameters.Model.Type}}
+    {{$GraphDataX := .Parameters.Model.X}}
+    {{$GraphDataY := .Parameters.Model.Y}}
+    {{$GraphDataZ := .Parameters.Model.Z}}
     {{$Total := .Parameters.Model.Total}}
     <canvas class="my-4 w-100" id="expensesGraph" width="900" height="380"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
@@ -76,7 +76,7 @@
         {{range $i, $e := $GraphDataX}}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 {{index $GraphDataX $i}}
-                <span class="badge rounded-pill" style="background-color: {{index $GraphDataZ $i}}">
+                <span class="badge rounded-pill bg-secondary" style="background-color: {{index $GraphDataZ $i}}">
                     {{(index $GraphDataY $i).FormatWithCurrency}}
                 </span>
             </li>
@@ -94,7 +94,7 @@
     <div class="btn-group">
         <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
             <span data-feather="calendar"></span>
-            {{translate "this_week"}}
+            {{translate (.Parameters.Model.Filter)}}
         </button>
         <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{.Path}}?filter=this_week">{{translate "this_week"}}</a></li>
@@ -103,8 +103,10 @@
             <li>
                 <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="#">2020</a></li>
-            <li><a class="dropdown-item" href="#">2019</a></li>
+            {{$Path := .Path}}
+            {{range .Parameters.Data}}
+                <li><a class="dropdown-item" href="{{$Path}}?filter=year{{.}}">{{.}}</a></li>
+            {{end}}
         </ul>
     </div>
 {{end}}
