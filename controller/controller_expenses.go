@@ -24,16 +24,28 @@ func (c *expensesController) Routing(router service.Router) {
 	router.Get("/by_category/", c.ByCategory)
 }
 
-type ExpensesData struct {
-	GraphData *GraphData
-}
-
 func (c *expensesController) Expenses(writer http.ResponseWriter, request *http.Request) {
-	render(writer, request, &Parameters{Data: &ExpensesData{c.prepareExpensesGraphData(request)}}, "expenses", "expenses")
+	render(
+		writer,
+		request,
+		&Parameters{
+			Model: c.prepareExpensesGraphData(request),
+		},
+		"expenses",
+		"expenses",
+	)
 }
 
 func (c *expensesController) ByCategory(writer http.ResponseWriter, request *http.Request) {
-	render(writer, request, &Parameters{Data: &ExpensesData{c.prepareCategoryGraphData(request)}}, "by_category", "expenses")
+	render(
+		writer,
+		request,
+		&Parameters{
+			Model: c.prepareCategoryGraphData(request),
+		},
+		"by_category",
+		"expenses",
+	)
 }
 
 type GraphData struct {
