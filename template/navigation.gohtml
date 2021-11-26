@@ -1,5 +1,5 @@
 {{define "navigation"}}
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse shadow">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
         <div class="position-sticky pt-3">
             {{if .SelectedProjectId}}
                 <ul class="nav flex-column">
@@ -27,8 +27,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{{active .Path "/by_category/"}}" href="/by_category/">
-                            <span data-feather="pie-chart"></span>{{translate "by_category"}}
+                        <a class="nav-link{{active .Path "/expenses/by_category/"}}" href="/expenses/by_category/">
+                            <span data-feather="pie-chart"></span>...{{translate "by_category"}}
                         </a>
                     </li>
                 </ul>

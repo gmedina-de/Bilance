@@ -23,8 +23,8 @@
     <div class="col-5">
         <div class="form-floating">
             <select class="form-select" name="PayerId" id="payer" required>
-                {{if .Parameters.Model.Payee.Id}}
-                    {{$selectedPayer := .Parameters.Model.Payee.Id}}
+                {{if .Parameters.Model.Payer.Id}}
+                    {{$selectedPayer := .Parameters.Model.Payer.Id}}
                     {{range .Parameters.Data.Users}}
                         <option value="{{.Id}}"{{if eq $selectedPayer .Id}} selected{{end}}>{{.Name}}</option>
                     {{end}}

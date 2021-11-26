@@ -76,7 +76,8 @@
         {{range $i, $e := $GraphDataX}}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 {{index $GraphDataX $i}}
-                <span class="badge rounded-pill bg-secondary" style="background-color: {{index $GraphDataZ $i}}!important;">
+                <span class="badge rounded-pill bg-secondary"
+                      style="background-color: {{index $GraphDataZ $i}}{{if eq $GraphDataType "doughnut"}}!important;{{end}}">
                     {{(index $GraphDataY $i).FormatWithCurrency}}
                 </span>
             </li>
