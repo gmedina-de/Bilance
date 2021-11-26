@@ -15,7 +15,7 @@ func PaymentController(repository repository.Repository, categoryRepository repo
 	return &paymentController{
 		baseController{
 			repository: repository,
-			basePath:   "/payments",
+			basePath:   "/",
 			dataProvider: func(request *http.Request) interface{} {
 				projectId := model.GetSelectedProjectIdString(request)
 				return struct {
@@ -33,7 +33,14 @@ func PaymentController(repository repository.Repository, categoryRepository repo
 func (c *paymentController) Routing(router service.Router) {
 	router.Get(c.basePath, c.List)
 	router.Post(c.basePath, c.List)
-	router.Get(c.basePath+"/edit", c.Edit)
-	router.Post(c.basePath+"/edit", c.Edit)
-	router.Get(c.basePath+"/edit/delete", c.Delete)
+	router.Get(c.basePath+"edit", c.Edit)
+	router.Post(c.basePath+"edit", c.Edit)
+	router.Get(c.basePath+"edit/delete", c.Delete)
+	router.Get(c.basePath+"changeProject", c.ChangeProject)
+}
+
+func (c *paymentController) ChangeProject(writer http.ResponseWriter, request *http.Request) {
+	selectedProjectId, _ := request.URL.Query()[model.SelectedProjectIdCookie]
+	model.SetSelectedProjectId(writer, selectedProjectId[0])
+	redirect(writer, request, "/")
 }

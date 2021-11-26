@@ -16,7 +16,7 @@ func ProjectController(repository repository.Repository, userRepository reposito
 	return &projectController{
 		baseController{
 			repository: repository,
-			basePath:   "/admin/projects",
+			basePath:   "/admin/projects/",
 			dataProvider: func(request *http.Request) interface{} {
 				if request.URL.Query().Has("Id") {
 					idString := request.URL.Query().Get("Id")
@@ -33,7 +33,7 @@ func ProjectController(repository repository.Repository, userRepository reposito
 func (c *projectController) Routing(router service.Router) {
 	router.Get(c.basePath, c.List)
 	router.Post(c.basePath, c.List)
-	router.Get(c.basePath+"/edit", c.Edit)
-	router.Post(c.basePath+"/edit", c.Edit)
-	router.Get(c.basePath+"/edit/delete", c.Delete)
+	router.Get(c.basePath+"edit", c.Edit)
+	router.Post(c.basePath+"edit", c.Edit)
+	router.Get(c.basePath+"edit/delete", c.Delete)
 }

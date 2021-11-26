@@ -7,7 +7,7 @@
     <tbody>
     {{$Path:=.Path}}
     {{range .Parameters.Model}}
-        <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
+        <tr onclick="window.location.href='{{$Path}}edit?Id={{.Id}}';">
             <td style="color: {{.Color}}">{{.Name}}</td>
         </tr>
     {{end}}

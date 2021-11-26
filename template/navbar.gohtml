@@ -9,7 +9,7 @@
                 {{end}}
             {{end}}
             {{if gt (len .User.Projects) 1}}
-                <form action="/" id="project-selector" method="get" onclick="event.preventDefault()">
+                <form action="/changeProject" id="project-selector" method="get" onclick="event.preventDefault()">
                     <select name="SelectedProjectId" onchange="this.form.submit()">
                         {{$SelectedProjectId:=.SelectedProjectId}}
                         {{range .User.Projects}}

@@ -30,14 +30,14 @@
 {{define "options"}}
 
 
-    <button type="button" class="btn btn-sm btn-secondary"data-bs-toggle="modal"
-            id="deleteConfirmationLabel"
-            data-bs-target="#deleteConfirmationModal">
+
+
+    <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" id="filterLabel"
+            data-bs-target="#filterModal">
         <span data-feather="sliders"></span>
         {{translate "filter"}}
     </button>
-    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -45,10 +45,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="input-group mb-3">
-                        <input type="date" class="form-control" placeholder="Username" aria-label="Username">
-                        <span class="input-group-text">-</span>
-                        <input type="date" class="form-control" placeholder="Server" aria-label="Server">
+
+
+                    <div class="form-floating mb-3">
+                        <input type="date" id="from" class="form-control" placeholder="From">
+                        <label for="from">{{translate "from"}}</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="date" id="to" class="form-control" placeholder="Server">
+                        <label for="to">{{translate "to"}}</label>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -58,10 +63,6 @@
             </div>
         </div>
     </div>
-
-
-
-
 
 
 

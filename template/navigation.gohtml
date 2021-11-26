@@ -5,27 +5,30 @@
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link{{active .Path "/"}}" href="/">
-                            <span data-feather="activity"></span>{{translate "dashboard"}}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{{active .Path "/payments"}}" href="/payments">
                             <span data-feather="layers"></span>{{translate "payments"}}
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{{active .Path "/categories"}}" href="/categories">
+                        <a class="nav-link{{active .Path "/categories/"}}" href="/categories/">
                             <span data-feather="tag"></span>{{translate "categories"}}
                         </a>
                     </li>
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>{{translate "analysis"}}</span>
+                    </h6>
                     <li class="nav-item">
-                        <a class="nav-link{{active .Path "/debts"}}" href="/debts">
+                        <a class="nav-link{{active .Path "/debts/"}}" href="/debts/">
                             <span data-feather="dollar-sign"></span>{{translate "debts"}}
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{{active .Path "/analysis"}}" href="/analysis">
-                            <span data-feather="pie-chart"></span>{{translate "analysis"}}
+                        <a class="nav-link{{active .Path "/expenses/"}}" href="/expenses/">
+                            <span data-feather="bar-chart-2"></span>{{translate "expenses"}}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{{active .Path "/by_category/"}}" href="/by_category/">
+                            <span data-feather="pie-chart"></span>{{translate "by_category"}}
                         </a>
                     </li>
                 </ul>
@@ -36,12 +39,12 @@
                 </h6>
                 <ul class="nav flex-column mb-2">
                     <li class="nav-item">
-                        <a class="nav-link{{active .Path "/admin/users"}}" href="/admin/users">
+                        <a class="nav-link{{active .Path "/admin/users/"}}" href="/admin/users/">
                             <span data-feather="users"></span>{{translate "users"}}
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{{active .Path "/admin/projects"}}" href="/admin/projects">
+                        <a class="nav-link{{active .Path "/admin/projects/"}}" href="/admin/projects/">
                             <span data-feather="grid"></span>{{translate "projects"}}
                         </a>
                     </li>

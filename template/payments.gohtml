@@ -9,7 +9,7 @@
     <tbody>
     {{$Path:=.Path}}
     {{range .Parameters.Model}}
-        <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
+        <tr onclick="window.location.href='{{$Path}}edit?Id={{.Id}}';">
             <td>{{.Name}}<br><span data-feather="calendar"></span> {{.Date.Format}}</td>
             <td><i style="color: {{.Category.Color}}">{{.Category.Name}}</i><br><b>{{.Amount.FormatWithCurrency}}</b>
             </td>

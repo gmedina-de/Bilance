@@ -164,3 +164,11 @@ tbody > tr:hover {
     color: #000;
     border-color: #bacbe6;
 }
+
+.list-group-item:hover {
+    z-index: 2;
+    cursor: pointer;
+    color: #000000;
+    background-color: #e6e6e6;
+    border-color: #e6e6e6;
+}
