@@ -52,7 +52,7 @@ var l10nDe = l10n{
 	debts:                 "Schulden",
 	receivables:           "Forderungen",
 	total_expenses:        "Gesamtausgaben",
-	user_amount:           "Projectbeteiligten",
+	user_amount:           "Projektbeteiligten",
 	proportional_expenses: "Anteilige Ausgaben",
 	sent_expenses:         "Getätigte Ausgaben",
 	sent_transfer:         "Getätigte Geldtransfer",
