@@ -52,9 +52,9 @@ func (c *paymentController) Search(writer http.ResponseWriter, request *http.Req
 	term := request.URL.Query().Get("term")
 	list := c.repository.List(
 		"WHERE ProjectId = "+model.GetSelectedProjectIdString(request),
-		"AND Name LIKE '%"+term+"%'",
+		"AND (Name LIKE '%"+term+"%'",
 		"OR CategoryId IN (SELECT Id FROM Category WHERE Name LIKE '%"+term+"%')",
-		"OR Date LIKE '"+term+"%'",
+		"OR Date LIKE '"+term+"%')",
 	).([]model.Payment)
 	render(
 		writer,
