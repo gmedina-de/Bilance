@@ -6,12 +6,12 @@ import (
 )
 
 type userController struct {
-	baseController
+	crudController
 }
 
 func UserController(repository repository.Repository) Controller {
 	return &userController{
-		baseController{
+		crudController{
 			repository: repository,
 			basePath:   "/admin/users/",
 		},

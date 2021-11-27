@@ -8,13 +8,13 @@ import (
 )
 
 type projectController struct {
-	baseController
+	crudController
 	userRepository repository.Repository
 }
 
 func ProjectController(repository repository.Repository, userRepository repository.Repository) Controller {
 	return &projectController{
-		baseController{
+		crudController{
 			repository: repository,
 			basePath:   "/admin/projects/",
 			dataProvider: func(request *http.Request) interface{} {

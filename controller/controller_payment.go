@@ -10,12 +10,12 @@ import (
 )
 
 type paymentController struct {
-	baseController
+	crudController
 }
 
 func PaymentController(repository repository.Repository, categoryRepository repository.Repository, userRepository repository.Repository) Controller {
 	return &paymentController{
-		baseController{
+		crudController{
 			repository: repository,
 			basePath:   "/",
 			dataProvider: func(request *http.Request) interface{} {
@@ -68,6 +68,6 @@ func (c *paymentController) List(writer http.ResponseWriter, request *http.Reque
 			c.repository.ModelNamePlural(),
 		)
 	} else {
-		c.baseController.List(writer, request)
+		c.crudController.List(writer, request)
 	}
 }

@@ -7,13 +7,13 @@ import (
 	"strconv"
 )
 
-type baseController struct {
+type crudController struct {
 	repository   repository.Repository
 	basePath     string
 	dataProvider func(request *http.Request) interface{}
 }
 
-func (c *baseController) List(writer http.ResponseWriter, request *http.Request) {
+func (c *crudController) List(writer http.ResponseWriter, request *http.Request) {
 	var toast string
 	if request.URL.Query().Has("success") {
 		toast = "record_saved_successfully"
@@ -31,7 +31,7 @@ func (c *baseController) List(writer http.ResponseWriter, request *http.Request)
 	render(writer, request, &Parameters{Model: list, Toast: toast}, modelName, "crud_table", modelName)
 }
 
-func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request) {
+func (c *crudController) Edit(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" {
 		var data interface{}
 		if c.dataProvider != nil {
@@ -61,7 +61,7 @@ func (c *baseController) Edit(writer http.ResponseWriter, request *http.Request)
 	}
 }
 
-func (c *baseController) Delete(writer http.ResponseWriter, request *http.Request) {
+func (c *crudController) Delete(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == "GET" && request.URL.Query().Has("Id") {
 		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
 		item := c.repository.Find(id)

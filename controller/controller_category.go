@@ -6,12 +6,12 @@ import (
 )
 
 type typeController struct {
-	baseController
+	crudController
 }
 
 func CategoryController(repository repository.Repository) Controller {
 	return &typeController{
-		baseController{
+		crudController{
 			repository: repository,
 			basePath:   "/categories/",
 		},
