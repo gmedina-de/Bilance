@@ -13,5 +13,5 @@ alertList.forEach(function (alert) {
   let alert1 = new bootstrap.Alert(alert);
   setTimeout(function () {
     alert1.close();
-  },5000)
+  },3000)
 });
