@@ -1,10 +1,10 @@
 {{define "navigation"}}
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar{{if ne .Path "/"}} collapse{{end}}">
         <div class="position-sticky pt-3">
             {{if .SelectedProjectId}}
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link{{active .Path "/"}}" href="/">
+                        <a class="nav-link{{active .Path "/payments/"}}" href="/payments/">
                             <span data-feather="layers"></span>{{translate "payments"}}
                         </a>
                     </li>

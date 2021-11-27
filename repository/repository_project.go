@@ -118,7 +118,7 @@ func (r *projectRepository) Update(entity interface{}) {
 
 	for _, newUser := range newProject.Users {
 		if !oldProjectUserIds.contains(newUser.Id) {
-			r.database.Insert(r.userRepository.ModelName(), &model.ProjectUser{0, newProject.Id, newUser.Id})
+			r.database.Insert("ProjectUser", &model.ProjectUser{0, newProject.Id, newUser.Id})
 		}
 	}
 

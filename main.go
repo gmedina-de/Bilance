@@ -39,12 +39,13 @@ func main() {
 	bilance := Bilance(
 		server,
 		router,
+		controller.IndexController(),
 		controller.PaymentController(paymentRepository, categoryRepository, userRepository),
-		controller.CategoryController(categoryRepository),
+		controller.CategoriesController(categoryRepository),
 		controller.BalancesController(projectRepository, paymentRepository),
 		controller.ExpensesController(paymentRepository, categoryRepository),
-		controller.UserController(userRepository),
-		controller.ProjectController(projectRepository, userRepository),
+		controller.UsersController(userRepository),
+		controller.ProjectsController(projectRepository, userRepository),
 	)
 	bilance.Run()
 }

@@ -12,7 +12,7 @@ type projectsController struct {
 	userRepository repository.Repository
 }
 
-func ProjectController(repository repository.Repository, userRepository repository.Repository) Controller {
+func ProjectsController(repository repository.Repository, userRepository repository.Repository) Controller {
 	return &projectsController{
 		crudController{
 			repository: repository,

@@ -19,13 +19,16 @@
                 </form>
             {{end}}
         </a>
-        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#sidebarMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <form method="get" action="/" class="w-100">
-            <input name="search" class="form-control form-control-dark w-100" type="text" placeholder="{{translate "search"}}">
-            <input type="submit" style="display: none;" />
+        {{if ne .Path "/"}}
+            <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#sidebarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        {{end}}
+        <form method="get" action="/payments/" class="w-100">
+            <input name="search" class="form-control form-control-dark w-100" type="text"
+                   placeholder="{{translate "search"}}">
+            <input type="submit" style="display: none;"/>
         </form>
         <div class="navbar-nav d-none d-md-block">
             <div class="nav-item text-nowrap">

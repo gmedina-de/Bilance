@@ -9,7 +9,7 @@ type usersController struct {
 	crudController
 }
 
-func UserController(repository repository.Repository) Controller {
+func UsersController(repository repository.Repository) Controller {
 	return &usersController{
 		crudController{
 			repository: repository,

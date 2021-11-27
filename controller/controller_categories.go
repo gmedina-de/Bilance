@@ -9,7 +9,7 @@ type categoriesController struct {
 	crudController
 }
 
-func CategoryController(repository repository.Repository) Controller {
+func CategoriesController(repository repository.Repository) Controller {
 	return &categoriesController{
 		crudController{
 			repository: repository,
