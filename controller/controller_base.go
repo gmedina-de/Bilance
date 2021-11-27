@@ -20,9 +20,12 @@ func (c *baseController) List(writer http.ResponseWriter, request *http.Request)
 	}
 	var list interface{}
 	modelName := c.repository.ModelNamePlural()
-	if modelName == "categories" || modelName == "payments" {
+	switch modelName {
+	case "payments":
+		fallthrough
+	case "categories":
 		list = c.repository.List("WHERE ProjectId = " + model.GetSelectedProjectIdString(request))
-	} else {
+	default:
 		list = c.repository.List()
 	}
 	render(writer, request, &Parameters{Model: list, Toast: toast}, modelName, "crud_table", modelName)

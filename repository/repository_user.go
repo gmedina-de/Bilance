@@ -56,7 +56,7 @@ func (r *userRepository) Find(id int64) interface{} {
 
 func (r *userRepository) List(conditions ...string) interface{} {
 	var result []model.User
-	conditions = append(conditions, "ORDER BY Id")
+	conditions = append(conditions, "ORDER BY Name")
 	r.database.Select(&result, r.NewFromQuery, conditions...)
 	return result
 }

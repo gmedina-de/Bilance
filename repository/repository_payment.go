@@ -95,7 +95,7 @@ func (r *paymentRepository) Find(id int64) interface{} {
 
 func (r *paymentRepository) List(conditions ...string) interface{} {
 	var result []model.Payment
-	conditions = append(conditions, "ORDER BY Id")
+	conditions = append(conditions, "ORDER BY Date")
 	r.database.Select(&result, r.NewFromQuery, conditions...)
 	return result
 }

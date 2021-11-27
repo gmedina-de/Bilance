@@ -80,7 +80,7 @@ func (r *projectRepository) Find(id int64) interface{} {
 
 func (r *projectRepository) List(conditions ...string) interface{} {
 	var result []model.Project
-	conditions = append(conditions, "ORDER BY Id")
+	conditions = append(conditions, "ORDER BY Name")
 	r.database.Select(&result, r.NewFromQuery, conditions...)
 	return result
 }
