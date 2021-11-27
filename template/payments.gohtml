@@ -54,14 +54,14 @@
             <label for="payee">{{translate "payee"}}</label>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-12">
         <div class="form-floating">
             <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "name"}}"
                    value="{{.Parameters.Model.Name}}" required>
             <label for="name">{{translate "name"}}</label>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-12">
         <div class="form-floating">
             <select class="form-select" name="CategoryId" id="category">
                 <option></option>
@@ -73,7 +73,7 @@
             <label for="category">{{translate "category"}}</label>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-12">
         <div class="input-group form-floating">
             <input type="number" class="form-control" min="0.00" max="100000.00" step="0.01" name="Amount" id="amount"
                    placeholder="{{translate "amount"}}"
@@ -82,7 +82,7 @@
             <label for="amount" style="z-index: 10;">{{translate "amount"}}</label>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-12">
         <div class="form-floating">
             <input type="date" class="form-control" name="Date" id="date" placeholder="{{translate "date"}}"
                    value="{{.Parameters.Model.Date}}" required>
