@@ -36,22 +36,15 @@ func main() {
 	paymentRepository := repository.PaymentRepository(database, userRepository, categoryRepository)
 	projectRepository := repository.ProjectRepository(database, paymentRepository, userRepository, categoryRepository)
 
-	paymentController := controller.PaymentController(paymentRepository, categoryRepository, userRepository)
-	categoryController := controller.CategoryController(categoryRepository)
-	balancesController := controller.BalancesController(projectRepository, paymentRepository)
-	expensesController := controller.ExpensesController(paymentRepository, categoryRepository)
-	userController := controller.UserController(userRepository)
-	projectController := controller.ProjectController(projectRepository, userRepository)
-
 	bilance := Bilance(
 		server,
 		router,
-		paymentController,
-		categoryController,
-		balancesController,
-		expensesController,
-		userController,
-		projectController,
+		controller.PaymentController(paymentRepository, categoryRepository, userRepository),
+		controller.CategoryController(categoryRepository),
+		controller.BalancesController(projectRepository, paymentRepository),
+		controller.ExpensesController(paymentRepository, categoryRepository),
+		controller.UserController(userRepository),
+		controller.ProjectController(projectRepository, userRepository),
 	)
 	bilance.Run()
 }

@@ -5,12 +5,12 @@ import (
 	"Bilance/service"
 )
 
-type typeController struct {
+type categoriesController struct {
 	crudController
 }
 
 func CategoryController(repository repository.Repository) Controller {
-	return &typeController{
+	return &categoriesController{
 		crudController{
 			repository: repository,
 			basePath:   "/categories/",
@@ -18,7 +18,7 @@ func CategoryController(repository repository.Repository) Controller {
 	}
 }
 
-func (c *typeController) Routing(router service.Router) {
+func (c *categoriesController) Routing(router service.Router) {
 	router.Get(c.basePath, c.List)
 	router.Post(c.basePath, c.List)
 	router.Get(c.basePath+"edit", c.Edit)

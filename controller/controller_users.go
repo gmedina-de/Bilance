@@ -5,12 +5,12 @@ import (
 	"Bilance/service"
 )
 
-type userController struct {
+type usersController struct {
 	crudController
 }
 
 func UserController(repository repository.Repository) Controller {
-	return &userController{
+	return &usersController{
 		crudController{
 			repository: repository,
 			basePath:   "/admin/users/",
@@ -18,7 +18,7 @@ func UserController(repository repository.Repository) Controller {
 	}
 }
 
-func (c *userController) Routing(router service.Router) {
+func (c *usersController) Routing(router service.Router) {
 	router.Get(c.basePath, c.List)
 	router.Post(c.basePath, c.List)
 	router.Get(c.basePath+"edit", c.Edit)

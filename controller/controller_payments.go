@@ -9,12 +9,12 @@ import (
 	"strconv"
 )
 
-type paymentController struct {
+type paymentsController struct {
 	crudController
 }
 
 func PaymentController(repository repository.Repository, categoryRepository repository.Repository, userRepository repository.Repository) Controller {
-	return &paymentController{
+	return &paymentsController{
 		crudController{
 			repository: repository,
 			basePath:   "/",
@@ -32,7 +32,7 @@ func PaymentController(repository repository.Repository, categoryRepository repo
 	}
 }
 
-func (c *paymentController) Routing(router service.Router) {
+func (c *paymentsController) Routing(router service.Router) {
 	router.Get(c.basePath, c.List)
 	router.Post(c.basePath, c.List)
 	router.Get(c.basePath+"edit", c.Edit)
@@ -41,13 +41,13 @@ func (c *paymentController) Routing(router service.Router) {
 	router.Get(c.basePath+"changeProject", c.ChangeProject)
 }
 
-func (c *paymentController) ChangeProject(writer http.ResponseWriter, request *http.Request) {
+func (c *paymentsController) ChangeProject(writer http.ResponseWriter, request *http.Request) {
 	selectedProjectId, _ := request.URL.Query()[model.SelectedProjectIdCookie]
 	model.SetSelectedProjectId(writer, selectedProjectId[0])
 	redirect(writer, request, "/")
 }
 
-func (c *paymentController) List(writer http.ResponseWriter, request *http.Request) {
+func (c *paymentsController) List(writer http.ResponseWriter, request *http.Request) {
 	if request.URL.Query().Has("search") {
 		term := request.URL.Query().Get("search")
 		list := c.repository.List(

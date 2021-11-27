@@ -7,13 +7,13 @@ import (
 	"net/http"
 )
 
-type projectController struct {
+type projectsController struct {
 	crudController
 	userRepository repository.Repository
 }
 
 func ProjectController(repository repository.Repository, userRepository repository.Repository) Controller {
-	return &projectController{
+	return &projectsController{
 		crudController{
 			repository: repository,
 			basePath:   "/admin/projects/",
@@ -30,7 +30,7 @@ func ProjectController(repository repository.Repository, userRepository reposito
 	}
 }
 
-func (c *projectController) Routing(router service.Router) {
+func (c *projectsController) Routing(router service.Router) {
 	router.Get(c.basePath, c.List)
 	router.Post(c.basePath, c.List)
 	router.Get(c.basePath+"edit", c.Edit)
