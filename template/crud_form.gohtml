@@ -11,15 +11,15 @@
 
 {{define "options"}}
     <div class="btn-group" role="group">
-        <a class="btn btn-sm btn-outline-secondary" onclick="history.back()">
-            <span data-feather="x-square"></span> {{translate "cancel"}}
-        </a>
         {{if .Parameters.Model.Id}}
             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
                     data-bs-target="#deleteConfirmationModal">
                 <span data-feather="trash-2"></span> {{translate "delete"}}
             </button>
         {{end}}
+        <a class="btn btn-sm btn-secondary" onclick="history.back()">
+            <span data-feather="x-square"></span> {{translate "cancel"}}
+        </a>
     </div>
     <div class="modal fade" id="deleteConfirmationModal">
         <div class="modal-dialog">

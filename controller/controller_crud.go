@@ -5,6 +5,7 @@ import (
 	"Bilance/repository"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type crudController struct {
@@ -31,8 +32,14 @@ func (c *crudController) List(writer http.ResponseWriter, request *http.Request)
 	}
 
 	pagination, limitCondition := c.handlePagination(request, projectIdString)
-	conditions = append(conditions, limitCondition)
-	render(writer, request, &Parameters{Model: c.repository.List(conditions...), Toast: toast, Data: pagination}, modelName, "crud_table", modelName)
+	render(
+		writer,
+		request,
+		&Parameters{Model: c.repository.List(append(conditions, limitCondition)...), Toast: toast, Data: pagination},
+		modelName,
+		"crud_table",
+		modelName,
+	)
 }
 
 type Pagination struct {
@@ -41,6 +48,9 @@ type Pagination struct {
 }
 
 func (c *crudController) handlePagination(request *http.Request, projectIdString string) (*Pagination, string) {
+	if strings.HasPrefix(request.URL.Path, "/admin/") {
+		return nil, ""
+	}
 	var limit int64 = 10
 	var page int64 = 1
 	if request.URL.Query().Has("page") {
