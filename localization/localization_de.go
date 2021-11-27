@@ -7,6 +7,7 @@ var l10nDe = l10n{
 	analysis:        "Auswertungen",
 	debts:           "Schulden",
 	expenses:        "Ausgaben",
+	by_period:       "nach Zeitraum",
 	by_category:     "nach Kategorie",
 	admin_functions: "Admin-Funktionen",
 	users:           "Nutzende",

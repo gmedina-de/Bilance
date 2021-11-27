@@ -13,31 +13,39 @@
                             <span data-feather="tag"></span>{{translate "categories"}}
                         </a>
                     </li>
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                        <span>{{translate "analysis"}}</span>
-                    </h6>
+                </ul>
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>{{translate "analysis"}}</span>
+                </h6>
+                <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link{{active .Path "/debts/"}}" href="/debts/">
                             <span data-feather="dollar-sign"></span>{{translate "debts"}}
                         </a>
                     </li>
+                </ul>
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>{{translate "expenses"}}</span>
+                </h6>
+                <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link{{active .Path "/expenses/"}}" href="/expenses/">
-                            <span data-feather="bar-chart-2"></span>{{translate "expenses"}}
+                        <a class="nav-link{{active .Path "/expenses/by_period/"}}" href="/expenses/by_period/">
+                            <span data-feather="bar-chart-2"></span>{{translate "by_period"}}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link{{active .Path "/expenses/by_category/"}}" href="/expenses/by_category/">
-                            <span data-feather="pie-chart"></span>...{{translate "by_category"}}
+                            <span data-feather="pie-chart"></span>{{translate "by_category"}}
                         </a>
                     </li>
+                </ul>
                 </ul>
             {{end}}
             {{if .User.Role}}
                 <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                     <span>{{translate "admin_functions"}}</span>
                 </h6>
-                <ul class="nav flex-column mb-2">
+                <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link{{active .Path "/admin/users/"}}" href="/admin/users/">
                             <span data-feather="users"></span>{{translate "users"}}

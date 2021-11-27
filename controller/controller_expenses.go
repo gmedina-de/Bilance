@@ -21,16 +21,23 @@ func ExpensesController(paymentRepository repository.Repository, categoryReposit
 }
 
 func (c *expensesController) Routing(router service.Router) {
-	router.Get("/expenses/", c.Expenses)
+	router.Get("/expenses/by_period/", c.Expenses)
 	router.Get("/expenses/by_category/", c.Expenses)
 }
 
 func (c *expensesController) Expenses(writer http.ResponseWriter, request *http.Request) {
+	var title string
+	switch request.URL.Path {
+	case "/expenses/by_period/":
+		title = localization.Translate("expenses") + " " + localization.Translate("by_period")
+	case "/expenses/by_category/":
+		title = localization.Translate("expenses") + " " + localization.Translate("by_category")
+	}
 	render(
 		writer,
 		request,
 		&Parameters{Model: c.prepareGraphData(request), Data: c.prepareYears()},
-		"expenses",
+		title,
 		"expenses",
 	)
 }
@@ -51,14 +58,15 @@ func (c *expensesController) prepareGraphData(request *http.Request) *GraphData 
 	var graphData = GraphData{}
 	projectId := model.GetSelectedProjectIdString(request)
 	start, end, step := c.calculateBoundaries(request, &graphData)
-	if strings.HasPrefix(request.URL.Path, "/expenses/by_category/") {
+	switch request.URL.Path {
+	case "/expenses/by_period/":
+		graphData.Type = "bar"
+		c.fillExpensesByPeriodGraphData(start, end, step, &graphData, projectId)
+	case "/expenses/by_category/":
 		graphData.Type = "doughnut"
 		categories := c.categoryRepository.List("WHERE ProjectId = " + projectId).([]model.Category)
 		categories = append(categories, model.Category{0, localization.Translate("uncategorized"), neutralColor, 0})
-		c.fillByCategoryGraphData(start, end, categories, &graphData, projectId)
-	} else {
-		graphData.Type = "bar"
-		c.fillExpensesGraphData(start, end, step, &graphData, projectId)
+		c.fillExpensesByCategoryGraphData(start, end, categories, &graphData, projectId)
 	}
 	return &graphData
 }
@@ -97,7 +105,7 @@ func (c *expensesController) calculateBoundaries(request *http.Request, data *Gr
 	return start, end, step
 }
 
-func (c *expensesController) fillExpensesGraphData(start time.Time, end time.Time, step model.TimeUnit, data *GraphData, projectId string) {
+func (c *expensesController) fillExpensesByPeriodGraphData(start time.Time, end time.Time, step model.TimeUnit, data *GraphData, projectId string) {
 	switch step {
 	case model.TimeUnitMonth:
 		for i := start.Month(); i <= end.Month(); i++ {
@@ -141,7 +149,7 @@ func (c *expensesController) fillExpensesGraphData(start time.Time, end time.Tim
 	}
 }
 
-func (c *expensesController) fillByCategoryGraphData(start time.Time, end time.Time, categories []model.Category, data *GraphData, projectId string) {
+func (c *expensesController) fillExpensesByCategoryGraphData(start time.Time, end time.Time, categories []model.Category, data *GraphData, projectId string) {
 	startDate := start.Format(model.DateLayoutISO)
 	endDate := end.Format(model.DateLayoutISO)
 	for _, category := range categories {

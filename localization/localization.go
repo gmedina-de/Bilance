@@ -9,6 +9,7 @@ type l10n struct {
 	analysis        string
 	debts           string
 	expenses        string
+	by_period       string
 	by_category     string
 	admin_functions string
 	users           string
