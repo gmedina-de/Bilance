@@ -9,11 +9,14 @@ import (
 )
 
 type userRepository struct {
-	baseRepository
+	database service.Database
 }
 
 func UserRepository(database service.Database) Repository {
-	return &userRepository{baseRepository{database: database}}
+	return &userRepository{database}
+}
+func (r *userRepository) ModelName() string {
+	return "user"
 }
 
 func (r *userRepository) ModelNamePlural() string {
@@ -29,7 +32,7 @@ func (r *userRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var Name string
 	var password string
 	var role model.UserRole
-	ScanAndPanic(row, &id, &Name, &password, &role)
+	scanAndPanic(row, &id, &Name, &password, &role)
 	return &model.User{id, Name, password, role, nil}
 }
 
@@ -46,7 +49,7 @@ func (r *userRepository) NewFromRequest(request *http.Request, id int64) interfa
 
 func (r *userRepository) Find(id int64) interface{} {
 	var result []model.User
-	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
+	r.database.Select(r.ModelName(), &result, "*", r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
 	if len(result) > 0 {
 		return &result[0]
 	} else {
@@ -56,7 +59,24 @@ func (r *userRepository) Find(id int64) interface{} {
 
 func (r *userRepository) List(conditions ...string) interface{} {
 	var result []model.User
-	conditions = append(conditions, "ORDER BY Name")
-	r.database.Select(&result, r.NewFromQuery, conditions...)
+	r.database.Select(r.ModelName(), &result, "*", r.NewFromQuery, conditions...)
 	return result
+}
+
+func (r *userRepository) Count(conditions ...string) int64 {
+	var result []int64
+	r.database.Select(r.ModelName(), &result, "COUNT(*)", countQueryFunc, conditions...)
+	return result[0]
+}
+
+func (r *userRepository) Insert(entity interface{}) {
+	r.database.Insert(r.ModelName(), entity)
+}
+
+func (r *userRepository) Update(entity interface{}) {
+	r.database.Update(r.ModelName(), entity)
+}
+
+func (r *userRepository) Delete(entity interface{}) {
+	r.database.Delete(r.ModelName(), entity)
 }

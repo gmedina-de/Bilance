@@ -18,17 +18,39 @@ func (c *crudController) List(writer http.ResponseWriter, request *http.Request)
 	if request.URL.Query().Has("success") {
 		toast = "record_saved_successfully"
 	}
-	var list interface{}
+
+	projectIdString := model.GetSelectedProjectIdString(request)
 	modelName := c.repository.ModelNamePlural()
+	var conditions []string
 	switch modelName {
-	case "payments":
-		fallthrough
 	case "categories":
-		list = c.repository.List("WHERE ProjectId = " + model.GetSelectedProjectIdString(request))
-	default:
-		list = c.repository.List()
+		conditions = append(conditions, "WHERE ProjectId = "+projectIdString)
+	case "payments":
+		conditions = append(conditions, "WHERE ProjectId = "+projectIdString)
+		conditions = append(conditions, "ORDER BY Date DESC")
 	}
-	render(writer, request, &Parameters{Model: list, Toast: toast}, modelName, "crud_table", modelName)
+
+	pagination, limitCondition := c.handlePagination(request, projectIdString)
+	conditions = append(conditions, limitCondition)
+	render(writer, request, &Parameters{Model: c.repository.List(conditions...), Toast: toast, Data: pagination}, modelName, "crud_table", modelName)
+}
+
+type Pagination struct {
+	Pages  int64
+	Active int64
+}
+
+func (c *crudController) handlePagination(request *http.Request, projectIdString string) (*Pagination, string) {
+	var limit int64 = 10
+	var page int64 = 1
+	if request.URL.Query().Has("page") {
+		page, _ = strconv.ParseInt(request.URL.Query().Get("page"), 10, 64)
+	}
+	var offset = limit * (page - 1)
+	var pages = c.repository.Count("WHERE ProjectId = "+projectIdString) / limit
+	pages++
+	return &Pagination{pages, page},
+		"LIMIT " + strconv.FormatInt(limit, 10) + " OFFSET " + strconv.FormatInt(offset, 10)
 }
 
 func (c *crudController) Edit(writer http.ResponseWriter, request *http.Request) {

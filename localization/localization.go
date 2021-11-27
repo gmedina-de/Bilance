@@ -15,6 +15,8 @@ type l10n struct {
 	users           string
 	projects        string
 	// actions
+	previous                        string
+	next                            string
 	logout                          string
 	search                          string
 	search_results                  string

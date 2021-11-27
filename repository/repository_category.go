@@ -9,11 +9,15 @@ import (
 )
 
 type categoryRepository struct {
-	baseRepository
+	database service.Database
 }
 
 func CategoryRepository(database service.Database) Repository {
-	return &categoryRepository{baseRepository{database: database}}
+	return &categoryRepository{database}
+}
+
+func (r *categoryRepository) ModelName() string {
+	return "category"
 }
 
 func (r *categoryRepository) ModelNamePlural() string {
@@ -29,7 +33,7 @@ func (r *categoryRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var name string
 	var color string
 	var projectId int64
-	ScanAndPanic(row, &id, &name, &color, &projectId)
+	scanAndPanic(row, &id, &name, &color, &projectId)
 	return &model.Category{id, name, color, projectId}
 }
 
@@ -45,7 +49,7 @@ func (r *categoryRepository) NewFromRequest(request *http.Request, id int64) int
 
 func (r *categoryRepository) Find(id int64) interface{} {
 	var result []model.Category
-	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
+	r.database.Select(r.ModelName(), &result, "*", r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
 	if len(result) > 0 {
 		return &result[0]
 	} else {
@@ -55,7 +59,24 @@ func (r *categoryRepository) Find(id int64) interface{} {
 
 func (r *categoryRepository) List(conditions ...string) interface{} {
 	var result []model.Category
-	conditions = append(conditions, "ORDER BY Name")
-	r.database.Select(&result, r.NewFromQuery, conditions...)
+	r.database.Select(r.ModelName(), &result, "*", r.NewFromQuery, conditions...)
 	return result
+}
+
+func (r *categoryRepository) Count(conditions ...string) int64 {
+	var result []int64
+	r.database.Select(r.ModelName(), &result, "COUNT(*)", countQueryFunc, conditions...)
+	return result[0]
+}
+
+func (r *categoryRepository) Insert(entity interface{}) {
+	r.database.Insert(r.ModelName(), entity)
+}
+
+func (r *categoryRepository) Update(entity interface{}) {
+	r.database.Update(r.ModelName(), entity)
+}
+
+func (r *categoryRepository) Delete(entity interface{}) {
+	r.database.Delete(r.ModelName(), entity)
 }

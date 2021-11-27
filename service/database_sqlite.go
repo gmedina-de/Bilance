@@ -31,7 +31,7 @@ func SqliteDatabase(log Log) Database {
 	return &sqliteDatabase{log, db}
 }
 
-func (s *sqliteDatabase) Select(result interface{}, queryFunction QueryFunc, conditions ...string) {
+func (s *sqliteDatabase) Select(table string, result interface{}, columns string, queryFunction QueryFunc, conditions ...string) {
 	modelType := reflect.TypeOf(result)
 	resultValue := reflect.ValueOf(result)
 	if modelType.Kind() == reflect.Ptr {
@@ -44,7 +44,7 @@ func (s *sqliteDatabase) Select(result interface{}, queryFunction QueryFunc, con
 		panic("Input param is not a slice")
 	}
 
-	query := "SELECT * FROM " + modelType.Name() + " " + strings.Join(conditions, " ")
+	query := "SELECT " + columns + " FROM " + table + " " + strings.Join(conditions, " ")
 	s.log.Debug("SQL " + query)
 	row, err := s.db.Query(query)
 	if err != nil {
@@ -56,7 +56,7 @@ func (s *sqliteDatabase) Select(result interface{}, queryFunction QueryFunc, con
 	}
 }
 
-func (s *sqliteDatabase) Insert(model interface{}) sql.Result {
+func (s *sqliteDatabase) Insert(table string, model interface{}) sql.Result {
 	modelType := reflect.TypeOf(model).Elem()
 	modelValue := reflect.ValueOf(model).Elem()
 	var columns []string
@@ -80,10 +80,10 @@ func (s *sqliteDatabase) Insert(model interface{}) sql.Result {
 		columns = append(columns, column)
 		values = append(values, fmt.Sprintf("'%v'", value.Interface()))
 	}
-	return s.execute(`INSERT INTO ` + modelType.Name() + `(` + strings.Join(columns, ",") + `) VALUES (` + strings.Join(values, ",") + `)`)
+	return s.execute(`INSERT INTO ` + table + `(` + strings.Join(columns, ",") + `) VALUES (` + strings.Join(values, ",") + `)`)
 }
 
-func (s *sqliteDatabase) Update(model interface{}) sql.Result {
+func (s *sqliteDatabase) Update(table string, model interface{}) sql.Result {
 	modelType := reflect.TypeOf(model).Elem()
 	modelValue := reflect.ValueOf(model).Elem()
 	var sets []string
@@ -111,10 +111,10 @@ func (s *sqliteDatabase) Update(model interface{}) sql.Result {
 			sets = append(sets, column+"="+valueString)
 		}
 	}
-	return s.execute(`UPDATE ` + modelType.Name() + ` SET ` + strings.Join(sets, ",") + ` WHERE Id = ` + id)
+	return s.execute(`UPDATE ` + table + ` SET ` + strings.Join(sets, ",") + ` WHERE Id = ` + id)
 }
 
-func (s *sqliteDatabase) Delete(model interface{}) sql.Result {
+func (s *sqliteDatabase) Delete(table string, model interface{}) sql.Result {
 	modelType := reflect.TypeOf(model).Elem()
 	modelValue := reflect.ValueOf(model).Elem()
 	id := "0"
@@ -125,7 +125,7 @@ func (s *sqliteDatabase) Delete(model interface{}) sql.Result {
 			id = value
 		}
 	}
-	return s.execute(`DELETE FROM ` + modelType.Name() + ` WHERE Id = ` + id)
+	return s.execute(`DELETE FROM ` + table + ` WHERE Id = ` + id)
 }
 
 func (s *sqliteDatabase) MultipleDelete(table string, conditions ...string) sql.Result {

@@ -6,12 +6,14 @@ import (
 )
 
 type Repository interface {
+	ModelName() string
 	ModelNamePlural() string
 	NewEmpty() interface{}
 	NewFromRequest(request *http.Request, id int64) interface{}
 	NewFromQuery(row *sql.Rows) interface{}
 	Find(id int64) interface{}
 	List(conditions ...string) interface{}
+	Count(conditions ...string) int64
 	Insert(entity interface{})
 	Update(entity interface{})
 	Delete(entity interface{})
@@ -26,4 +28,17 @@ func (r idRange) contains(id int64) bool {
 		}
 	}
 	return false
+}
+
+func scanAndPanic(row *sql.Rows, dest ...interface{}) {
+	err := row.Scan(dest...)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func countQueryFunc(row *sql.Rows) interface{} {
+	var count int64
+	scanAndPanic(row, &count)
+	return &count
 }

@@ -13,6 +13,8 @@ var l10nDe = l10n{
 	users:           "Nutzende",
 	projects:        "Projekte",
 	// actions
+	previous:                        "Vorherige",
+	next:                            "Nächste",
 	logout:                          "Ausloggen",
 	search:                          "Suchen",
 	search_results:                  "Suchergebnisse",

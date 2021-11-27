@@ -55,6 +55,7 @@ func (c *paymentController) List(writer http.ResponseWriter, request *http.Reque
 			"AND (Name LIKE '%"+term+"%'",
 			"OR CategoryId IN (SELECT Id FROM Category WHERE Name LIKE '%"+term+"%')",
 			"OR Date LIKE '"+term+"%')",
+			"ORDER BY Date",
 		).([]model.Payment)
 		render(
 			writer,

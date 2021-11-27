@@ -38,15 +38,11 @@ func render(writer http.ResponseWriter, request *http.Request, parameters *Param
 		"template/navigation.gohtml",
 	)
 	tmpl := template.New("")
-	f := func(currentPath string, linkPath string) string {
-		if currentPath == "/" && linkPath == "/" || strings.HasPrefix(currentPath, linkPath) && linkPath != "/" {
-			return " active"
-		}
-		return ""
-	}
 	tmpl.Funcs(template.FuncMap{
 		"translate": localization.Translate,
-		"active":    f,
+		"active":    active,
+		"paginate":  paginate,
+		"sum":       sum,
 	})
 	tmpl, err := tmpl.ParseFiles(templates...)
 	if err != nil {
@@ -67,4 +63,24 @@ func render(writer http.ResponseWriter, request *http.Request, parameters *Param
 
 func redirect(writer http.ResponseWriter, request *http.Request, path string) {
 	http.Redirect(writer, request, path, http.StatusTemporaryRedirect)
+}
+
+func active(currentPath string, linkPath string) string {
+	if currentPath == "/" && linkPath == "/" || strings.HasPrefix(currentPath, linkPath) && linkPath != "/" {
+		return " active"
+	}
+	return ""
+}
+
+func paginate(count int64) []int64 {
+	var i int64
+	var items []int64
+	for i = 1; i <= count; i++ {
+		items = append(items, i)
+	}
+	return items
+}
+
+func sum(a int64, b int64) int64 {
+	return a + b
 }

@@ -10,24 +10,28 @@ import (
 )
 
 type projectRepository struct {
-	baseRepository
-	paymentRepository Repository
-	userRepository    Repository
-	typeRepository    Repository
+	database           service.Database
+	paymentRepository  Repository
+	userRepository     Repository
+	categoryRepository Repository
 }
 
 func ProjectRepository(
 	database service.Database,
 	paymentRepository Repository,
 	userRepository Repository,
-	typeRepository Repository,
+	categoryRepository Repository,
 ) Repository {
 	return &projectRepository{
-		baseRepository{database: database},
+		database,
 		paymentRepository,
 		userRepository,
-		typeRepository,
+		categoryRepository,
 	}
+}
+
+func (r *projectRepository) ModelName() string {
+	return "project"
 }
 
 func (r *projectRepository) ModelNamePlural() string {
@@ -42,14 +46,14 @@ func (r *projectRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var id int64
 	var name string
 	var description string
-	ScanAndPanic(row, &id, &name, &description)
+	scanAndPanic(row, &id, &name, &description)
 	idString := strconv.FormatInt(id, 10)
 	project := model.Project{
 		id,
 		name,
 		description,
 		r.paymentRepository.List("WHERE ProjectId = " + idString).([]model.Payment),
-		r.typeRepository.List("WHERE ProjectId = " + idString).([]model.Category),
+		r.categoryRepository.List("WHERE ProjectId = " + idString).([]model.Category),
 		r.userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")").([]model.User),
 	}
 	return &project
@@ -63,14 +67,14 @@ func (r *projectRepository) NewFromRequest(request *http.Request, id int64) inte
 		request.Form.Get("Name"),
 		request.Form.Get("Description"),
 		r.paymentRepository.List("WHERE ProjectId = " + idString).([]model.Payment),
-		r.typeRepository.List("WHERE ProjectId = " + idString).([]model.Category),
+		r.categoryRepository.List("WHERE ProjectId = " + idString).([]model.Category),
 		r.userRepository.List("WHERE Id IN (" + users + ")").([]model.User),
 	}
 }
 
 func (r *projectRepository) Find(id int64) interface{} {
 	var result []model.Project
-	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
+	r.database.Select(r.ModelName(), &result, "*", r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
 	if len(result) > 0 {
 		return &result[0]
 	} else {
@@ -80,17 +84,22 @@ func (r *projectRepository) Find(id int64) interface{} {
 
 func (r *projectRepository) List(conditions ...string) interface{} {
 	var result []model.Project
-	conditions = append(conditions, "ORDER BY Name")
-	r.database.Select(&result, r.NewFromQuery, conditions...)
+	r.database.Select(r.ModelName(), &result, "*", r.NewFromQuery, conditions...)
 	return result
+}
+
+func (r *projectRepository) Count(conditions ...string) int64 {
+	var result []int64
+	r.database.Select(r.ModelName(), &result, "COUNT(*)", countQueryFunc, conditions...)
+	return result[0]
 }
 
 func (r *projectRepository) Insert(entity interface{}) {
 	project := entity.(*model.Project)
-	result := r.database.Insert(project)
+	result := r.database.Insert(r.ModelName(), project)
 	projectId, _ := result.LastInsertId()
 	for _, user := range project.Users {
-		r.database.Insert(&model.ProjectUser{0, projectId, user.Id})
+		r.database.Insert(r.ModelName(), &model.ProjectUser{0, projectId, user.Id})
 	}
 }
 
@@ -109,7 +118,7 @@ func (r *projectRepository) Update(entity interface{}) {
 
 	for _, newUser := range newProject.Users {
 		if !oldProjectUserIds.contains(newUser.Id) {
-			r.database.Insert(&model.ProjectUser{0, newProject.Id, newUser.Id})
+			r.database.Insert(r.userRepository.ModelName(), &model.ProjectUser{0, newProject.Id, newUser.Id})
 		}
 	}
 
@@ -122,9 +131,9 @@ func (r *projectRepository) Update(entity interface{}) {
 		}
 	}
 
-	r.database.Update(newProject)
+	r.database.Update(r.ModelName(), newProject)
 }
 
 func (r *projectRepository) Delete(entity interface{}) {
-	r.database.Delete(entity)
+	r.database.Delete(r.ModelName(), entity)
 }

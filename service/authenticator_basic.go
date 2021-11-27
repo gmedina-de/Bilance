@@ -51,7 +51,9 @@ func (b *basicAuthenticator) Authenticate(writer http.ResponseWriter, request *h
 func (b *basicAuthenticator) retrieveUser(username string) (model.User, bool) {
 	var users []model.User
 	b.database.Select(
+		"User",
 		&users,
+		"*",
 		func(row *sql.Rows) interface{} {
 			var id int64
 			var Name string
@@ -60,7 +62,9 @@ func (b *basicAuthenticator) retrieveUser(username string) (model.User, bool) {
 			row.Scan(&id, &Name, &password, &role)
 			var projects []model.Project
 			b.database.Select(
+				"Project",
 				&projects,
+				"*",
 				func(row *sql.Rows) interface{} {
 					var id int64
 					var name string

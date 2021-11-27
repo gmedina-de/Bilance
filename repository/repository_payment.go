@@ -11,13 +11,17 @@ import (
 )
 
 type paymentRepository struct {
-	baseRepository
+	database       service.Database
 	userRepository Repository
 	typeRepository Repository
 }
 
 func PaymentRepository(database service.Database, userRepository Repository, typeRepository Repository) Repository {
-	return &paymentRepository{baseRepository{database: database}, userRepository, typeRepository}
+	return &paymentRepository{database, userRepository, typeRepository}
+}
+
+func (r *paymentRepository) ModelName() string {
+	return "payment"
 }
 
 func (r *paymentRepository) ModelNamePlural() string {
@@ -42,7 +46,7 @@ func (r *paymentRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var categoryId int64
 	var payerId int64
 	var payeeId int64
-	ScanAndPanic(row, &id, &name, &amount, &date, &projectId, &categoryId, &payerId, &payeeId)
+	scanAndPanic(row, &id, &name, &amount, &date, &projectId, &categoryId, &payerId, &payeeId)
 	category := r.typeRepository.Find(categoryId).(*model.Category)
 	payer := r.userRepository.Find(payerId).(*model.User)
 	payee := r.userRepository.Find(payeeId).(*model.User)
@@ -85,7 +89,7 @@ func (r *paymentRepository) NewFromRequest(request *http.Request, id int64) inte
 
 func (r *paymentRepository) Find(id int64) interface{} {
 	var result []model.Payment
-	r.database.Select(&result, r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
+	r.database.Select(r.ModelName(), &result, "*", r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
 	if len(result) > 0 {
 		return &result[0]
 	} else {
@@ -95,7 +99,24 @@ func (r *paymentRepository) Find(id int64) interface{} {
 
 func (r *paymentRepository) List(conditions ...string) interface{} {
 	var result []model.Payment
-	conditions = append(conditions, "ORDER BY Date")
-	r.database.Select(&result, r.NewFromQuery, conditions...)
+	r.database.Select(r.ModelName(), &result, "*", r.NewFromQuery, conditions...)
 	return result
+}
+
+func (r *paymentRepository) Count(conditions ...string) int64 {
+	var result []int64
+	r.database.Select(r.ModelName(), &result, "COUNT(*)", countQueryFunc, conditions...)
+	return result[0]
+}
+
+func (r *paymentRepository) Insert(entity interface{}) {
+	r.database.Insert(r.ModelName(), entity)
+}
+
+func (r *paymentRepository) Update(entity interface{}) {
+	r.database.Update(r.ModelName(), entity)
+}
+
+func (r *paymentRepository) Delete(entity interface{}) {
+	r.database.Delete(r.ModelName(), entity)
 }
