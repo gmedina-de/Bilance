@@ -46,6 +46,16 @@ var l10nDe = l10n{
 	outside_world: "Außenwelt",
 	total:         "Gesamt",
 	uncategorized: "Nicht kategorisiert",
+	// balances
+	debts:                 "Schulden",
+	receivables:           "Forderungen",
+	total_expenses:        "Gesamtausgaben",
+	user_amount:           "Projectbeteiligten",
+	proportional_expenses: "Anteilige Ausgaben",
+	sent_expenses:         "Getätigte Ausgaben",
+	sent_transfer:         "Getätigte Geldtransfer",
+	received_transfer:     "Erhaltene Geldtransfer",
+	result:                "Ergebnis",
 	// calendar
 	this_week:  "Diese Woche",
 	this_month: "Dieser Monat",

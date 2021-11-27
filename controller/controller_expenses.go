@@ -111,7 +111,7 @@ func (c *expensesController) fillExpensesByPeriodGraphData(start time.Time, end 
 		for i := start.Month(); i <= end.Month(); i++ {
 			t := start.AddDate(0, int(i)-1, 0)
 			data.X = append(data.X, localization.Translate(t.Month().String()))
-			y := c.sumExpenses(c.paymentRepository.List(
+			y := model.SumAmounts(c.paymentRepository.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND Date LIKE '"+t.Format("2006-01")+"%'",
@@ -124,7 +124,7 @@ func (c *expensesController) fillExpensesByPeriodGraphData(start time.Time, end 
 		for i := start.Day(); i <= end.Day(); i++ {
 			t := start.AddDate(0, 0, i-1)
 			data.X = append(data.X, t.Format(model.DateLayoutDE))
-			y := c.sumExpenses(c.paymentRepository.List(
+			y := model.SumAmounts(c.paymentRepository.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND Date = '"+t.Format(model.DateLayoutISO)+"'",
@@ -137,7 +137,7 @@ func (c *expensesController) fillExpensesByPeriodGraphData(start time.Time, end 
 		for i := model.NormalWeekday(start.Weekday()); i <= model.NormalWeekday(end.Weekday()); i++ {
 			t := start.AddDate(0, 0, i)
 			data.X = append(data.X, localization.Translate(t.Weekday().String()))
-			y := c.sumExpenses(c.paymentRepository.List(
+			y := model.SumAmounts(c.paymentRepository.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND Date = '"+t.Format(model.DateLayoutISO)+"'",
@@ -156,14 +156,14 @@ func (c *expensesController) fillExpensesByCategoryGraphData(start time.Time, en
 		data.X = append(data.X, category.Name)
 		var y model.EUR
 		if category.Id == 0 {
-			y = c.sumExpenses(c.paymentRepository.List(
+			y = model.SumAmounts(c.paymentRepository.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
-				"AND CategoryId NOT IN ("+extractCategoryIds(categories)+")",
+				"AND CategoryId NOT IN ("+model.ExtractCategoryIds(categories)+")",
 				"AND Date BETWEEN '"+startDate+"' AND '"+endDate+"'",
 			).([]model.Payment))
 		} else {
-			y = c.sumExpenses(c.paymentRepository.List(
+			y = model.SumAmounts(c.paymentRepository.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND CategoryId = '"+strconv.FormatInt(category.Id, 10)+"'",
@@ -174,22 +174,6 @@ func (c *expensesController) fillExpensesByCategoryGraphData(start time.Time, en
 		data.Z = append(data.Z, category.Color)
 		data.Total += y
 	}
-}
-
-func extractCategoryIds(categories []model.Category) string {
-	var result []string
-	for _, category := range categories {
-		result = append(result, strconv.FormatInt(category.Id, 10))
-	}
-	return strings.Join(result, ",")
-}
-
-func (c *expensesController) sumExpenses(payments []model.Payment) model.EUR {
-	var result model.EUR
-	for _, payment := range payments {
-		result += payment.Amount
-	}
-	return result
 }
 
 func (c *expensesController) prepareYears() []int {

@@ -48,6 +48,16 @@ type l10n struct {
 	outside_world string
 	total         string
 	uncategorized string
+	// balances
+	debts                 string
+	receivables           string
+	total_expenses        string
+	user_amount           string
+	proportional_expenses string
+	sent_expenses         string
+	sent_transfer         string
+	received_transfer     string
+	result                string
 	// calendar
 	this_week  string
 	this_month string

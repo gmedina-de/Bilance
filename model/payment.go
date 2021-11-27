@@ -52,3 +52,11 @@ func NormalWeekday(weekday time.Weekday) int {
 	}
 	return int(weekday) - 1
 }
+
+func SumAmounts(payments []Payment) EUR {
+	var result EUR
+	for _, payment := range payments {
+		result += payment.Amount
+	}
+	return result
+}
