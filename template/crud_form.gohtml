@@ -16,19 +16,17 @@
         </a>
         {{if .Parameters.Model.Id}}
             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                    id="deleteConfirmationLabel"
                     data-bs-target="#deleteConfirmationModal">
                 <span data-feather="trash-2"></span> {{translate "delete"}}
             </button>
         {{end}}
     </div>
-    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="deleteConfirmationModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{translate "delete_confirmation"}}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">{{translate "delete_confirmation"}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     {{translate "delete_confirmation_description"}}
