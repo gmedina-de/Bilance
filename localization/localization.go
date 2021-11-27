@@ -7,7 +7,7 @@ type l10n struct {
 	payments        string
 	categories      string
 	analysis        string
-	debts           string
+	balances        string
 	expenses        string
 	by_period       string
 	by_category     string

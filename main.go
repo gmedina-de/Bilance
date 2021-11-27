@@ -38,7 +38,7 @@ func main() {
 
 	paymentController := controller.PaymentController(paymentRepository, categoryRepository, userRepository)
 	categoryController := controller.CategoryController(categoryRepository)
-	debtsController := controller.DebtsController(paymentRepository)
+	balancesController := controller.BalancesController(paymentRepository)
 	expensesController := controller.ExpensesController(paymentRepository, categoryRepository)
 	userController := controller.UserController(userRepository)
 	projectController := controller.ProjectController(projectRepository, userRepository)
@@ -48,7 +48,7 @@ func main() {
 		router,
 		paymentController,
 		categoryController,
-		debtsController,
+		balancesController,
 		expensesController,
 		userController,
 		projectController,

@@ -5,7 +5,7 @@ var l10nDe = l10n{
 	payments:        "Zahlungen",
 	categories:      "Kategorien",
 	analysis:        "Auswertungen",
-	debts:           "Schulden",
+	balances:        "Salden",
 	expenses:        "Ausgaben",
 	by_period:       "nach Zeitraum",
 	by_category:     "nach Kategorie",

@@ -149,16 +149,16 @@ body {
     flex-wrap: nowrap !important;
 }
 
-tbody > tr {
+.table > tbody > tr {
     cursor: pointer;
 }
 
-tbody {
+.table > tbody {
     background-color: white;
     border-bottom: 2px solid black;
 }
 
-tbody > tr:hover {
+.table > tbody > tr:hover {
     --bs-table-bg: #cfe2ff;
     --bs-table-striped-bg: #c5d7f2;
     --bs-table-striped-color: #000;
@@ -176,3 +176,20 @@ tbody > tr:hover {
     background-color: #e6e6e6;
     border-color: #e6e6e6;
 }
+
+.accordion-button > .rounded-pill {
+    margin-left: 0.5rem;
+}
+
+.progress {
+    background-color: transparent;
+}
+
+.progress-bar.progress-bar-animated {
+    -webkit-animation-direction: reverse;
+    -moz-animation-direction: reverse;
+    -ms-animation-direction: reverse;
+    -o-animation-direction: reverse;
+    animation-direction: reverse;
+}
+
