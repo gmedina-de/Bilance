@@ -41,7 +41,7 @@ func (c *paymentsController) Routing(router service.Router) {
 }
 
 func (c *paymentsController) List(writer http.ResponseWriter, request *http.Request) {
-	if request.URL.Query().Has("search") {
+	if request.URL.Query().Get("search") != "" {
 		term := request.URL.Query().Get("search")
 		list := c.repository.List(
 			"WHERE ProjectId = "+model.GetSelectedProjectIdString(request),

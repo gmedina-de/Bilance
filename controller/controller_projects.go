@@ -18,7 +18,7 @@ func ProjectsController(repository repository.Repository, userRepository reposit
 			repository: repository,
 			basePath:   "/admin/projects/",
 			dataProvider: func(request *http.Request) interface{} {
-				if request.URL.Query().Has("Id") {
+				if request.URL.Query().Get("Id") != "" {
 					idString := request.URL.Query().Get("Id")
 					return userRepository.List("WHERE Id NOT IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")").([]model.User)
 				} else {

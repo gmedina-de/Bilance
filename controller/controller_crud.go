@@ -16,7 +16,7 @@ type crudController struct {
 
 func (c *crudController) List(writer http.ResponseWriter, request *http.Request) {
 	var toast string
-	if request.URL.Query().Has("success") {
+	if request.URL.Query().Get("success") != "" {
 		toast = "record_saved_successfully"
 	}
 
@@ -53,7 +53,7 @@ func (c *crudController) handlePagination(request *http.Request, projectIdString
 	}
 	var limit int64 = 10
 	var page int64 = 1
-	if request.URL.Query().Has("page") {
+	if request.URL.Query().Get("page") != "" {
 		page, _ = strconv.ParseInt(request.URL.Query().Get("page"), 10, 64)
 	}
 	var offset = limit * (page - 1)
@@ -70,7 +70,7 @@ func (c *crudController) Edit(writer http.ResponseWriter, request *http.Request)
 			data = c.dataProvider(request)
 		}
 		modelName := c.repository.ModelNamePlural()
-		if request.URL.Query().Has("Id") {
+		if request.URL.Query().Get("Id") != "" {
 			idString := request.URL.Query().Get("Id")
 			id, _ := strconv.ParseInt(idString, 10, 64)
 			model := c.repository.Find(id)
@@ -83,7 +83,7 @@ func (c *crudController) Edit(writer http.ResponseWriter, request *http.Request)
 		if err != nil {
 			panic(err)
 		}
-		if request.Form.Has("Id") {
+		if request.Form.Get("Id") != "" {
 			id, _ := strconv.ParseInt(request.Form.Get("Id"), 10, 64)
 			c.repository.Update(c.repository.NewFromRequest(request, id))
 		} else {
@@ -94,7 +94,7 @@ func (c *crudController) Edit(writer http.ResponseWriter, request *http.Request)
 }
 
 func (c *crudController) Delete(writer http.ResponseWriter, request *http.Request) {
-	if request.Method == "GET" && request.URL.Query().Has("Id") {
+	if request.Method == "GET" && request.URL.Query().Get("Id") != "" {
 		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
 		item := c.repository.Find(id)
 		c.repository.Delete(item)
