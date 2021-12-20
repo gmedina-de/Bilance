@@ -13,10 +13,10 @@ import (
 
 type expensesController struct {
 	paymentRepository  repository.Repository
-	categoryRepository repository.Repository
+	categoryRepository repository.GenericRepository[model.Category]
 }
 
-func ExpensesController(paymentRepository repository.Repository, categoryRepository repository.Repository) Controller {
+func ExpensesController(paymentRepository repository.Repository, categoryRepository repository.GenericRepository[model.Category]) Controller {
 	return &expensesController{paymentRepository, categoryRepository}
 }
 
@@ -64,7 +64,7 @@ func (c *expensesController) prepareGraphData(request *http.Request) *GraphData 
 		c.fillExpensesByPeriodGraphData(start, end, step, &graphData, projectId)
 	case "/expenses/by_category/":
 		graphData.Type = "doughnut"
-		categories := c.categoryRepository.List("WHERE ProjectId = " + projectId).([]model.Category)
+		categories := c.categoryRepository.List("WHERE ProjectId = " + projectId)
 		categories = append(categories, model.Category{0, localization.Translate("uncategorized"), neutralColor, 0})
 		c.fillExpensesByCategoryGraphData(start, end, categories, &graphData, projectId)
 	}

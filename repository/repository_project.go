@@ -13,14 +13,14 @@ type projectRepository struct {
 	database           service.Database
 	paymentRepository  Repository
 	userRepository     Repository
-	categoryRepository Repository
+	categoryRepository GenericRepository[model.Category]
 }
 
 func ProjectRepository(
 	database service.Database,
 	paymentRepository Repository,
 	userRepository Repository,
-	categoryRepository Repository,
+	categoryRepository GenericRepository[model.Category],
 ) Repository {
 	return &projectRepository{
 		database,
@@ -53,7 +53,7 @@ func (r *projectRepository) NewFromQuery(row *sql.Rows) interface{} {
 		name,
 		description,
 		r.paymentRepository.List("WHERE ProjectId = " + idString).([]model.Payment),
-		r.categoryRepository.List("WHERE ProjectId = " + idString).([]model.Category),
+		r.categoryRepository.List("WHERE ProjectId = " + idString),
 		r.userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")").([]model.User),
 	}
 	return &project
@@ -67,7 +67,7 @@ func (r *projectRepository) NewFromRequest(request *http.Request, id int64) inte
 		request.Form.Get("Name"),
 		request.Form.Get("Description"),
 		r.paymentRepository.List("WHERE ProjectId = " + idString).([]model.Payment),
-		r.categoryRepository.List("WHERE ProjectId = " + idString).([]model.Category),
+		r.categoryRepository.List("WHERE ProjectId = " + idString),
 		r.userRepository.List("WHERE Id IN (" + users + ")").([]model.User),
 	}
 }
