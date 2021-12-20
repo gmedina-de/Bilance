@@ -1,8 +1,8 @@
 package model
 
 import (
-	"strconv"
-	"strings"
+	"database/sql"
+	"net/http"
 )
 
 type Category struct {
@@ -12,10 +12,19 @@ type Category struct {
 	ProjectId int64
 }
 
-func ExtractCategoryIds(categories []Category) string {
-	var result []string
-	for _, category := range categories {
-		result = append(result, strconv.FormatInt(category.Id, 10))
-	}
-	return strings.Join(result, ",")
+func (c Category) Empty() *Category {
+	return &c
+}
+
+func (c Category) FromQuery(row *sql.Rows) *Category {
+	scanAndPanic(row, &c.Id, &c.Name, &c.Color, &c.ProjectId)
+	return &c
+}
+
+func (c Category) FromRequest(request *http.Request, id int64) *Category {
+	c.Id = id
+	c.Name = request.Form.Get("Name")
+	c.Color = request.Form.Get("Color")
+	c.ProjectId = GetSelectedProjectId(request)
+	return &c
 }

@@ -11,13 +11,13 @@ import (
 )
 
 type paymentRepository struct {
-	database       service.Database
-	userRepository Repository
-	typeRepository Repository
+	database           service.Database
+	userRepository     Repository
+	categoryRepository GRepository[model.Category]
 }
 
-func PaymentRepository(database service.Database, userRepository Repository, typeRepository Repository) Repository {
-	return &paymentRepository{database, userRepository, typeRepository}
+func PaymentRepository(database service.Database, userRepository Repository, categoryRepository GRepository[model.Category]) Repository {
+	return &paymentRepository{database, userRepository, categoryRepository}
 }
 
 func (r *paymentRepository) ModelName() string {
@@ -47,7 +47,7 @@ func (r *paymentRepository) NewFromQuery(row *sql.Rows) interface{} {
 	var payerId int64
 	var payeeId int64
 	scanAndPanic(row, &id, &name, &amount, &date, &projectId, &categoryId, &payerId, &payeeId)
-	category := r.typeRepository.Find(categoryId).(*model.Category)
+	category := r.categoryRepository.Find(categoryId)
 	payer := r.userRepository.Find(payerId).(*model.User)
 	payee := r.userRepository.Find(payeeId).(*model.User)
 	return &model.Payment{
@@ -81,7 +81,7 @@ func (r *paymentRepository) NewFromRequest(request *http.Request, id int64) inte
 		model.EUR(amount),
 		model.Date(date),
 		projectId,
-		r.typeRepository.Find(categoryId).(*model.Category),
+		r.categoryRepository.Find(categoryId),
 		r.userRepository.Find(payerId).(*model.User),
 		r.userRepository.Find(payeeId).(*model.User),
 	}

@@ -13,10 +13,10 @@ import (
 
 type expensesController struct {
 	paymentRepository  repository.Repository
-	categoryRepository repository.Repository
+	categoryRepository repository.GRepository[model.Category]
 }
 
-func ExpensesController(paymentRepository repository.Repository, categoryRepository repository.Repository) Controller {
+func ExpensesController(paymentRepository repository.Repository, categoryRepository repository.GRepository[model.Category]) Controller {
 	return &expensesController{paymentRepository, categoryRepository}
 }
 
@@ -64,7 +64,7 @@ func (c *expensesController) prepareGraphData(request *http.Request) *GraphData 
 		c.fillExpensesByPeriodGraphData(start, end, step, &graphData, projectId)
 	case "/expenses/by_category/":
 		graphData.Type = "doughnut"
-		categories := c.categoryRepository.List("WHERE ProjectId = " + projectId).([]model.Category)
+		categories := c.categoryRepository.List("WHERE ProjectId = " + projectId)
 		categories = append(categories, model.Category{0, localization.Translate("uncategorized"), neutralColor, 0})
 		c.fillExpensesByCategoryGraphData(start, end, categories, &graphData, projectId)
 	}
@@ -159,7 +159,7 @@ func (c *expensesController) fillExpensesByCategoryGraphData(start time.Time, en
 			y = model.SumAmounts(c.paymentRepository.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
-				"AND CategoryId NOT IN ("+model.ExtractCategoryIds(categories)+")",
+				"AND CategoryId NOT IN ("+ExtractCategoryIds(categories)+")",
 				"AND Date BETWEEN '"+startDate+"' AND '"+endDate+"'",
 			).([]model.Payment))
 		} else {
@@ -183,4 +183,12 @@ func (c *expensesController) prepareYears() []int {
 		result = append(result, currentYear-i)
 	}
 	return result
+}
+
+func ExtractCategoryIds(categories []model.Category) string {
+	var result []string
+	for _, category := range categories {
+		result = append(result, strconv.FormatInt(category.Id, 10))
+	}
+	return strings.Join(result, ",")
 }

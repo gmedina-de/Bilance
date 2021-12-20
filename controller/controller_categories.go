@@ -1,17 +1,18 @@
 package controller
 
 import (
+	"Bilance/model"
 	"Bilance/repository"
 	"Bilance/service"
 )
 
 type categoriesController struct {
-	crudController
+	crudController2[model.Category]
 }
 
-func CategoriesController(repository repository.Repository) Controller {
+func CategoriesController(repository repository.GRepository[model.Category]) Controller {
 	return &categoriesController{
-		crudController{
+		crudController2[model.Category]{
 			repository: repository,
 			basePath:   "/categories/",
 		},
