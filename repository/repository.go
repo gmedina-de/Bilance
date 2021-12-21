@@ -36,9 +36,3 @@ func scanAndPanic(row *sql.Rows, dest ...interface{}) {
 		panic(err)
 	}
 }
-
-func countQueryFunc(row *sql.Rows) interface{} {
-	var count int64
-	scanAndPanic(row, &count)
-	return &count
-}

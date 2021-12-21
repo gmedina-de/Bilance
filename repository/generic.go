@@ -24,16 +24,16 @@ type GRepository[T model.Model[T]] interface {
 	Delete(entity *T)
 }
 
-type gRepository[T model.Model[T]] struct {
+type generic[T model.Model[T]] struct {
 	database service.Database
 	model    T
 }
 
-func (r *gRepository[T]) ModelName() string {
+func (r *generic[T]) ModelName() string {
 	return strings.ToLower(reflect.TypeOf(r.model).Name())
 }
 
-func (r *gRepository[T]) ModelNamePlural() string {
+func (r *generic[T]) ModelNamePlural() string {
 	name := r.ModelName()
 	if name[len(name)-1] == 'y' {
 		return name[0:len(name)-1] + "ies"
@@ -41,23 +41,23 @@ func (r *gRepository[T]) ModelNamePlural() string {
 	return name + "s"
 }
 
-func (r *gRepository[T]) NewEmpty() *T {
+func (r *generic[T]) NewEmpty() *T {
 	return &r.model
 }
 
-func (r *gRepository[T]) NewFromQuery(row *sql.Rows) *T {
+func (r *generic[T]) NewFromQuery(row *sql.Rows) *T {
 	return r.model.FromQuery(row)
 }
 
-func (r *gRepository[T]) NewFromRequest(request *http.Request, id int64) *T {
+func (r *generic[T]) NewFromRequest(request *http.Request, id int64) *T {
 	return r.model.FromRequest(request, id)
 }
 
-func (r *gRepository[T]) newFromQueryInterface(row *sql.Rows) interface{} {
+func (r *generic[T]) newFromQueryInterface(row *sql.Rows) interface{} {
 	return r.NewFromQuery(row)
 }
 
-func (r *gRepository[T]) Find(id int64) *T {
+func (r *generic[T]) Find(id int64) *T {
 	var result []T
 	r.database.Select(r.ModelName(), &result, "*", r.newFromQueryInterface, "WHERE Id = "+strconv.FormatInt(id, 10))
 	if len(result) > 0 {
@@ -67,26 +67,32 @@ func (r *gRepository[T]) Find(id int64) *T {
 	}
 }
 
-func (r *gRepository[T]) List(conditions ...string) []T {
+func (r *generic[T]) List(conditions ...string) []T {
 	var result []T
 	r.database.Select(r.ModelName(), &result, "*", r.newFromQueryInterface, conditions...)
 	return result
 }
 
-func (r *gRepository[T]) Count(conditions ...string) int64 {
+func (r *generic[T]) Count(conditions ...string) int64 {
 	var result []int64
 	r.database.Select(r.ModelName(), &result, "COUNT(*)", countQueryFunc, conditions...)
 	return result[0]
 }
 
-func (r *gRepository[T]) Insert(entity *T) {
+func (r *generic[T]) Insert(entity *T) {
 	r.database.Insert(r.ModelName(), entity)
 }
 
-func (r *gRepository[T]) Update(entity *T) {
+func (r *generic[T]) Update(entity *T) {
 	r.database.Update(r.ModelName(), entity)
 }
 
-func (r *gRepository[T]) Delete(entity *T) {
+func (r *generic[T]) Delete(entity *T) {
 	r.database.Delete(r.ModelName(), entity)
+}
+
+func countQueryFunc(row *sql.Rows) interface{} {
+	var count int64
+	scanAndPanic(row, &count)
+	return &count
 }

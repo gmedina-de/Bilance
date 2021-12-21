@@ -31,21 +31,21 @@ func main() {
 	router := service.DefaultRouter(log, authenticator)
 	server := service.DefaultServer(router, log)
 
-	userRepository := repository.UserRepository(database)
-	categoryRepository := repository.CategoryRepository(database)
-	paymentRepository := repository.PaymentRepository(database, userRepository, categoryRepository)
-	projectRepository := repository.ProjectRepository(database, paymentRepository, userRepository, categoryRepository)
+	users := repository.Users(database)
+	categories := repository.Categories(database)
+	payments := repository.Payments(database)
+	projects := repository.Projects(database, payments, users, categories)
 
 	bilance := Bilance(
 		server,
 		router,
-		controller.IndexController(),
-		controller.PaymentController(paymentRepository, categoryRepository, userRepository),
-		controller.CategoriesController(categoryRepository),
-		controller.BalancesController(projectRepository, paymentRepository),
-		controller.ExpensesController(paymentRepository, categoryRepository),
-		controller.UsersController(userRepository),
-		controller.ProjectsController(projectRepository, userRepository),
+		controller.Index(),
+		controller.Payments(payments, categories, users),
+		controller.Categories(categories),
+		controller.Balances(projects, payments),
+		controller.Expenses(payments, categories),
+		controller.Users(users),
+		controller.Projects(projects, users),
 	)
 	bilance.Run()
 }

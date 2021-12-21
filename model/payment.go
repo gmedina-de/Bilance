@@ -1,62 +1,42 @@
 package model
 
 import (
-	"fmt"
-	"time"
+	"database/sql"
+	"net/http"
+	"strconv"
+	"strings"
 )
 
 type Payment struct {
-	Id        int64
-	Name      string
-	Amount    EUR
-	Date      Date
-	ProjectId int64
-	Category  *Category
-	Payer     *User
-	Payee     *User
+	Id         int64
+	Name       string
+	Amount     EUR
+	Date       Date
+	ProjectId  int64
+	CategoryId int64
+	PayerId    int64
+	PayeeId    int64
 }
 
-type EUR int64
-
-func (m EUR) Format() string {
-	x := float64(m)
-	x = x / 100
-	return fmt.Sprintf("%.2f", x)
+func (p Payment) FromQuery(row *sql.Rows) *Payment {
+	scanAndPanic(row, &p.Id, &p.Name, &p.Amount, &p.Date, &p.ProjectId, &p.CategoryId, &p.PayerId, &p.PayeeId)
+	return &p
 }
 
-func (m EUR) FormatWithCurrency() string {
-	return m.Format() + " €"
-}
-
-type Date string
-
-func (d Date) Format() string {
-	parse, _ := time.Parse(DateLayoutISO, string(d))
-	return parse.Format(DateLayoutDE)
-}
-
-const (
-	DateLayoutISO = "2006-01-02"
-	DateLayoutDE  = "02.01.2006"
-)
-
-type TimeUnit int
-
-const TimeUnitWeekday TimeUnit = iota
-const TimeUnitMonthday TimeUnit = iota + 1
-const TimeUnitMonth TimeUnit = iota + 2
-
-func NormalWeekday(weekday time.Weekday) int {
-	if weekday == time.Sunday {
-		return 6
+func (p Payment) FromRequest(request *http.Request, id int64) *Payment {
+	p.Id = id
+	p.Name = request.Form.Get("Name")
+	p.Date = Date(request.Form.Get("Date"))
+	p.ProjectId = GetSelectedProjectId(request)
+	amountInput := request.Form.Get("Amount")
+	amountString := strings.Replace(amountInput, ".", "", 1)
+	amount, _ := strconv.ParseInt(amountString, 10, 64)
+	if !strings.Contains(amountInput, ".") {
+		amount *= 100
 	}
-	return int(weekday) - 1
-}
-
-func SumAmounts(payments []Payment) EUR {
-	var result EUR
-	for _, payment := range payments {
-		result += payment.Amount
-	}
-	return result
+	p.Amount = EUR(amount)
+	p.CategoryId, _ = strconv.ParseInt(request.Form.Get("CategoryId"), 10, 64)
+	p.PayerId, _ = strconv.ParseInt(request.Form.Get("PayerId"), 10, 64)
+	p.PayeeId, _ = strconv.ParseInt(request.Form.Get("PayeeId"), 10, 64)
+	return &p
 }

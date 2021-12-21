@@ -8,10 +8,12 @@
     </thead>
     <tbody>
     {{$Path:=.Path}}
+    {{$Categories := .Parameters.Data}}
     {{range .Parameters.Model}}
         <tr onclick="window.location.href='{{$Path}}edit?Id={{.Id}}';">
             <td>{{.Name}}<br><span data-feather="calendar"></span> {{.Date.Format}}</td>
-            <td><i style="color: {{.Category.Color}}">{{.Category.Name}}</i><br><b>{{.Amount.FormatWithCurrency}}</b>
+            {{$Category := $Categories.CategoryId}}
+            <td><i style="color: {{$Category.Color}}">{{$Category.Name}}</i><br><b>{{.Amount.FormatWithCurrency}}</b>
             </td>
             <td>{{.Payer.Name}}<span data-feather="arrow-right"></span><br>{{.Payee.Name}}</td>
         </tr>
@@ -23,15 +25,15 @@
     <div class="col-5">
         <div class="form-floating">
             <select class="form-select" name="PayerId" id="payer" required>
-                {{if .Parameters.Model.Payer.Id}}
-                    {{$selectedPayer := .Parameters.Model.Payer.Id}}
+                {{if .Parameters.Model.PayerId}}
+                    {{$selectedPayerId := .Parameters.Model.PayerId}}
                     {{range .Parameters.Data.Users}}
-                        <option value="{{.Id}}"{{if eq $selectedPayer .Id}} selected{{end}}>{{.Name}}</option>
+                        <option value="{{.Id}}"{{if eq $selectedPayerId .Id}} selected{{end}}>{{.Name}}</option>
                     {{end}}
                 {{else}}
-                    {{$selectedPayer := .User.Id}}
+                    {{$selectedPayerId := .User.Id}}
                     {{range .Parameters.Data.Users}}
-                        <option value="{{.Id}}"{{if eq $selectedPayer .Id}} selected{{end}}>{{.Name}}</option>
+                        <option value="{{.Id}}"{{if eq $selectedPayerId .Id}} selected{{end}}>{{.Name}}</option>
                     {{end}}
                 {{end}}
             </select>
@@ -43,11 +45,11 @@
         <div class="form-floating">
             <select class="form-select" name="PayeeId" id="payee" required>
                 <option>{{translate "outside_world"}}</option>
-                {{$selectedPayer := .User.Id}}
-                {{$selectedPayee := .Parameters.Model.Payee.Id}}
+                {{$selectedPayerId := .User.Id}}
+                {{$selectedPayeeId := .Parameters.Model.PayeeId}}
                 {{range .Parameters.Data.Users}}
-                    {{if not (eq $selectedPayer .Id)}}
-                        <option value="{{.Id}}"{{if eq $selectedPayee .Id}} selected{{end}}>{{.Name}}</option>
+                    {{if not (eq $selectedPayerId .Id)}}
+                        <option value="{{.Id}}"{{if eq $selectedPayeeId .Id}} selected{{end}}>{{.Name}}</option>
                     {{end}}
                 {{end}}
             </select>
@@ -65,7 +67,7 @@
         <div class="form-floating">
             <select class="form-select" name="CategoryId" id="category">
                 <option></option>
-                {{$selectedCategoryId := .Parameters.Model.Category.Id}}
+                {{$selectedCategoryId := .Parameters.Model.CategoryId}}
                 {{range .Parameters.Data.Categories}}
                     <option value="{{.Id}}"{{if eq $selectedCategoryId .Id}} selected{{end}}>{{.Name}}</option>
                 {{end}}

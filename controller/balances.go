@@ -9,34 +9,21 @@ import (
 	"strconv"
 )
 
-type balancesController struct {
-	projectRepository repository.Repository
-	paymentRepository repository.Repository
+type balances struct {
+	projects          repository.Repository
+	paymentRepository repository.GRepository[model.Payment]
 }
 
-func BalancesController(projectRepository repository.Repository, paymentRepository repository.Repository) Controller {
-	return &balancesController{projectRepository, paymentRepository}
+func Balances(projectRepository repository.Repository, paymentRepository repository.GRepository[model.Payment]) Controller {
+	return &balances{projectRepository, paymentRepository}
 }
 
-func (c *balancesController) Routing(router service.Router) {
-	router.Get("/balances/", c.Balances)
+func (b *balances) Routing(router service.Router) {
+	router.Get("/balances/", b.Balances)
 }
 
-type BalanceData struct {
-	ProjectName          string
-	UserName             string
-	TotalExpenses        model.EUR
-	UserAmount           int
-	ProportionalExpenses model.EUR
-	SentExpenses         model.EUR
-	SentTransfer         model.EUR
-	ReceivedTransfer     model.EUR
-	Result               model.EUR
-	Width                float64
-}
-
-func (c *balancesController) Balances(writer http.ResponseWriter, request *http.Request) {
-	balanceData := c.prepareBalanceData(request)
+func (b *balances) Balances(writer http.ResponseWriter, request *http.Request) {
+	balanceData := b.prepareBalanceData(request)
 	render(
 		writer,
 		request,
@@ -46,35 +33,35 @@ func (c *balancesController) Balances(writer http.ResponseWriter, request *http.
 	)
 }
 
-func (c *balancesController) prepareBalanceData(request *http.Request) []*BalanceData {
+func (b *balances) prepareBalanceData(request *http.Request) []*BalanceData {
 	var balanceData []*BalanceData
-	project := c.projectRepository.Find(model.GetSelectedProjectId(request)).(*model.Project)
+	project := b.projects.Find(model.GetSelectedProjectId(request)).(*model.Project)
 	projectIdString := model.GetSelectedProjectIdString(request)
-	totalExpenses := -model.SumAmounts(c.paymentRepository.List(
+	totalExpenses := -model.SumAmounts(b.paymentRepository.List(
 		"WHERE ProjectId = "+projectIdString,
 		"AND PayeeId = 0",
-	).([]model.Payment))
+	))
 	users := project.Users
 	userAmount := len(users)
 	proportionalExpenses := model.EUR(int64(totalExpenses) / int64(userAmount))
 	var maxBalance float64
 	for _, user := range users {
 		userIdString := strconv.FormatInt(user.Id, 10)
-		sentExpenses := model.SumAmounts(c.paymentRepository.List(
+		sentExpenses := model.SumAmounts(b.paymentRepository.List(
 			"WHERE ProjectId = "+projectIdString,
 			"AND PayerId = "+userIdString,
 			"AND PayeeId = 0",
-		).([]model.Payment))
-		sentTransfer := model.SumAmounts(c.paymentRepository.List(
+		))
+		sentTransfer := model.SumAmounts(b.paymentRepository.List(
 			"WHERE ProjectId = "+projectIdString,
 			"AND PayerId = "+userIdString,
 			"AND PayeeId != 0",
-		).([]model.Payment))
-		receivedTransfer := model.SumAmounts(c.paymentRepository.List(
+		))
+		receivedTransfer := model.SumAmounts(b.paymentRepository.List(
 			"WHERE ProjectId = "+projectIdString,
 			"AND PayerId != "+userIdString,
 			"AND PayeeId = "+userIdString,
-		).([]model.Payment))
+		))
 		result := proportionalExpenses + sentExpenses + sentTransfer - receivedTransfer
 		if math.Abs(float64(result)) > float64(maxBalance) {
 			maxBalance = float64(result)
@@ -91,11 +78,24 @@ func (c *balancesController) prepareBalanceData(request *http.Request) []*Balanc
 			Result:               result,
 		})
 	}
-	c.calculateWidths(balanceData, maxBalance)
+	b.calculateWidths(balanceData, maxBalance)
 	return balanceData
 }
 
-func (c *balancesController) calculateWidths(balanceData []*BalanceData, maxBalance float64) {
+type BalanceData struct {
+	ProjectName          string
+	UserName             string
+	TotalExpenses        model.EUR
+	UserAmount           int
+	ProportionalExpenses model.EUR
+	SentExpenses         model.EUR
+	SentTransfer         model.EUR
+	ReceivedTransfer     model.EUR
+	Result               model.EUR
+	Width                float64
+}
+
+func (b *balances) calculateWidths(balanceData []*BalanceData, maxBalance float64) {
 	for _, data := range balanceData {
 		if data.Result > 0 {
 			data.Width = float64(data.Result) / maxBalance * 100

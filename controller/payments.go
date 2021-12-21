@@ -9,13 +9,17 @@ import (
 	"strconv"
 )
 
-type paymentsController struct {
-	crudController
+type payments struct {
+	generic2[model.Payment]
 }
 
-func PaymentController(repository repository.Repository, categoryRepository repository.GRepository[model.Category], userRepository repository.GRepository[model.User]) Controller {
-	return &paymentsController{
-		crudController{
+func Payments(
+	repository repository.GRepository[model.Payment],
+	categories repository.GRepository[model.Category],
+	users repository.GRepository[model.User],
+) Controller {
+	return &payments{
+		generic2[model.Payment]{
 			repository: repository,
 			basePath:   "/payments/",
 			dataProvider: func(request *http.Request) interface{} {
@@ -24,23 +28,21 @@ func PaymentController(repository repository.Repository, categoryRepository repo
 					Categories []model.Category
 					Users      []model.User
 				}{
-					categoryRepository.List("WHERE ProjectId = " + projectId),
-					userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + projectId + ")"),
+					categories.List("WHERE ProjectId = " + projectId),
+					users.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + projectId + ")"),
 				}
 			},
 		},
 	}
 }
 
-func (c *paymentsController) Routing(router service.Router) {
+func (c *payments) Routing(router service.Router) {
+	c.generic2.Routing(router)
 	router.Get(c.basePath, c.List)
 	router.Post(c.basePath, c.List)
-	router.Get(c.basePath+"edit", c.Edit)
-	router.Post(c.basePath+"edit", c.Edit)
-	router.Get(c.basePath+"edit/delete", c.Delete)
 }
 
-func (c *paymentsController) List(writer http.ResponseWriter, request *http.Request) {
+func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
 	if request.URL.Query().Get("search") != "" {
 		term := request.URL.Query().Get("search")
 		list := c.repository.List(
@@ -49,7 +51,7 @@ func (c *paymentsController) List(writer http.ResponseWriter, request *http.Requ
 			"OR CategoryId IN (SELECT Id FROM Category WHERE Name LIKE '%"+term+"%')",
 			"OR Date LIKE '"+term+"%')",
 			"ORDER BY Date",
-		).([]model.Payment)
+		)
 		render(
 			writer,
 			request,
@@ -62,6 +64,6 @@ func (c *paymentsController) List(writer http.ResponseWriter, request *http.Requ
 			c.repository.ModelNamePlural(),
 		)
 	} else {
-		c.crudController.List(writer, request)
+		c.generic2.List(writer, request)
 	}
 }

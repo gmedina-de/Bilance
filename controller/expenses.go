@@ -11,21 +11,21 @@ import (
 	"time"
 )
 
-type expensesController struct {
-	paymentRepository  repository.Repository
-	categoryRepository repository.GRepository[model.Category]
+type expenses struct {
+	payments   repository.GRepository[model.Payment]
+	categories repository.GRepository[model.Category]
 }
 
-func ExpensesController(paymentRepository repository.Repository, categoryRepository repository.GRepository[model.Category]) Controller {
-	return &expensesController{paymentRepository, categoryRepository}
+func Expenses(payments repository.GRepository[model.Payment], categories repository.GRepository[model.Category]) Controller {
+	return &expenses{payments, categories}
 }
 
-func (c *expensesController) Routing(router service.Router) {
+func (c *expenses) Routing(router service.Router) {
 	router.Get("/expenses/by_period/", c.Expenses)
 	router.Get("/expenses/by_category/", c.Expenses)
 }
 
-func (c *expensesController) Expenses(writer http.ResponseWriter, request *http.Request) {
+func (c *expenses) Expenses(writer http.ResponseWriter, request *http.Request) {
 	var title string
 	switch request.URL.Path {
 	case "/expenses/by_period/":
@@ -54,7 +54,7 @@ type GraphData struct {
 const primaryColor = "#007bff"
 const neutralColor = "#6c757d"
 
-func (c *expensesController) prepareGraphData(request *http.Request) *GraphData {
+func (c *expenses) prepareGraphData(request *http.Request) *GraphData {
 	var graphData = GraphData{}
 	projectId := model.GetSelectedProjectIdString(request)
 	start, end, step := c.calculateBoundaries(request, &graphData)
@@ -64,14 +64,14 @@ func (c *expensesController) prepareGraphData(request *http.Request) *GraphData 
 		c.fillExpensesByPeriodGraphData(start, end, step, &graphData, projectId)
 	case "/expenses/by_category/":
 		graphData.Type = "doughnut"
-		categories := c.categoryRepository.List("WHERE ProjectId = " + projectId)
+		categories := c.categories.List("WHERE ProjectId = " + projectId)
 		categories = append(categories, model.Category{0, localization.Translate("uncategorized"), neutralColor, 0})
 		c.fillExpensesByCategoryGraphData(start, end, categories, &graphData, projectId)
 	}
 	return &graphData
 }
 
-func (c *expensesController) calculateBoundaries(request *http.Request, data *GraphData) (time.Time, time.Time, model.TimeUnit) {
+func (c *expenses) calculateBoundaries(request *http.Request, data *GraphData) (time.Time, time.Time, model.TimeUnit) {
 	location, _ := time.LoadLocation("Europe/Berlin")
 	now := time.Now().In(location)
 	var start time.Time
@@ -105,17 +105,17 @@ func (c *expensesController) calculateBoundaries(request *http.Request, data *Gr
 	return start, end, step
 }
 
-func (c *expensesController) fillExpensesByPeriodGraphData(start time.Time, end time.Time, step model.TimeUnit, data *GraphData, projectId string) {
+func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time, step model.TimeUnit, data *GraphData, projectId string) {
 	switch step {
 	case model.TimeUnitMonth:
 		for i := start.Month(); i <= end.Month(); i++ {
 			t := start.AddDate(0, int(i)-1, 0)
 			data.X = append(data.X, localization.Translate(t.Month().String()))
-			y := model.SumAmounts(c.paymentRepository.List(
+			y := model.SumAmounts(c.payments.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND Date LIKE '"+t.Format("2006-01")+"%'",
-			).([]model.Payment))
+			))
 			data.Y = append(data.Y, y)
 			data.Z = append(data.Z, primaryColor)
 			data.Total += y
@@ -124,11 +124,11 @@ func (c *expensesController) fillExpensesByPeriodGraphData(start time.Time, end 
 		for i := start.Day(); i <= end.Day(); i++ {
 			t := start.AddDate(0, 0, i-1)
 			data.X = append(data.X, t.Format(model.DateLayoutDE))
-			y := model.SumAmounts(c.paymentRepository.List(
+			y := model.SumAmounts(c.payments.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND Date = '"+t.Format(model.DateLayoutISO)+"'",
-			).([]model.Payment))
+			))
 			data.Y = append(data.Y, y)
 			data.Z = append(data.Z, primaryColor)
 			data.Total += y
@@ -137,11 +137,11 @@ func (c *expensesController) fillExpensesByPeriodGraphData(start time.Time, end 
 		for i := model.NormalWeekday(start.Weekday()); i <= model.NormalWeekday(end.Weekday()); i++ {
 			t := start.AddDate(0, 0, i)
 			data.X = append(data.X, localization.Translate(t.Weekday().String()))
-			y := model.SumAmounts(c.paymentRepository.List(
+			y := model.SumAmounts(c.payments.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND Date = '"+t.Format(model.DateLayoutISO)+"'",
-			).([]model.Payment))
+			))
 			data.Y = append(data.Y, y)
 			data.Z = append(data.Z, primaryColor)
 			data.Total += y
@@ -149,26 +149,26 @@ func (c *expensesController) fillExpensesByPeriodGraphData(start time.Time, end 
 	}
 }
 
-func (c *expensesController) fillExpensesByCategoryGraphData(start time.Time, end time.Time, categories []model.Category, data *GraphData, projectId string) {
+func (c *expenses) fillExpensesByCategoryGraphData(start time.Time, end time.Time, categories []model.Category, data *GraphData, projectId string) {
 	startDate := start.Format(model.DateLayoutISO)
 	endDate := end.Format(model.DateLayoutISO)
 	for _, category := range categories {
 		data.X = append(data.X, category.Name)
 		var y model.EUR
 		if category.Id == 0 {
-			y = model.SumAmounts(c.paymentRepository.List(
+			y = model.SumAmounts(c.payments.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND CategoryId NOT IN ("+ExtractCategoryIds(categories)+")",
 				"AND Date BETWEEN '"+startDate+"' AND '"+endDate+"'",
-			).([]model.Payment))
+			))
 		} else {
-			y = model.SumAmounts(c.paymentRepository.List(
+			y = model.SumAmounts(c.payments.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND CategoryId = '"+strconv.FormatInt(category.Id, 10)+"'",
 				"AND Date BETWEEN '"+startDate+"' AND '"+endDate+"'",
-			).([]model.Payment))
+			))
 		}
 		data.Y = append(data.Y, y)
 		data.Z = append(data.Z, category.Color)
@@ -176,7 +176,7 @@ func (c *expensesController) fillExpensesByCategoryGraphData(start time.Time, en
 	}
 }
 
-func (c *expensesController) prepareYears() []int {
+func (c *expenses) prepareYears() []int {
 	var result []int
 	currentYear := time.Now().Year()
 	for i := 1; i < 11; i++ {
