@@ -2,8 +2,11 @@ package model
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/base64"
 	"encoding/gob"
+	"net/http"
+	"strconv"
 )
 
 type User struct {
@@ -12,6 +15,20 @@ type User struct {
 	Password string
 	Role     UserRole
 	Projects []Project
+}
+
+func (u User) FromQuery(row *sql.Rows) *User {
+	scanAndPanic(row, &u.Id, &u.Name, &u.Password, &u.Role)
+	return &u
+}
+
+func (u User) FromRequest(request *http.Request, id int64) *User {
+	admin, _ := strconv.Atoi(request.Form.Get("Role"))
+	u.Id = id
+	u.Name = request.Form.Get("Name")
+	u.Password = request.Form.Get("Password")
+	u.Role = UserRole(admin)
+	return &u
 }
 
 type UserRole int64

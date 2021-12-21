@@ -6,14 +6,9 @@ import (
 )
 
 type categoryRepository struct {
-	GenericRepository[model.Category]
+	gRepository[model.Category]
 }
 
 func CategoryRepository(database service.Database) GRepository[model.Category] {
-	return &categoryRepository{
-		GenericRepository[model.Category]{
-			database,
-			model.Category{},
-		},
-	}
+	return &categoryRepository{gRepository[model.Category]{database, model.Category{}}}
 }

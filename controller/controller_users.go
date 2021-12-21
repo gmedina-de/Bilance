@@ -1,17 +1,18 @@
 package controller
 
 import (
+	"Bilance/model"
 	"Bilance/repository"
 	"Bilance/service"
 )
 
 type usersController struct {
-	crudController
+	crudController2[model.User]
 }
 
-func UsersController(repository repository.Repository) Controller {
+func UsersController(repository repository.GRepository[model.User]) Controller {
 	return &usersController{
-		crudController{
+		crudController2[model.User]{
 			repository: repository,
 			basePath:   "/admin/users/",
 		},

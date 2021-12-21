@@ -6,7 +6,6 @@ import (
 )
 
 type Model[T any] interface {
-	Empty() *T
 	FromRequest(request *http.Request, id int64) *T
 	FromQuery(row *sql.Rows) *T
 }

@@ -9,10 +9,10 @@ import (
 
 type projectsController struct {
 	crudController
-	userRepository repository.Repository
+	userRepository repository.GRepository[model.User]
 }
 
-func ProjectsController(repository repository.Repository, userRepository repository.Repository) Controller {
+func ProjectsController(repository repository.Repository, userRepository repository.GRepository[model.User]) Controller {
 	return &projectsController{
 		crudController{
 			repository: repository,
@@ -20,9 +20,9 @@ func ProjectsController(repository repository.Repository, userRepository reposit
 			dataProvider: func(request *http.Request) interface{} {
 				if request.URL.Query().Get("Id") != "" {
 					idString := request.URL.Query().Get("Id")
-					return userRepository.List("WHERE Id NOT IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")").([]model.User)
+					return userRepository.List("WHERE Id NOT IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")")
 				} else {
-					return userRepository.List().([]model.User)
+					return userRepository.List()
 				}
 			},
 		},

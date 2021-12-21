@@ -12,10 +12,6 @@ type Category struct {
 	ProjectId int64
 }
 
-func (c Category) Empty() *Category {
-	return &c
-}
-
 func (c Category) FromQuery(row *sql.Rows) *Category {
 	scanAndPanic(row, &c.Id, &c.Name, &c.Color, &c.ProjectId)
 	return &c

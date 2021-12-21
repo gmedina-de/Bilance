@@ -3,80 +3,12 @@ package repository
 import (
 	"Bilance/model"
 	"Bilance/service"
-	"database/sql"
-	"net/http"
-	"strconv"
 )
 
 type userRepository struct {
-	database service.Database
+	gRepository[model.User]
 }
 
-func UserRepository(database service.Database) Repository {
-	return &userRepository{database}
-}
-func (r *userRepository) ModelName() string {
-	return "user"
-}
-
-func (r *userRepository) ModelNamePlural() string {
-	return "users"
-}
-
-func (r *userRepository) NewEmpty() interface{} {
-	return &model.User{}
-}
-
-func (r *userRepository) NewFromQuery(row *sql.Rows) interface{} {
-	var id int64
-	var Name string
-	var password string
-	var role model.UserRole
-	scanAndPanic(row, &id, &Name, &password, &role)
-	return &model.User{id, Name, password, role, nil}
-}
-
-func (r *userRepository) NewFromRequest(request *http.Request, id int64) interface{} {
-	admin, _ := strconv.Atoi(request.Form.Get("Role"))
-	return &model.User{
-		id,
-		request.Form.Get("Name"),
-		request.Form.Get("Password"),
-		model.UserRole(admin),
-		nil,
-	}
-}
-
-func (r *userRepository) Find(id int64) interface{} {
-	var result []model.User
-	r.database.Select(r.ModelName(), &result, "*", r.NewFromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
-	if len(result) > 0 {
-		return &result[0]
-	} else {
-		return r.NewEmpty()
-	}
-}
-
-func (r *userRepository) List(conditions ...string) interface{} {
-	var result []model.User
-	r.database.Select(r.ModelName(), &result, "*", r.NewFromQuery, conditions...)
-	return result
-}
-
-func (r *userRepository) Count(conditions ...string) int64 {
-	var result []int64
-	r.database.Select(r.ModelName(), &result, "COUNT(*)", countQueryFunc, conditions...)
-	return result[0]
-}
-
-func (r *userRepository) Insert(entity interface{}) {
-	r.database.Insert(r.ModelName(), entity)
-}
-
-func (r *userRepository) Update(entity interface{}) {
-	r.database.Update(r.ModelName(), entity)
-}
-
-func (r *userRepository) Delete(entity interface{}) {
-	r.database.Delete(r.ModelName(), entity)
+func UserRepository(database service.Database) GRepository[model.User] {
+	return &userRepository{gRepository[model.User]{database, model.User{}}}
 }

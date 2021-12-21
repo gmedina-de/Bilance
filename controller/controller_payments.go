@@ -13,7 +13,7 @@ type paymentsController struct {
 	crudController
 }
 
-func PaymentController(repository repository.Repository, categoryRepository repository.GRepository[model.Category], userRepository repository.Repository) Controller {
+func PaymentController(repository repository.Repository, categoryRepository repository.GRepository[model.Category], userRepository repository.GRepository[model.User]) Controller {
 	return &paymentsController{
 		crudController{
 			repository: repository,
@@ -25,7 +25,7 @@ func PaymentController(repository repository.Repository, categoryRepository repo
 					Users      []model.User
 				}{
 					categoryRepository.List("WHERE ProjectId = " + projectId),
-					userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + projectId + ")").([]model.User),
+					userRepository.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + projectId + ")"),
 				}
 			},
 		},
