@@ -12,13 +12,21 @@
     {{$Categories := .Parameters.Data.Categories}}
     {{range .Parameters.Model}}
         <tr onclick="window.location.href='{{$Path}}edit?Id={{.Id}}';">
-            <td>{{.Name}}<br><span data-feather="calendar"></span> {{.Date.Format}}</td>
+            <td>
+                {{.Name}}
+                <br><span data-feather="calendar"></span> {{.Date.Format}}
+            </td>
             {{$Category := index $Categories .CategoryId}}
-            <td><i style="color: {{$Category.Color}}">{{$Category.Name}}</i><br><b>{{.Amount.FormatWithCurrency}}</b>
+            <td>
+                {{if $Category}}<i style="color: {{$Category.Color}}">{{$Category.Name}}</i><br>{{end}}
+                <b>{{.Amount.FormatWithCurrency}}</b>
             </td>
             {{$Payer := index $Users .PayerId}}
             {{$Payee := index $Users .PayeeId}}
-            <td>{{$Payer.Name}}<span data-feather="arrow-right"></span><br>{{$Payee.Name}}</td>
+            <td>
+                {{$Payer.Name}}<span data-feather="arrow-right"></span><br>
+                {{if $Payee}}{{$Payee.Name}}{{end}}
+            </td>
         </tr>
     {{end}}
     </tbody>
