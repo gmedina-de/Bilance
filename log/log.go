@@ -1,4 +1,4 @@
-package service
+package log
 
 type Log interface {
 	Debug(message string, parameters ...interface{})

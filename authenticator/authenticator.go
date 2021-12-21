@@ -1,4 +1,4 @@
-package service
+package authenticator
 
 import (
 	"net/http"

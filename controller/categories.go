@@ -6,12 +6,12 @@ import (
 )
 
 type categories struct {
-	generic2[model.Category]
+	generic[model.Category]
 }
 
-func Categories(repository repository.GRepository[model.Category]) Controller {
+func Categories(repository repository.Repository[model.Category]) Controller {
 	return &categories{
-		generic2[model.Category]{
+		generic[model.Category]{
 			repository: repository,
 			basePath:   "/categories/",
 		},

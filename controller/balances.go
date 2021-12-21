@@ -3,23 +3,28 @@ package controller
 import (
 	"Bilance/model"
 	"Bilance/repository"
-	"Bilance/service"
+	"Bilance/server"
 	"math"
 	"net/http"
 	"strconv"
 )
 
 type balances struct {
-	projects          repository.Repository
-	paymentRepository repository.GRepository[model.Payment]
+	projects repository.Repository[model.Project]
+	payments repository.Repository[model.Payment]
+	users    repository.Repository[model.User]
 }
 
-func Balances(projectRepository repository.Repository, paymentRepository repository.GRepository[model.Payment]) Controller {
-	return &balances{projectRepository, paymentRepository}
+func Balances(
+	projects repository.Repository[model.Project],
+	payments repository.Repository[model.Payment],
+	users repository.Repository[model.User],
+) Controller {
+	return &balances{projects, payments, users}
 }
 
-func (b *balances) Routing(router service.Router) {
-	router.Get("/balances/", b.Balances)
+func (b *balances) Routing(server server.Server) {
+	server.Get("/balances/", b.Balances)
 }
 
 func (b *balances) Balances(writer http.ResponseWriter, request *http.Request) {
@@ -35,29 +40,29 @@ func (b *balances) Balances(writer http.ResponseWriter, request *http.Request) {
 
 func (b *balances) prepareBalanceData(request *http.Request) []*BalanceData {
 	var balanceData []*BalanceData
-	project := b.projects.Find(model.GetSelectedProjectId(request)).(*model.Project)
+	project := b.projects.Find(model.GetSelectedProjectId(request))
 	projectIdString := model.GetSelectedProjectIdString(request)
-	totalExpenses := -model.SumAmounts(b.paymentRepository.List(
+	totalExpenses := -model.SumAmounts(b.payments.List(
 		"WHERE ProjectId = "+projectIdString,
 		"AND PayeeId = 0",
 	))
-	users := project.Users
-	userAmount := len(users)
+	userIds := model.StringToIds(project.UserIds)
+	userAmount := len(userIds)
 	proportionalExpenses := model.EUR(int64(totalExpenses) / int64(userAmount))
 	var maxBalance float64
-	for _, user := range users {
-		userIdString := strconv.FormatInt(user.Id, 10)
-		sentExpenses := model.SumAmounts(b.paymentRepository.List(
+	for _, userId := range userIds {
+		userIdString := strconv.FormatInt(userId, 10)
+		sentExpenses := model.SumAmounts(b.payments.List(
 			"WHERE ProjectId = "+projectIdString,
 			"AND PayerId = "+userIdString,
 			"AND PayeeId = 0",
 		))
-		sentTransfer := model.SumAmounts(b.paymentRepository.List(
+		sentTransfer := model.SumAmounts(b.payments.List(
 			"WHERE ProjectId = "+projectIdString,
 			"AND PayerId = "+userIdString,
 			"AND PayeeId != 0",
 		))
-		receivedTransfer := model.SumAmounts(b.paymentRepository.List(
+		receivedTransfer := model.SumAmounts(b.payments.List(
 			"WHERE ProjectId = "+projectIdString,
 			"AND PayerId != "+userIdString,
 			"AND PayeeId = "+userIdString,
@@ -68,7 +73,7 @@ func (b *balances) prepareBalanceData(request *http.Request) []*BalanceData {
 		}
 		balanceData = append(balanceData, &BalanceData{
 			ProjectName:          project.Name,
-			UserName:             user.Name,
+			UserName:             b.users.Find(userId).Name,
 			TotalExpenses:        totalExpenses,
 			UserAmount:           userAmount,
 			ProportionalExpenses: proportionalExpenses,

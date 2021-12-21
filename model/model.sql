@@ -5,7 +5,8 @@ create table Project
         constraint Project_pk
             primary key autoincrement,
     Name text not null,
-    Description text
+    Description text,
+    Users text
 );
 
 create table Category
@@ -49,19 +50,6 @@ create table Payment
         references User
             on update cascade on delete cascade,
     PayeeId INTEGER
-        references User
-            on update cascade on delete cascade
-);
-
-create table ProjectUser
-(
-    Id INTEGER
-        constraint ProjectUser_pk
-            primary key autoincrement,
-    ProjectId INTEGER not null
-        references Project
-            on update cascade on delete cascade,
-    UserId INTEGER not null
         references User
             on update cascade on delete cascade
 );

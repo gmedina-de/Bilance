@@ -37,12 +37,10 @@
 
     <div class="col-12">
         <label for="Users" class="form-label">{{translate "users"}}</label>
-        <select class="form-select" id="Users" name="Users" multiple>
-            {{range .Parameters.Model.Users}}
-                <option value="{{.Id}}" selected>{{.Name}}</option>
-            {{end}}
+        <select class="form-select" id="Users" name="UserIds" multiple>
+            {{$UserIds := .Parameters.Model.UserIds}}
             {{range .Parameters.Data}}
-                <option value="{{.Id}}">{{.Name}}</option>
+                <option value="{{.Id}}" {{if contains $UserIds .Id}}{{end}}>{{.Name}}</option>
             {{end}}
         </select>
     </div>

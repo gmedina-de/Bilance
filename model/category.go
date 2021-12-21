@@ -13,7 +13,10 @@ type Category struct {
 }
 
 func (c Category) FromQuery(row *sql.Rows) *Category {
-	scanAndPanic(row, &c.Id, &c.Name, &c.Color, &c.ProjectId)
+	columns, _ := row.Columns()
+	println(columns)
+	row.Scan()
+	ScanAndPanic(row, &c.Id, &c.Name, &c.Color, &c.ProjectId)
 	return &c
 }
 

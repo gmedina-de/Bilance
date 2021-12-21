@@ -7,22 +7,17 @@ import (
 )
 
 type projects struct {
-	generic
-	users repository.GRepository[model.User]
+	generic[model.Project]
+	users repository.Repository[model.User]
 }
 
-func Projects(repository repository.Repository, users repository.GRepository[model.User]) Controller {
+func Projects(repository repository.Repository[model.Project], users repository.Repository[model.User]) Controller {
 	return &projects{
-		generic{
+		generic[model.Project]{
 			repository: repository,
 			basePath:   "/admin/projects/",
 			dataProvider: func(request *http.Request) interface{} {
-				if request.URL.Query().Get("Id") != "" {
-					idString := request.URL.Query().Get("Id")
-					return users.List("WHERE Id NOT IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + idString + ")")
-				} else {
-					return users.List()
-				}
+				return users.List()
 			},
 		},
 		users,

@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"Bilance/localization"
 	"Bilance/model"
 	"Bilance/repository"
-	"Bilance/service"
-	"Bilance/static"
+	"Bilance/server"
 	"net/http"
 	"strconv"
 	"strings"
@@ -12,26 +12,26 @@ import (
 )
 
 type expenses struct {
-	payments   repository.GRepository[model.Payment]
-	categories repository.GRepository[model.Category]
+	payments   repository.Repository[model.Payment]
+	categories repository.Repository[model.Category]
 }
 
-func Expenses(payments repository.GRepository[model.Payment], categories repository.GRepository[model.Category]) Controller {
+func Expenses(payments repository.Repository[model.Payment], categories repository.Repository[model.Category]) Controller {
 	return &expenses{payments, categories}
 }
 
-func (c *expenses) Routing(router service.Router) {
-	router.Get("/expenses/by_period/", c.Expenses)
-	router.Get("/expenses/by_category/", c.Expenses)
+func (c *expenses) Routing(server server.Server) {
+	server.Get("/expenses/by_period/", c.Expenses)
+	server.Get("/expenses/by_category/", c.Expenses)
 }
 
 func (c *expenses) Expenses(writer http.ResponseWriter, request *http.Request) {
 	var title string
 	switch request.URL.Path {
 	case "/expenses/by_period/":
-		title = static.Translate("expenses") + " " + static.Translate("by_period")
+		title = localization.Translate("expenses") + " " + localization.Translate("by_period")
 	case "/expenses/by_category/":
-		title = static.Translate("expenses") + " " + static.Translate("by_category")
+		title = localization.Translate("expenses") + " " + localization.Translate("by_category")
 	}
 	render(
 		writer,
@@ -65,7 +65,7 @@ func (c *expenses) prepareGraphData(request *http.Request) *GraphData {
 	case "/expenses/by_category/":
 		graphData.Type = "doughnut"
 		categories := c.categories.List("WHERE ProjectId = " + projectId)
-		categories = append(categories, model.Category{0, static.Translate("uncategorized"), neutralColor, 0})
+		categories = append(categories, model.Category{0, localization.Translate("uncategorized"), neutralColor, 0})
 		c.fillExpensesByCategoryGraphData(start, end, categories, &graphData, projectId)
 	}
 	return &graphData
@@ -110,7 +110,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 	case model.TimeUnitMonth:
 		for i := start.Month(); i <= end.Month(); i++ {
 			t := start.AddDate(0, int(i)-1, 0)
-			data.X = append(data.X, static.Translate(t.Month().String()))
+			data.X = append(data.X, localization.Translate(t.Month().String()))
 			y := model.SumAmounts(c.payments.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",
@@ -136,7 +136,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 	case model.TimeUnitWeekday:
 		for i := model.NormalWeekday(start.Weekday()); i <= model.NormalWeekday(end.Weekday()); i++ {
 			t := start.AddDate(0, 0, i)
-			data.X = append(data.X, static.Translate(t.Weekday().String()))
+			data.X = append(data.X, localization.Translate(t.Weekday().String()))
 			y := model.SumAmounts(c.payments.List(
 				"WHERE ProjectId = "+projectId,
 				"AND PayeeId = 0",

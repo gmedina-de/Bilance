@@ -1,9 +1,14 @@
 package model
 
 import (
+	"bytes"
 	"database/sql"
+	"encoding/base64"
+	"encoding/gob"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -12,11 +17,36 @@ type Model[T any] interface {
 	FromQuery(row *sql.Rows) *T
 }
 
-func scanAndPanic(row *sql.Rows, dest ...interface{}) {
+func ScanAndPanic(row *sql.Rows, dest ...interface{}) {
 	err := row.Scan(dest...)
 	if err != nil {
 		panic(err)
 	}
+}
+
+func StringToIds(input string) []int64 {
+	split := strings.Split(input, ",")
+	var result []int64
+	for _, id := range split {
+		parseInt, _ := strconv.ParseInt(id, 10, 64)
+		result = append(result, parseInt)
+	}
+	return result
+}
+
+func Serialize(T any) string {
+	b := bytes.Buffer{}
+	e := gob.NewEncoder(&b)
+	_ = e.Encode(T)
+	return base64.StdEncoding.EncodeToString(b.Bytes())
+}
+
+func Deserialize[T any](str string, dest *T) {
+	by, _ := base64.StdEncoding.DecodeString(str)
+	b := bytes.Buffer{}
+	b.Write(by)
+	d := gob.NewDecoder(&b)
+	_ = d.Decode(&dest)
 }
 
 type EUR int64
