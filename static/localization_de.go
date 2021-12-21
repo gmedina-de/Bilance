@@ -1,4 +1,4 @@
-package localization
+package static
 
 var l10nDe = l10n{
 	// navigation

@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"Bilance/localization"
 	"Bilance/model"
 	"Bilance/repository"
 	"Bilance/service"
+	"Bilance/static"
 	"net/http"
 	"strconv"
 )
@@ -57,7 +57,7 @@ func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
 			request,
 			&Parameters{
 				Model: list,
-				Toast: strconv.Itoa(len(list)) + " " + localization.Translate("records_found"),
+				Toast: strconv.Itoa(len(list)) + " " + static.Translate("records_found"),
 			},
 			"search_results",
 			"crud_table",

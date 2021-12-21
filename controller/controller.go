@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"Bilance/localization"
 	"Bilance/model"
 	"Bilance/service"
+	"Bilance/static"
 	"html/template"
 	"net/http"
 	"strings"
@@ -39,7 +39,7 @@ func render(writer http.ResponseWriter, request *http.Request, parameters *Param
 	)
 	tmpl := template.New("")
 	tmpl.Funcs(template.FuncMap{
-		"translate": localization.Translate,
+		"translate": static.Translate,
 		"active":    active,
 		"paginate":  paginate,
 		"sum":       sum,
