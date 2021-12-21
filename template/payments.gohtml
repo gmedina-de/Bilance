@@ -8,14 +8,17 @@
     </thead>
     <tbody>
     {{$Path:=.Path}}
-    {{$Categories := .Parameters.Data}}
+    {{$Users := .Parameters.Data.Users}}
+    {{$Categories := .Parameters.Data.Categories}}
     {{range .Parameters.Model}}
         <tr onclick="window.location.href='{{$Path}}edit?Id={{.Id}}';">
             <td>{{.Name}}<br><span data-feather="calendar"></span> {{.Date.Format}}</td>
-            {{$Category := $Categories.CategoryId}}
+            {{$Category := index $Categories .CategoryId}}
             <td><i style="color: {{$Category.Color}}">{{$Category.Name}}</i><br><b>{{.Amount.FormatWithCurrency}}</b>
             </td>
-            <td>{{.Payer.Name}}<span data-feather="arrow-right"></span><br>{{.Payee.Name}}</td>
+            {{$Payer := index $Users .PayerId}}
+            {{$Payee := index $Users .PayeeId}}
+            <td>{{$Payer.Name}}<span data-feather="arrow-right"></span><br>{{$Payee.Name}}</td>
         </tr>
     {{end}}
     </tbody>

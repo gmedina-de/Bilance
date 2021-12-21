@@ -8,8 +8,8 @@
     {{end}}
     {{if .Parameters.Data}}
         {{$Path := .Path}}
-        {{$Pages := .Parameters.Data.Pages}}
-        {{$Active := .Parameters.Data.Active}}
+        {{$Pages := .Parameters.Pagination.Pages}}
+        {{$Active := .Parameters.Pagination.Active}}
         {{if gt $Pages 1}}
             <nav>
                 <ul class="pagination justify-content-center">

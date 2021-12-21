@@ -1,20 +1,22 @@
 package controller
 
 import (
+	"Bilance/localization"
 	"Bilance/model"
-	"Bilance/service"
-	"Bilance/static"
+	"Bilance/server"
 	"html/template"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
 type Controller interface {
-	Routing(router service.Router)
+	Routing(router server.Server)
 }
 
 type Context struct {
 	User              *model.User
+	Projects          []model.Project
 	SelectedProjectId int64
 	Path              string
 	Title             string
@@ -22,9 +24,10 @@ type Context struct {
 }
 
 type Parameters struct {
-	Model interface{}
-	Data  interface{}
-	Toast string
+	Model      interface{}
+	Data       interface{}
+	Pagination *Pagination
+	Toast      string
 }
 
 func render(writer http.ResponseWriter, request *http.Request, parameters *Parameters, title string, templates ...string) {
@@ -39,18 +42,24 @@ func render(writer http.ResponseWriter, request *http.Request, parameters *Param
 	)
 	tmpl := template.New("")
 	tmpl.Funcs(template.FuncMap{
-		"translate": static.Translate,
+		"translate": localization.Translate,
 		"active":    active,
 		"paginate":  paginate,
 		"sum":       sum,
+		"contains":  contains,
 	})
 	tmpl, err := tmpl.ParseFiles(templates...)
 	if err != nil {
 		panic(err)
 	}
-	user := model.DeserializeUser(request.Header.Get("user"))
+
+	var user model.User
+	model.Deserialize(request.Header.Get("user"), &user)
+	var projects []model.Project
+	model.Deserialize(request.Header.Get("projects"), &projects)
 	err = tmpl.ExecuteTemplate(writer, "base", &Context{
-		user,
+		&user,
+		projects,
 		model.GetSelectedProjectId(request),
 		request.URL.Path,
 		title,
@@ -80,7 +89,10 @@ func paginate(count int64) []int64 {
 	}
 	return items
 }
-
 func sum(a int64, b int64) int64 {
 	return a + b
+}
+
+func contains(a string, b int64) bool {
+	return strings.Contains(a, strconv.FormatInt(b, 10))
 }

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"Bilance/model"
-	"Bilance/service"
+	"Bilance/server"
 	"net/http"
 )
 
@@ -13,9 +13,9 @@ func Index() Controller {
 	return &index{}
 }
 
-func (c *index) Routing(router service.Router) {
-	router.Get("/", c.Index)
-	router.Get("/changeProject", c.ChangeProject)
+func (c *index) Routing(server server.Server) {
+	server.Get("/", c.Index)
+	server.Get("/changeProject", c.ChangeProject)
 }
 
 func (c *index) Index(writer http.ResponseWriter, request *http.Request) {

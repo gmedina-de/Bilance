@@ -2,13 +2,13 @@
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">
             <b>Bilance</b>
-            {{if eq (len .User.Projects) 1}}
+            {{if eq (len .Projects) 1}}
                 {{$SelectedProjectId:=.SelectedProjectId}}
                 {{range .User.Projects}}
                     {{if eq $SelectedProjectId .Id}}{{.Name}}{{end}}
                 {{end}}
             {{end}}
-            {{if gt (len .User.Projects) 1}}
+            {{if gt (len .Projects) 1}}
                 <form action="/changeProject" id="project-selector" method="get" onclick="event.preventDefault()">
                     <select name="SelectedProjectId" onchange="this.form.submit()">
                         {{$SelectedProjectId:=.SelectedProjectId}}

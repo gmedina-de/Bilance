@@ -1,31 +1,16 @@
 package repository
 
 import (
+	"Bilance/database"
 	"Bilance/model"
-	"Bilance/service"
 	"database/sql"
-	"net/http"
 	"reflect"
 	"strconv"
 	"strings"
 )
 
-type GRepository[T model.Model[T]] interface {
-	ModelName() string
-	ModelNamePlural() string
-	NewEmpty() *T
-	NewFromQuery(row *sql.Rows) *T
-	NewFromRequest(request *http.Request, id int64) *T
-	Find(id int64) *T
-	List(conditions ...string) []T
-	Count(conditions ...string) int64
-	Insert(entity *T)
-	Update(entity *T)
-	Delete(entity *T)
-}
-
-type generic[T model.Model[T]] struct {
-	database service.Database
+type generic[T model.Model] struct {
+	database database.Database
 	model    T
 }
 
@@ -45,21 +30,13 @@ func (r *generic[T]) NewEmpty() *T {
 	return &r.model
 }
 
-func (r *generic[T]) NewFromQuery(row *sql.Rows) *T {
-	return r.model.FromQuery(row)
-}
-
-func (r *generic[T]) NewFromRequest(request *http.Request, id int64) *T {
-	return r.model.FromRequest(request, id)
-}
-
-func (r *generic[T]) newFromQueryInterface(row *sql.Rows) interface{} {
-	return r.NewFromQuery(row)
+func (r *generic[T]) fromQuery(row *sql.Rows) any {
+	return r.FromQuery(row)
 }
 
 func (r *generic[T]) Find(id int64) *T {
 	var result []T
-	r.database.Select(r.ModelName(), &result, "*", r.newFromQueryInterface, "WHERE Id = "+strconv.FormatInt(id, 10))
+	r.database.Select(r.ModelName(), &result, "*", r.fromQuery, "WHERE Id = "+strconv.FormatInt(id, 10))
 	if len(result) > 0 {
 		return &result[0]
 	} else {
@@ -69,7 +46,16 @@ func (r *generic[T]) Find(id int64) *T {
 
 func (r *generic[T]) List(conditions ...string) []T {
 	var result []T
-	r.database.Select(r.ModelName(), &result, "*", r.newFromQueryInterface, conditions...)
+	r.database.Select(r.ModelName(), &result, "*", r.fromQuery, conditions...)
+	return result
+}
+
+func (r *generic[T]) Map(conditions ...string) map[int64]*T {
+	var result = make(map[int64]*T)
+	list := r.List(conditions...)
+	for _, elem := range list {
+		result[reflect.ValueOf(elem).FieldByName("Id").Interface().(int64)] = &elem
+	}
 	return result
 }
 
@@ -93,6 +79,6 @@ func (r *generic[T]) Delete(entity *T) {
 
 func countQueryFunc(row *sql.Rows) interface{} {
 	var count int64
-	scanAndPanic(row, &count)
+	row.Scan(row, &count)
 	return &count
 }

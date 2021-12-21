@@ -1,45 +1,45 @@
 package controller
 
 import (
+	"Bilance/localization"
 	"Bilance/model"
 	"Bilance/repository"
-	"Bilance/service"
-	"Bilance/static"
+	"Bilance/server"
 	"net/http"
 	"strconv"
 )
 
 type payments struct {
-	generic2[model.Payment]
+	generic[model.Payment]
 }
 
 func Payments(
-	repository repository.GRepository[model.Payment],
-	categories repository.GRepository[model.Category],
-	users repository.GRepository[model.User],
+	repository repository.Repository[model.Payment],
+	categories repository.Repository[model.Category],
+	users repository.Repository[model.User],
 ) Controller {
 	return &payments{
-		generic2[model.Payment]{
+		generic[model.Payment]{
 			repository: repository,
 			basePath:   "/payments/",
 			dataProvider: func(request *http.Request) interface{} {
 				projectId := model.GetSelectedProjectIdString(request)
 				return struct {
-					Categories []model.Category
-					Users      []model.User
+					Categories map[int64]*model.Category
+					Users      map[int64]*model.User
 				}{
-					categories.List("WHERE ProjectId = " + projectId),
-					users.List("WHERE Id IN (SELECT UserId FROM ProjectUser WHERE ProjectId = " + projectId + ")"),
+					categories.Map("WHERE ProjectId = " + projectId),
+					users.Map("WHERE Id IN (SELECT UserIds FROM Project WHERE Id = " + projectId + ")"),
 				}
 			},
 		},
 	}
 }
 
-func (c *payments) Routing(router service.Router) {
-	c.generic2.Routing(router)
-	router.Get(c.basePath, c.List)
-	router.Post(c.basePath, c.List)
+func (c *payments) Routing(server server.Server) {
+	c.generic.Routing(server)
+	server.Get(c.basePath, c.List)
+	server.Post(c.basePath, c.List)
 }
 
 func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
@@ -57,13 +57,13 @@ func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
 			request,
 			&Parameters{
 				Model: list,
-				Toast: strconv.Itoa(len(list)) + " " + static.Translate("records_found"),
+				Toast: strconv.Itoa(len(list)) + " " + localization.Translate("records_found"),
 			},
 			"search_results",
 			"crud_table",
 			c.repository.ModelNamePlural(),
 		)
 	} else {
-		c.generic2.List(writer, request)
+		c.generic.List(writer, request)
 	}
 }

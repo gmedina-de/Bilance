@@ -6,12 +6,12 @@ import (
 )
 
 type users struct {
-	generic2[model.User]
+	generic[model.User]
 }
 
-func Users(repository repository.GRepository[model.User]) Controller {
+func Users(repository repository.Repository[model.User]) Controller {
 	return &users{
-		generic2[model.User]{
+		generic[model.User]{
 			repository: repository,
 			basePath:   "/admin/users/",
 		},

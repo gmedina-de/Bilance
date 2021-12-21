@@ -2,15 +2,15 @@ package application
 
 import (
 	"Bilance/controller"
-	"Bilance/service"
+	"Bilance/server"
 )
 
 type application struct {
 	controllers []controller.Controller
-	router      service.Router
+	router      server.Server
 }
 
-func Application(router service.Router, controllers []controller.Controller) *application {
+func Application(router server.Server, controllers []controller.Controller) *application {
 	return &application{controllers, router}
 }
 

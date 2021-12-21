@@ -2,17 +2,20 @@ package main
 
 import (
 	"Bilance/application"
+	"Bilance/authenticator"
 	"Bilance/controller"
+	"Bilance/database"
+	"Bilance/log"
 	"Bilance/repository"
-	"Bilance/service"
+	"Bilance/server"
 )
 
 func main() {
 	application.Genuine(
-		service.ConsoleLog,
-		service.SqliteDatabase,
-		service.BasicAuthenticator,
-		service.HttpRouter,
+		log.Console,
+		database.Sqlite,
+		authenticator.Basic,
+		server.Authenticated,
 		repository.Users,
 		repository.Categories,
 		repository.Payments,
