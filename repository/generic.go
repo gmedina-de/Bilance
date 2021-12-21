@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-type generic[T model.Model] struct {
+type generic[T model.Model[T]] struct {
 	database database.Database
 	model    T
 }
@@ -31,7 +31,7 @@ func (r *generic[T]) NewEmpty() *T {
 }
 
 func (r *generic[T]) fromQuery(row *sql.Rows) any {
-	return r.FromQuery(row)
+	return r.model.FromQuery(row)
 }
 
 func (r *generic[T]) Find(id int64) *T {

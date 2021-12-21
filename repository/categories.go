@@ -12,10 +12,8 @@ type categories struct {
 }
 
 func Categories(database database.Database) Repository[model.Category] {
-	c := &categories{generic[model.Category]{database: database, model: model.Category{}}}
 	return &categories{
 		generic[model.Category]{
-			c,
 			database,
 			model.Category{},
 		},

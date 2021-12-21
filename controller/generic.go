@@ -9,8 +9,7 @@ import (
 	"strings"
 )
 
-type generic[T model.Model] struct {
-	Controller
+type generic[T model.Model[T]] struct {
 	repository   repository.Repository[T]
 	basePath     string
 	dataProvider func(request *http.Request) interface{}
