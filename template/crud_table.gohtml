@@ -6,7 +6,7 @@
     {{else}}
         {{translate "no_records_found"}}
     {{end}}
-    {{if .Parameters.Data}}
+    {{if .Parameters.Pagination}}
         {{$Path := .Path}}
         {{$Pages := .Parameters.Pagination.Pages}}
         {{$Active := .Parameters.Pagination.Active}}
