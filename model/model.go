@@ -6,16 +6,12 @@ import (
 	"encoding/base64"
 	"encoding/gob"
 	"fmt"
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
 )
 
-type Model[T any] interface {
-	FromRequest(request *http.Request, id int64) *T
-	FromQuery(row *sql.Rows) *T
-}
+type Model any
 
 func ScanAndPanic(row *sql.Rows, dest ...interface{}) {
 	err := row.Scan(dest...)

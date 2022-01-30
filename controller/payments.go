@@ -28,8 +28,8 @@ func Payments(
 					Categories map[int64]*model.Category
 					Users      map[int64]*model.User
 				}{
-					categories.Map("WHERE ProjectId = " + projectId),
-					users.Map("WHERE Id IN (SELECT UserIds FROM Project WHERE Id = " + projectId + ")"),
+					categories.Map("ProjectId = " + projectId),
+					users.Map("Id IN (SELECT UserIds FROM Project WHERE Id = " + projectId + ")"),
 				}
 			},
 		},
@@ -46,7 +46,7 @@ func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
 	if request.URL.Query().Get("search") != "" {
 		term := request.URL.Query().Get("search")
 		list := c.repository.List(
-			"WHERE ProjectId = "+model.GetSelectedProjectIdString(request),
+			"ProjectId = "+model.GetSelectedProjectIdString(request),
 			"AND (Name LIKE '%"+term+"%'",
 			"OR CategoryId IN (SELECT Id FROM Category WHERE Name LIKE '%"+term+"%')",
 			"OR Date LIKE '"+term+"%')",

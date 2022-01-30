@@ -64,7 +64,7 @@ func (c *expenses) prepareGraphData(request *http.Request) *GraphData {
 		c.fillExpensesByPeriodGraphData(start, end, step, &graphData, projectId)
 	case "/expenses/by_category/":
 		graphData.Type = "doughnut"
-		categories := c.categories.List("WHERE ProjectId = " + projectId)
+		categories := c.categories.List("ProjectId = " + projectId)
 		categories = append(categories, model.Category{0, localization.Translate("uncategorized"), neutralColor, 0})
 		c.fillExpensesByCategoryGraphData(start, end, categories, &graphData, projectId)
 	}
@@ -112,7 +112,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 			t := start.AddDate(0, int(i)-1, 0)
 			data.X = append(data.X, localization.Translate(t.Month().String()))
 			y := model.SumAmounts(c.payments.List(
-				"WHERE ProjectId = "+projectId,
+				"ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND Date LIKE '"+t.Format("2006-01")+"%'",
 			))
@@ -125,7 +125,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 			t := start.AddDate(0, 0, i-1)
 			data.X = append(data.X, t.Format(model.DateLayoutDE))
 			y := model.SumAmounts(c.payments.List(
-				"WHERE ProjectId = "+projectId,
+				"ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND Date = '"+t.Format(model.DateLayoutISO)+"'",
 			))
@@ -138,7 +138,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 			t := start.AddDate(0, 0, i)
 			data.X = append(data.X, localization.Translate(t.Weekday().String()))
 			y := model.SumAmounts(c.payments.List(
-				"WHERE ProjectId = "+projectId,
+				"ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND Date = '"+t.Format(model.DateLayoutISO)+"'",
 			))
@@ -157,14 +157,14 @@ func (c *expenses) fillExpensesByCategoryGraphData(start time.Time, end time.Tim
 		var y model.EUR
 		if category.Id == 0 {
 			y = model.SumAmounts(c.payments.List(
-				"WHERE ProjectId = "+projectId,
+				"ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND CategoryId NOT IN ("+ExtractCategoryIds(categories)+")",
 				"AND Date BETWEEN '"+startDate+"' AND '"+endDate+"'",
 			))
 		} else {
 			y = model.SumAmounts(c.payments.List(
-				"WHERE ProjectId = "+projectId,
+				"ProjectId = "+projectId,
 				"AND PayeeId = 0",
 				"AND CategoryId = '"+strconv.FormatInt(category.Id, 10)+"'",
 				"AND Date BETWEEN '"+startDate+"' AND '"+endDate+"'",

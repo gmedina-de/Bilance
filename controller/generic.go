@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-type generic[T model.Model[T]] struct {
+type generic[T model.Model] struct {
 	repository   repository.Repository[T]
 	basePath     string
 	dataProvider func(request *http.Request) interface{}
@@ -40,15 +40,15 @@ func (g *generic[T]) List(writer http.ResponseWriter, request *http.Request) {
 	var conditions []string
 	switch modelName {
 	case "categories":
-		conditions = append(conditions, "WHERE ProjectId = "+projectIdString)
+		conditions = append(conditions, "ProjectId = "+projectIdString)
 	case "payments":
-		conditions = append(conditions, "WHERE ProjectId = "+projectIdString)
+		conditions = append(conditions, "ProjectId = "+projectIdString)
 		conditions = append(conditions, "ORDER BY Date DESC")
 	}
 
 	pagination, limitCondition := g.handlePagination(request, projectIdString)
 	parameters := &Parameters{
-		Model:      g.repository.List(append(conditions, limitCondition)...),
+		Model:      g.repository.Raw(strings.Join(conditions, " AND ") + " " + limitCondition),
 		Data:       data,
 		Pagination: pagination,
 		Toast:      toast,
@@ -73,7 +73,7 @@ func (g *generic[T]) handlePagination(request *http.Request, projectIdString str
 		page, _ = strconv.ParseInt(request.URL.Query().Get("page"), 10, 64)
 	}
 	var offset = limit * (page - 1)
-	var pages = g.repository.Count("WHERE ProjectId = "+projectIdString) / limit
+	var pages = g.repository.Count("ProjectId = "+projectIdString) / limit
 	pages++
 	return &Pagination{pages, page},
 		"LIMIT " + strconv.FormatInt(limit, 10) + " OFFSET " + strconv.FormatInt(offset, 10)

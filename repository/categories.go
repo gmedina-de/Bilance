@@ -3,27 +3,15 @@ package repository
 import (
 	"Bilance/database"
 	"Bilance/model"
-	"database/sql"
 	"net/http"
 )
 
 type categories struct {
-	generic[model.Category]
+	*generic[model.Category]
 }
 
 func Categories(database database.Database) Repository[model.Category] {
-	return &categories{
-		generic[model.Category]{
-			database,
-			model.Category{},
-		},
-	}
-}
-
-func (c *categories) FromQuery(row *sql.Rows) *model.Category {
-	category := model.Category{}
-	model.ScanAndPanic(row, &category.Id, &category.Name, &category.Color, &category.ProjectId)
-	return &category
+	return &categories{Generic(database, model.Category{})}
 }
 
 func (c *categories) FromRequest(request *http.Request, id int64) *model.Category {

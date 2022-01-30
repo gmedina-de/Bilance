@@ -35,7 +35,7 @@ func (b *basic) Authenticate(writer http.ResponseWriter, request *http.Request) 
 
 			if usernameMatch && passwordMatch {
 				if !strings.HasPrefix(request.URL.Path, "/admin") || user.Role == model.UserRoleAdmin {
-					projects := b.projects.List("WHERE UserIds LIKE '%" + strconv.FormatInt(user.Id, 10) + "%'")
+					projects := b.projects.List("UserIds LIKE '%" + strconv.FormatInt(user.Id, 10) + "%'")
 					if b.isProjectAccessible(user, projects, writer, request) {
 						request.Header.Add("user", model.Serialize(user))
 						request.Header.Add("user", model.Serialize(projects))
@@ -52,7 +52,7 @@ func (b *basic) Authenticate(writer http.ResponseWriter, request *http.Request) 
 }
 
 func (b *basic) retrieveUser(username string) (model.User, bool) {
-	users := b.users.List("WHERE Name = '" + username + "'")
+	users := b.users.List("name = ?", username)
 	if len(users) > 0 {
 		return users[0], true
 	} else {

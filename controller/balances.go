@@ -43,7 +43,7 @@ func (b *balances) prepareBalanceData(request *http.Request) []*BalanceData {
 	project := b.projects.Find(model.GetSelectedProjectId(request))
 	projectIdString := model.GetSelectedProjectIdString(request)
 	totalExpenses := -model.SumAmounts(b.payments.List(
-		"WHERE ProjectId = "+projectIdString,
+		"ProjectId = "+projectIdString,
 		"AND PayeeId = 0",
 	))
 	userIds := model.StringToIds(project.UserIds)
@@ -53,17 +53,17 @@ func (b *balances) prepareBalanceData(request *http.Request) []*BalanceData {
 	for _, userId := range userIds {
 		userIdString := strconv.FormatInt(userId, 10)
 		sentExpenses := model.SumAmounts(b.payments.List(
-			"WHERE ProjectId = "+projectIdString,
+			"ProjectId = "+projectIdString,
 			"AND PayerId = "+userIdString,
 			"AND PayeeId = 0",
 		))
 		sentTransfer := model.SumAmounts(b.payments.List(
-			"WHERE ProjectId = "+projectIdString,
+			"ProjectId = "+projectIdString,
 			"AND PayerId = "+userIdString,
 			"AND PayeeId != 0",
 		))
 		receivedTransfer := model.SumAmounts(b.payments.List(
-			"WHERE ProjectId = "+projectIdString,
+			"ProjectId = "+projectIdString,
 			"AND PayerId != "+userIdString,
 			"AND PayeeId = "+userIdString,
 		))

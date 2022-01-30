@@ -5,17 +5,20 @@ import (
 	"net/http"
 )
 
-type Repository[T model.Model[T]] interface {
+type Repository[T model.Model] interface {
 	ModelName() string
 	ModelNamePlural() string
 
 	NewEmpty() *T
 	FromRequest(request *http.Request, id int64) *T
 
+	All() []T
 	Find(id int64) *T
-	List(conditions ...string) []T
-	Map(conditions ...string) map[int64]*T
-	Count(conditions ...string) int64
+	List(query string, args ...string) []T
+	Map(query string, args ...string) map[int64]*T
+	Raw(sql string) []T
+
+	Count(query string, args ...string) int64
 
 	Insert(entity *T)
 	Update(entity *T)

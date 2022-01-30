@@ -3,30 +3,19 @@ package repository
 import (
 	"Bilance/database"
 	"Bilance/model"
-	"database/sql"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
 type payments struct {
-	generic[model.Payment]
+	*generic[model.Payment]
 }
 
 func Payments(database database.Database) Repository[model.Payment] {
-	return &payments{
-		generic[model.Payment]{
-			database: database,
-			model:    model.Payment{},
-		},
-	}
+	return &payments{Generic(database, model.Payment{})}
 }
 
-func (p *payments) FromQuery(row *sql.Rows) *model.Payment {
-	payment := model.Payment{}
-	model.ScanAndPanic(row, &payment.Id, &payment.Name, &payment.Amount, &payment.Date, &payment.ProjectId, &payment.CategoryId, &payment.PayerId, &payment.PayeeId)
-	return &payment
-}
 func (p *payments) FromRequest(request *http.Request, id int64) *model.Payment {
 	payment := model.Payment{}
 	payment.Id = id

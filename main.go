@@ -13,7 +13,7 @@ import (
 func main() {
 	application.Genuine(
 		log.Console,
-		database.Sqlite,
+		database.Gorm,
 		authenticator.Basic,
 		server.Authenticated,
 		repository.Users,

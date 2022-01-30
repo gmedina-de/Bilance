@@ -17,7 +17,7 @@ func Projects(repository repository.Repository[model.Project], users repository.
 			repository: repository,
 			basePath:   "/admin/projects/",
 			dataProvider: func(request *http.Request) interface{} {
-				return users.List()
+				return users.All()
 			},
 		},
 		users,
