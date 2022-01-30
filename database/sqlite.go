@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	_ "modernc.org/sqlite"
+	_ "github.com/mattn/go-sqlite3"
 	"os"
 	"reflect"
 	"strings"
