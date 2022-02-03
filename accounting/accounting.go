@@ -1,0 +1,18 @@
+package accounting
+
+import (
+	"homecloud/accounting/controller"
+	"homecloud/accounting/repository"
+	"homecloud/core"
+)
+
+func init() {
+	core.AddConstructors(
+		repository.Categories,
+		repository.Payments,
+		controller.Payments,
+		controller.Categories,
+		controller.Balances,
+		controller.Expenses,
+	)
+}
