@@ -19,24 +19,14 @@
 
             <div class="collapse navbar-collapse" id="navbarsExample03">
                 <ul class="navbar-nav mx-auto mb-2 mb-sm-0">
-                    <li>
-                        <a href="#" class="nav-link text-primary">
-                            <span data-feather="home" class="bi d-md-block mx-auto"></span>
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link">
-                            <span data-feather="book" class="bi d-md-block mx-auto"></span>
-                            Balance
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link">
-                            <span data-feather="cloud" class="bi d-md-block mx-auto"></span>
-                            Files
-                        </a>
-                    </li>
+                    {{range .Navigation}}
+                        <li>
+                            <a href="{{.Path}}" class="nav-link text-primary">
+                                <span data-feather="{{.Icon}}" class="bi d-md-block mx-auto"></span>
+                                {{.Name}}
+                            </a>
+                        </li>
+                    {{end}}
                 </ul>
                 <form>
                     <input class="form-control" type="text" placeholder="Search">

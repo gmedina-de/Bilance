@@ -17,10 +17,10 @@ func init() {
 		log.Console,
 		database.Gorm,
 		authenticator.Basic,
+		server.Authenticated,
 		repository.Users,
 		controller.Users,
 	)
-
 }
 
 func Init() {
@@ -29,8 +29,25 @@ func Init() {
 	}
 	fmt.Println("___________________________________")
 
-	srv := inject(server.Authenticated).Interface().(server.Server)
-	srv.Start()
+	application := inject(Application).Interface().(*application)
+	application.Run()
+}
+
+type application struct {
+	controllers []controller.Controller
+	server      server.Server
+}
+
+func Application(server server.Server, controllers []controller.Controller) *application {
+	return &application{controllers, server}
+}
+
+func (b *application) Run() {
+	for _, c := range b.controllers {
+		b.server.SetBasePath(TypeOf(c).Elem().Name())
+		c.Routing(b.server)
+	}
+	b.server.Start()
 }
 
 var (

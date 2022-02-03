@@ -6,6 +6,7 @@ import (
 	"homecloud/core/localization"
 	"homecloud/core/model"
 	"homecloud/core/repository"
+	"homecloud/core/server"
 	"net/http"
 	"strconv"
 	"strings"
@@ -19,6 +20,11 @@ type expenses struct {
 
 func Expenses(payments repository.Repository[model2.Payment], categories repository.Repository[model2.Category]) controller.Controller {
 	return &expenses{payments, categories}
+}
+
+func (c *expenses) Routing(server server.Server) {
+	server.Get("/expenses/by_period/", c.Expenses)
+	server.Get("/expenses/by_category/", c.Expenses)
 }
 
 func (c *expenses) Expenses(writer http.ResponseWriter, request *http.Request) {

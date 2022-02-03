@@ -3,41 +3,21 @@ package server
 import (
 	"fmt"
 	"homecloud/core/authenticator"
-	"homecloud/core/controller"
 	"homecloud/core/log"
 	"net/http"
-	"reflect"
 	"strings"
 )
 
 type authenticated struct {
 	log           log.Log
 	authenticator authenticator.Authenticator
-	routes        map[string]pair
+	routes        map[string]http.HandlerFunc
 	port          int
-	baseRoute     string
+	basePath      string
 }
 
-type pair struct {
-	controller controller.Controller
-	action     reflect.Value
-}
-
-func Authenticated(log log.Log, authenticator authenticator.Authenticator, controllers []controller.Controller) Server {
-	a := &authenticated{log: log, authenticator: authenticator, routes: make(map[string]pair), port: 8080}
-	for _, c := range controllers {
-		a.baseRoute = reflect.TypeOf(c).Name()
-		controllerType := reflect.TypeOf(c)
-		name := controllerType.Elem().Name()
-		for i := 0; i < controllerType.NumMethod(); i++ {
-			method := controllerType.Method(i)
-			action := strings.Replace("/"+strings.ToLower(method.Name), "/index", "", 1)
-			route := "GET /" + strings.Replace(name, "index", "", 1) + action
-			log.Debug("Route %s -> %s", route, method.Func)
-			a.routes[route] = pair{c, method.Func}
-		}
-	}
-	return a
+func Authenticated(log log.Log, authenticator authenticator.Authenticator) Server {
+	return &authenticated{log: log, authenticator: authenticator, routes: make(map[string]http.HandlerFunc), port: 8080}
 }
 
 func (r *authenticated) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
@@ -45,19 +25,33 @@ func (r *authenticated) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 	if r.authenticator.Authenticate(writer, request) {
 		handler, found := r.routes[strings.ToUpper(request.Method)+" "+request.URL.Path]
 		if found {
-			handler.action.Call([]reflect.Value{
-				reflect.ValueOf(handler.controller),
-				reflect.ValueOf(writer),
-				reflect.ValueOf(request),
-			})
+			handler(writer, request)
 		} else {
 			fmt.Fprintf(writer, "No route for %s found!", request.URL.Path)
 		}
 	}
 }
 
+func (r *authenticated) SetBasePath(basePath string) {
+	r.basePath = basePath
+}
+
+func (r *authenticated) Get(route string, handler http.HandlerFunc) {
+	r.route("GET", route, handler)
+}
+
+func (r *authenticated) Post(route string, handler http.HandlerFunc) {
+	r.route("POST", route, handler)
+}
+
+func (r *authenticated) route(method string, route string, handler http.HandlerFunc) {
+	s := method + " /" + r.basePath + route
+	r.log.Debug("Add route for %s", s)
+	r.routes[s] = handler
+}
+
 func (r *authenticated) Start() {
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("core/static"))))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", r.ServeHTTP)
 	r.log.Info("Listening to http://localhost:%d", r.port)
 	http.ListenAndServe(fmt.Sprintf(":%d", r.port), nil)

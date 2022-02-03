@@ -3,14 +3,25 @@ package controller
 import (
 	"homecloud/core/model"
 	"homecloud/core/repository"
+	"homecloud/core/server"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
 type Generic[T model.Model] struct {
+	BasePath     string
+	BaseTemplate string
 	Repository   repository.Repository[T]
 	DataProvider func(request *http.Request) interface{}
+}
+
+func (g *Generic[T]) Routing(server server.Server) {
+	server.Get(g.BasePath, g.Index)
+	server.Post(g.BasePath, g.Index)
+	server.Get(g.BasePath+"edit", g.Edit)
+	server.Post(g.BasePath+"edit", g.Edit)
+	server.Get(g.BasePath+"edit/delete", g.Delete)
 }
 
 func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
@@ -50,8 +61,8 @@ func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
 		request,
 		parameters,
 		modelName,
-		"crud_table",
-		modelName,
+		"core/template/crud_table.gohtml",
+		g.BaseTemplate,
 	)
 }
 
@@ -77,14 +88,13 @@ func (g *Generic[T]) Edit(writer http.ResponseWriter, request *http.Request) {
 		if g.DataProvider != nil {
 			data = g.DataProvider(request)
 		}
-		modelName := g.Repository.ModelNamePlural()
 		if request.URL.Query().Get("Id") != "" {
 			idString := request.URL.Query().Get("Id")
 			id, _ := strconv.ParseInt(idString, 10, 64)
 			model := g.Repository.Find(id)
-			Render(writer, request, &Parameters{Model: model, Data: data}, "edit", "crud_form", modelName)
+			Render(writer, request, &Parameters{Model: model, Data: data}, "edit", "core/template/crud_table.gohtml", g.BaseTemplate)
 		} else {
-			Render(writer, request, &Parameters{Model: g.Repository.NewEmpty(), Data: data}, "new", "crud_form", modelName)
+			Render(writer, request, &Parameters{Model: g.Repository.NewEmpty(), Data: data}, "new", "core/template/crud_form.gohtml", g.BaseTemplate)
 		}
 	} else if request.Method == "POST" {
 		err := request.ParseForm()
@@ -97,7 +107,7 @@ func (g *Generic[T]) Edit(writer http.ResponseWriter, request *http.Request) {
 		} else {
 			g.Repository.Insert(g.Repository.FromRequest(request, 0))
 		}
-		redirect(writer, request, "?success")
+		Redirect(writer, request, g.BasePath+"?success")
 	}
 }
 
@@ -106,11 +116,6 @@ func (g *Generic[T]) Delete(writer http.ResponseWriter, request *http.Request) {
 		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
 		item := g.Repository.Find(id)
 		g.Repository.Delete(item)
-		redirect(writer, request, "g.basePath")
+		Redirect(writer, request, g.BasePath)
 	}
-}
-
-type Pagination struct {
-	Pages  int64
-	Active int64
 }

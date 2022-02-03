@@ -6,6 +6,7 @@ import (
 	"homecloud/core/localization"
 	"homecloud/core/model"
 	"homecloud/core/repository"
+	"homecloud/core/server"
 	"net/http"
 	"strconv"
 )
@@ -21,7 +22,9 @@ func Payments(
 ) controller.Controller {
 	return &payments{
 		controller.Generic[model2.Payment]{
-			Repository: repository,
+			Repository:   repository,
+			BasePath:     "/payments",
+			BaseTemplate: "accounting/template/payments.gohtml",
 			DataProvider: func(request *http.Request) interface{} {
 				return struct {
 					Categories map[int64]*model2.Category
@@ -33,6 +36,13 @@ func Payments(
 			},
 		},
 	}
+}
+
+func (c *payments) Routing(server server.Server) {
+	c.Generic.Routing(server)
+	server.Get(c.BasePath, c.List)
+	server.Post(c.BasePath, c.List)
+	controller.AddMenuItem("accounting", "book", "/payments")
 }
 
 func (c *payments) List(writer http.ResponseWriter, request *http.Request) {

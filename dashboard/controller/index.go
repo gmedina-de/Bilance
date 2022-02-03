@@ -2,6 +2,7 @@ package controller
 
 import (
 	"homecloud/core/controller"
+	"homecloud/core/server"
 	"net/http"
 )
 
@@ -12,8 +13,13 @@ func Index() controller.Controller {
 	return &index{}
 }
 
+func (c *index) Routing(server server.Server) {
+	server.Get("/", c.Index)
+	controller.AddMenuItem("home", "home", "/")
+}
+
 func (c *index) Index(writer http.ResponseWriter, request *http.Request) {
-	controller.Render(writer, request, nil, "", "index")
+	controller.Render(writer, request, nil, "", "dashboard/template/index.gohtml")
 }
 
 //

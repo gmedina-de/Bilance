@@ -5,6 +5,7 @@ import (
 	"homecloud/core/controller"
 	"homecloud/core/model"
 	"homecloud/core/repository"
+	"homecloud/core/server"
 	"net/http"
 )
 
@@ -18,6 +19,10 @@ func Balances(
 	users repository.Repository[model.User],
 ) controller.Controller {
 	return &balances{payments, users}
+}
+
+func (b *balances) Routing(server server.Server) {
+	server.Get("/balances/", b.Balances)
 }
 
 func (b *balances) Balances(writer http.ResponseWriter, request *http.Request) {
