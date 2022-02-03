@@ -1,4 +1,4 @@
-package controller
+package template
 
 import (
 	"homecloud/core/localization"
@@ -10,11 +10,12 @@ import (
 )
 
 type Context struct {
-	User       *model.User
-	Path       string
-	Title      string
-	Navigation []MenuItem
-	Parameters *Parameters
+	User        *model.User
+	Path        string
+	Title       string
+	Navigation  []*menuItem
+	Navigation2 []*menuItem
+	Parameters  *Parameters
 }
 
 type Parameters struct {
@@ -22,23 +23,6 @@ type Parameters struct {
 	Data       interface{}
 	Pagination *Pagination
 	Toast      string
-}
-
-type Pagination struct {
-	Pages  int64
-	Active int64
-}
-
-type MenuItem struct {
-	Name string
-	Icon string
-	Path string
-}
-
-var menu []MenuItem
-
-func AddNavigation1(name string, icon string, path string) {
-	menu = append(menu, MenuItem{name, icon, path})
 }
 
 func Render(writer http.ResponseWriter, request *http.Request, parameters *Parameters, title string, templates ...string) {
@@ -67,16 +51,13 @@ func Render(writer http.ResponseWriter, request *http.Request, parameters *Param
 		&user,
 		request.URL.Path,
 		title,
-		menu,
+		navigation,
+		getCurrentNavigation(request.URL.Path).subMenu,
 		parameters,
 	})
 	if err != nil {
 		panic(err)
 	}
-}
-
-func Redirect(writer http.ResponseWriter, request *http.Request, path string) {
-	http.Redirect(writer, request, path, http.StatusTemporaryRedirect)
 }
 
 func active(currentPath string, linkPath string) bool {
@@ -86,14 +67,6 @@ func active(currentPath string, linkPath string) bool {
 	return false
 }
 
-func paginate(count int64) []int64 {
-	var i int64
-	var items []int64
-	for i = 1; i <= count; i++ {
-		items = append(items, i)
-	}
-	return items
-}
 func sum(a int64, b int64) int64 {
 	return a + b
 }

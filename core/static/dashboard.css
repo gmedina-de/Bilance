@@ -1,23 +1,3 @@
-body {
-    font-size: 1rem;
-    background-color: #f3f3f3;
-}
-
-
-#project-selector {
-    display: inline;
-}
-
-#project-selector select {
-    background: none;
-    border: none;
-    color: white;
-}
-
-#project-selector option {
-    color: black !important;
-}
-
 /* Misc */
 .bd-placeholder-img {
     font-size: 1.125rem;
@@ -42,7 +22,6 @@ body {
 }
 
 .table > tbody {
-    background-color: white;
     border-bottom: 2px solid black;
 }
 
@@ -79,4 +58,25 @@ body {
     -ms-animation-direction: reverse;
     -o-animation-direction: reverse;
     animation-direction: reverse;
+}
+.sidebar-heading {
+    font-size: .75rem;
+    text-transform: uppercase;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+}
+
+.sidebar .nav-link .feather {
+    margin-right: 4px;
+    color: #727272;
+    width: 16px;
+    height: 16px;
+    vertical-align: text-bottom;
+}
+
+.row {
+    align-items: flex-start
 }

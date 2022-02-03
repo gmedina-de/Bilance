@@ -1,61 +1,26 @@
 {{define "navigation2"}}
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar{{if ne .Path "/"}} collapse{{end}}">
-        <div class="position-sticky pt-3">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block mt-3 card sidebar collapse">
+        <div class="position-sticky pt-3 pb-3">
+
             <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link{{active .Path "/payments/"}}" href="/payments/">
-                        <span data-feather="layers"></span>{{translate "payments"}}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link{{active .Path "/categories/"}}" href="/categories/">
-                        <span data-feather="tag"></span>{{translate "categories"}}
-                    </a>
-                </li>
+
+                {{$Path := .Path}}
+                {{range .Navigation2}}
+                    {{if ne .Path ""}}
+                        <li>
+                            <a href="{{.Path}}" class="nav-link{{if active $Path .Path}} text-primary{{end}}">
+                                <span data-feather="{{.Icon}}"></span>
+                                {{translate .Name}}
+                            </a>
+                        </li>
+                    {{else}}
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>{{translate .Name}}</span>
+                        </h6>
+                    {{end}}
+                {{end}}
             </ul>
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                <span>{{translate "analysis"}}</span>
-            </h6>
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link{{active .Path "/balances/"}}" href="/balances/">
-                        <span data-feather="activity"></span>{{translate "balances"}}
-                    </a>
-                </li>
-            </ul>
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                <span>{{translate "expenses"}}</span>
-            </h6>
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link{{active .Path "/expenses/by_period/"}}" href="/expenses/by_period/">
-                        <span data-feather="bar-chart-2"></span>{{translate "by_period"}}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link{{active .Path "/expenses/by_category/"}}" href="/expenses/by_category/">
-                        <span data-feather="pie-chart"></span>{{translate "by_category"}}
-                    </a>
-                </li>
-            </ul>
-            </ul>
-            {{if .User.Role}}
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>{{translate "admin_functions"}}</span>
-                </h6>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link{{active .Path "/admin/users/"}}" href="/admin/users/">
-                            <span data-feather="users"></span>{{translate "users"}}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{{active .Path "/admin/projects/"}}" href="/admin/projects/">
-                            <span data-feather="grid"></span>{{translate "projects"}}
-                        </a>
-                    </li>
-                </ul>
-            {{end}}
+
         </div>
     </nav>
 {{end}}

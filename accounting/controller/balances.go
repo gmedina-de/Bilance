@@ -6,6 +6,7 @@ import (
 	"homecloud/core/model"
 	"homecloud/core/repository"
 	"homecloud/core/server"
+	"homecloud/core/template"
 	"net/http"
 )
 
@@ -14,25 +15,22 @@ type balances struct {
 	users    repository.Repository[model.User]
 }
 
-func Balances(
-	payments repository.Repository[model2.Payment],
-	users repository.Repository[model.User],
-) controller.Controller {
+func Balances(payments repository.Repository[model2.Payment], users repository.Repository[model.User]) controller.Controller {
 	return &balances{payments, users}
 }
 
 func (b *balances) Routing(server server.Server) {
-	server.Get("balances", b.Balances)
+	server.Get("", b.Balances)
 }
 
 func (b *balances) Balances(writer http.ResponseWriter, request *http.Request) {
 	balanceData := b.prepareBalanceData()
-	controller.Render(
+	template.Render(
 		writer,
 		request,
-		&controller.Parameters{Model: &balanceData},
+		&template.Parameters{Model: &balanceData},
 		"balances",
-		"balances",
+		"accounting/template/balances.gohtml",
 	)
 }
 

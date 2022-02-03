@@ -1,9 +1,11 @@
 {{define "navigation1"}}
 
-    <nav class="navbar navbar-expand-md navbar-dark sticky-top py-md-0 bg-dark">
+    <nav class="navbar navbar-expand-md navbar-dark sticky-top py-md-0 bg-dark shadow">
         <div class="container">
-            <a class="navbar-brand" href="#">Expand at sm</a>
-
+            <a class="navbar-brand" href="/">
+                Homecloud
+                <span data-feather="cloud"></span>
+            </a>
             <div class="btn-group d-block">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample03">
                     <span class="navbar-toggler-icon"></span>
@@ -16,8 +18,7 @@
                     Submenu
                 </button>
             </div>
-
-            <div class="collapse navbar-collapse" id="navbarsExample03">
+            <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mx-auto mb-2 mb-sm-0">
                     {{$Path := .Path}}
                     {{range .Navigation}}
@@ -35,105 +36,4 @@
             </div>
         </div>
     </nav>
-
-    {{/*        <header class="sticky-top d-flex flex-wrap align-items-center justify-content-center justify-content-md-between px-3 mb-4 bg-dark text-white">*/}}
-    {{/*            <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-light text-decoration-none">*/}}
-    {{/*                <b>HomeCloud</b>*/}}
-    {{/*            </a>*/}}
-    {{/*<div class="navbar-nav-scroll">*/}}
-    {{/*            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">*/}}
-    {{/*                <li>*/}}
-    {{/*                    <a href="#" class="nav-link px-2 link-light bg-primary">*/}}
-    {{/*                        <span data-feather="home" class="bi d-block mx-auto mb-1"></span>*/}}
-    {{/*                        Home*/}}
-    {{/*                    </a>*/}}
-    {{/*                </li>*/}}
-    {{/*                <li>*/}}
-    {{/*                    <a href="#" class="nav-link px-2 link-light">*/}}
-    {{/*                        <span data-feather="book" class="bi d-block mx-auto mb-1"></span>*/}}
-    {{/*                        Balance*/}}
-    {{/*                    </a>*/}}
-    {{/*                </li>*/}}
-    {{/*                <li>*/}}
-    {{/*                    <a href="#" class="nav-link px-2 link-light">*/}}
-    {{/*                        <span data-feather="cloud" class="bi d-block mx-auto mb-1"></span>*/}}
-    {{/*                        Files*/}}
-    {{/*                    </a>*/}}
-    {{/*                </li>*/}}
-    {{/*                <li>*/}}
-    {{/*                    <a href="#" class="nav-link px-2 link-light">*/}}
-    {{/*                        <span data-feather="users" class="bi d-block mx-auto mb-1"></span>*/}}
-    {{/*                        Users*/}}
-    {{/*                    </a>*/}}
-    {{/*                </li><li>*/}}
-    {{/*                    <a href="#" class="nav-link px-2 link-light">*/}}
-    {{/*                        <span data-feather="book" class="bi d-block mx-auto mb-1"></span>*/}}
-    {{/*                        Balance*/}}
-    {{/*                    </a>*/}}
-    {{/*                </li>*/}}
-    {{/*                <li>*/}}
-    {{/*                    <a href="#" class="nav-link px-2 link-light">*/}}
-    {{/*                        <span data-feather="cloud" class="bi d-block mx-auto mb-1"></span>*/}}
-    {{/*                        Files*/}}
-    {{/*                    </a>*/}}
-    {{/*                </li>*/}}
-    {{/*                <li>*/}}
-    {{/*                    <a href="#" class="nav-link px-2 link-light">*/}}
-    {{/*                        <span data-feather="users" class="bi d-block mx-auto mb-1"></span>*/}}
-    {{/*                        Users*/}}
-    {{/*                    </a>*/}}
-    {{/*                </li>*/}}
-    {{/*            </ul>*/}}
-    {{/*</div>*/}}
-    {{/*            <div class="col-md-3 text-end">*/}}
-    {{/*                <button type="button" class="btn btn-outline-primary me-2">Login</button>*/}}
-    {{/*                <button type="button" class="btn btn-primary">Sign-up</button>*/}}
-    {{/*            </div>*/}}
-    {{/*        </header>*/}}
-
-    {{/*    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">*/}}
-    {{/*        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">*/}}
-    {{/*            <b>HomeCloud</b>*/}}
-    {{/*            {{if eq (len .Projects) 1}}*/}}
-    {{/*                {{$SelectedProjectId:=.SelectedProjectId}}*/}}
-    {{/*                {{range .User.Projects}}*/}}
-    {{/*                    {{if eq $SelectedProjectId .Id}}{{.Name}}{{end}}*/}}
-    {{/*                {{end}}*/}}
-    {{/*            {{end}}*/}}
-    {{/*            {{if gt (len .Projects) 1}}*/}}
-    {{/*                <form action="/changeProject" id="project-selector" method="get" onclick="event.preventDefault()">*/}}
-    {{/*                    <select name="SelectedProjectId" onchange="this.form.submit()">*/}}
-    {{/*                        {{$SelectedProjectId:=.SelectedProjectId}}*/}}
-    {{/*                        {{range .User.Projects}}*/}}
-    {{/*                            <option value="{{.Id}}" {{if eq $SelectedProjectId .Id}} selected{{end}}>{{.Name}}</option>*/}}
-    {{/*                        {{end}}*/}}
-    {{/*                    </select>*/}}
-    {{/*                </form>*/}}
-    {{/*            {{end}}*/}}
-    {{/*        </a>*/}}
-    {{/*        {{if ne .Path "/"}}*/}}
-    {{/*            <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"*/}}
-    {{/*                    data-bs-target="#sidebarMenu">*/}}
-    {{/*                <span class="navbar-toggler-icon"></span>*/}}
-    {{/*            </button>*/}}
-    {{/*        {{end}}*/}}
-    {{/*        <form method="get" action="/payments/" class="w-100">*/}}
-    {{/*            <input name="search" class="form-control form-control-dark w-100" type="text"*/}}
-    {{/*                   placeholder="{{translate "search"}}">*/}}
-    {{/*            <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start"*/}}
-    {{/*                 style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">*/}}
-    {{/*                <a class="dropdown-item" href="#">Action</a>*/}}
-    {{/*                <a class="dropdown-item" href="#">Another action</a>*/}}
-    {{/*                <a class="dropdown-item" href="#">Something else here</a>*/}}
-    {{/*            </div>*/}}
-    {{/*            <input type="submit" style="display: none;"/>*/}}
-    {{/*        </form>*/}}
-    {{/*        <div class="navbar-nav d-none d-md-block">*/}}
-    {{/*            <div class="nav-item text-nowrap">*/}}
-    {{/*                <a class="nav-link px-3" id="logout" href="#">{{translate "logout"}}</a>*/}}
-    {{/*            </div>*/}}
-    {{/*        </div>*/}}
-    {{/*    </header>*/}}
-
-
 {{end}}

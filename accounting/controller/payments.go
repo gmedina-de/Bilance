@@ -7,6 +7,7 @@ import (
 	"homecloud/core/model"
 	"homecloud/core/repository"
 	"homecloud/core/server"
+	"homecloud/core/template"
 	"net/http"
 	"strconv"
 )
@@ -41,7 +42,8 @@ func (c *payments) Routing(server server.Server) {
 	c.Generic.Routing(server)
 	server.Get("", c.List)
 	server.Post("", c.List)
-	controller.AddNavigation1("accounting", "book", "/accounting/payments")
+	server.SetBasePath("/accounting")
+	server.Get("", c.List)
 }
 
 func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
@@ -53,10 +55,10 @@ func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
 			"OR Date LIKE '"+term+"%'",
 			"ORDER BY Date",
 		)
-		controller.Render(
+		template.Render(
 			writer,
 			request,
-			&controller.Parameters{
+			&template.Parameters{
 				Model: list,
 				Toast: strconv.Itoa(len(list)) + " " + localization.Translate("records_found"),
 			},

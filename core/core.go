@@ -9,9 +9,16 @@ import (
 	"homecloud/core/log"
 	"homecloud/core/repository"
 	"homecloud/core/server"
+	"homecloud/core/template"
 )
 
 func init() {
+	template.AddNavigation(
+		template.MenuItem("home", "home", "/"),
+	)
+	template.AddNavigation(
+		template.MenuItem("users", "user", "/users"),
+	)
 	Register(
 		log.Console,
 		database.Gorm,
@@ -30,6 +37,5 @@ func Register(constructors ...interface{}) {
 }
 
 func Init() {
-	application := inj.Inject(application.Homecloud).Interface().(application.Application)
-	application.Run()
+	inj.Inject(application.Homecloud).Interface().(application.Application).Run()
 }

@@ -7,6 +7,7 @@ import (
 	"homecloud/core/model"
 	"homecloud/core/repository"
 	"homecloud/core/server"
+	"homecloud/core/template"
 	"net/http"
 	"strconv"
 	"strings"
@@ -35,12 +36,12 @@ func (c *expenses) Expenses(writer http.ResponseWriter, request *http.Request) {
 	case "/expenses/by_category/":
 		title = localization.Translate("expenses") + " " + localization.Translate("by_category")
 	}
-	controller.Render(
+	template.Render(
 		writer,
 		request,
-		&controller.Parameters{Model: c.prepareGraphData(request), Data: c.prepareYears()},
+		&template.Parameters{Model: c.prepareGraphData(request), Data: c.prepareYears()},
 		title,
-		"expenses",
+		"accounting/template/expenses.gohtml",
 	)
 }
 

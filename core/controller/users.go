@@ -3,7 +3,6 @@ package controller
 import (
 	"homecloud/core/model"
 	"homecloud/core/repository"
-	"homecloud/core/server"
 )
 
 type users struct {
@@ -17,9 +16,4 @@ func Users(repository repository.Repository[model.User]) Controller {
 			Repository:   repository,
 		},
 	}
-}
-
-func (c *users) Routing(server server.Server) {
-	c.Generic.Routing(server)
-	AddNavigation1("users", "user", "/users")
 }

@@ -51,7 +51,7 @@ func (r *authenticated) route(method string, route string, handler http.HandlerF
 }
 
 func (r *authenticated) Start() {
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("core/static"))))
 	http.HandleFunc("/", r.ServeHTTP)
 	r.log.Info("Listening to http://localhost:%d", r.port)
 	http.ListenAndServe(fmt.Sprintf(":%d", r.port), nil)

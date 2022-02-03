@@ -4,6 +4,7 @@ import (
 	"homecloud/core/model"
 	"homecloud/core/repository"
 	"homecloud/core/server"
+	"homecloud/core/template"
 	"net/http"
 	"strconv"
 	"strings"
@@ -48,14 +49,14 @@ func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	pagination, _ := g.handlePagination(request, projectIdString)
-	parameters := &Parameters{
+	parameters := &template.Parameters{
 		Model: g.Repository.All(),
 		//Model:      g.repository.Raw(strings.Join(conditions, " AND ") + " " + limitCondition),
 		Data:       data,
 		Pagination: pagination,
 		Toast:      toast,
 	}
-	Render(
+	template.Render(
 		writer,
 		request,
 		parameters,
@@ -65,7 +66,7 @@ func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
 	)
 }
 
-func (g *Generic[T]) handlePagination(request *http.Request, projectIdString string) (*Pagination, string) {
+func (g *Generic[T]) handlePagination(request *http.Request, projectIdString string) (*template.Pagination, string) {
 	if strings.HasPrefix(request.URL.Path, "/admin/") {
 		return nil, ""
 	}
@@ -77,7 +78,7 @@ func (g *Generic[T]) handlePagination(request *http.Request, projectIdString str
 	var offset = limit * (page - 1)
 	var pages = g.Repository.Count("ProjectId = "+projectIdString) / limit
 	pages++
-	return &Pagination{pages, page},
+	return &template.Pagination{pages, page},
 		"LIMIT " + strconv.FormatInt(limit, 10) + " OFFSET " + strconv.FormatInt(offset, 10)
 }
 
@@ -91,9 +92,9 @@ func (g *Generic[T]) Edit(writer http.ResponseWriter, request *http.Request) {
 			idString := request.URL.Query().Get("Id")
 			id, _ := strconv.ParseInt(idString, 10, 64)
 			model := g.Repository.Find(id)
-			Render(writer, request, &Parameters{Model: model, Data: data}, "edit", "core/template/crud_table.gohtml", g.BaseTemplate)
+			template.Render(writer, request, &template.Parameters{Model: model, Data: data}, "edit", "core/template/crud_table.gohtml", g.BaseTemplate)
 		} else {
-			Render(writer, request, &Parameters{Model: g.Repository.NewEmpty(), Data: data}, "new", "core/template/crud_form.gohtml", g.BaseTemplate)
+			template.Render(writer, request, &template.Parameters{Model: g.Repository.NewEmpty(), Data: data}, "new", "core/template/crud_form.gohtml", g.BaseTemplate)
 		}
 	} else if request.Method == "POST" {
 		err := request.ParseForm()
@@ -106,7 +107,7 @@ func (g *Generic[T]) Edit(writer http.ResponseWriter, request *http.Request) {
 		} else {
 			g.Repository.Insert(g.Repository.FromRequest(request, 0))
 		}
-		Redirect(writer, request, strings.Replace(request.URL.Path, "/edit", "", 1)+"?success")
+		http.Redirect(writer, request, strings.Replace(request.URL.Path, "/edit", "", 1)+"?success", http.StatusTemporaryRedirect)
 	}
 }
 
@@ -115,6 +116,6 @@ func (g *Generic[T]) Delete(writer http.ResponseWriter, request *http.Request) {
 		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
 		item := g.Repository.Find(id)
 		g.Repository.Delete(item)
-		Redirect(writer, request, strings.Replace(request.URL.Path, "/edit/delete", "", 1))
+		http.Redirect(writer, request, strings.Replace(request.URL.Path, "/edit/delete", "", 1), http.StatusTemporaryRedirect)
 	}
 }
