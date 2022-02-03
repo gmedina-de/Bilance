@@ -45,7 +45,7 @@ func (r *authenticated) Post(route string, handler http.HandlerFunc) {
 }
 
 func (r *authenticated) route(method string, route string, handler http.HandlerFunc) {
-	s := method + " /" + r.basePath + route
+	s := method + " " + r.basePath + route
 	r.log.Debug("Add route for %s", s)
 	r.routes[s] = handler
 }

@@ -10,18 +10,17 @@ import (
 )
 
 type Generic[T model.Model] struct {
-	BasePath     string
 	BaseTemplate string
 	Repository   repository.Repository[T]
 	DataProvider func(request *http.Request) interface{}
 }
 
 func (g *Generic[T]) Routing(server server.Server) {
-	server.Get(g.BasePath, g.Index)
-	server.Post(g.BasePath, g.Index)
-	server.Get(g.BasePath+"edit", g.Edit)
-	server.Post(g.BasePath+"edit", g.Edit)
-	server.Get(g.BasePath+"edit/delete", g.Delete)
+	server.Get("", g.Index)
+	server.Post("", g.Index)
+	server.Get("/edit", g.Edit)
+	server.Post("/edit", g.Edit)
+	server.Get("/edit/delete", g.Delete)
 }
 
 func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
@@ -107,7 +106,7 @@ func (g *Generic[T]) Edit(writer http.ResponseWriter, request *http.Request) {
 		} else {
 			g.Repository.Insert(g.Repository.FromRequest(request, 0))
 		}
-		Redirect(writer, request, g.BasePath+"?success")
+		Redirect(writer, request, strings.Replace(request.URL.Path, "/edit", "", 1)+"?success")
 	}
 }
 
@@ -116,6 +115,6 @@ func (g *Generic[T]) Delete(writer http.ResponseWriter, request *http.Request) {
 		id, _ := strconv.ParseInt(request.URL.Query().Get("Id"), 10, 64)
 		item := g.Repository.Find(id)
 		g.Repository.Delete(item)
-		Redirect(writer, request, g.BasePath)
+		Redirect(writer, request, strings.Replace(request.URL.Path, "/edit/delete", "", 1))
 	}
 }

@@ -23,7 +23,6 @@ func Payments(
 	return &payments{
 		controller.Generic[model2.Payment]{
 			Repository:   repository,
-			BasePath:     "/payments",
 			BaseTemplate: "accounting/template/payments.gohtml",
 			DataProvider: func(request *http.Request) interface{} {
 				return struct {
@@ -40,9 +39,9 @@ func Payments(
 
 func (c *payments) Routing(server server.Server) {
 	c.Generic.Routing(server)
-	server.Get(c.BasePath, c.List)
-	server.Post(c.BasePath, c.List)
-	controller.AddMenuItem("accounting", "book", "/payments")
+	server.Get("", c.List)
+	server.Post("", c.List)
+	controller.AddNavigation1("accounting", "book", "/accounting/payments")
 }
 
 func (c *payments) List(writer http.ResponseWriter, request *http.Request) {

@@ -22,7 +22,7 @@ func Balances(
 }
 
 func (b *balances) Routing(server server.Server) {
-	server.Get("/balances/", b.Balances)
+	server.Get("balances", b.Balances)
 }
 
 func (b *balances) Balances(writer http.ResponseWriter, request *http.Request) {

@@ -13,12 +13,13 @@ type users struct {
 func Users(repository repository.Repository[model.User]) Controller {
 	return &users{
 		Generic[model.User]{
-			Repository: repository,
+			BaseTemplate: "core/template/users.gohtml",
+			Repository:   repository,
 		},
 	}
 }
 
 func (c *users) Routing(server server.Server) {
 	c.Generic.Routing(server)
-	AddMenuItem("users", "user", "/users")
+	AddNavigation1("users", "user", "/users")
 }

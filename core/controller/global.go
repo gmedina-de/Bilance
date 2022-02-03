@@ -37,7 +37,7 @@ type MenuItem struct {
 
 var menu []MenuItem
 
-func AddMenuItem(name string, icon string, path string) {
+func AddNavigation1(name string, icon string, path string) {
 	menu = append(menu, MenuItem{name, icon, path})
 }
 
@@ -45,8 +45,8 @@ func Render(writer http.ResponseWriter, request *http.Request, parameters *Param
 	// prepare templates
 	templates = append(templates,
 		"core/template/base.gohtml",
-		"core/template/navbar.gohtml",
-		"core/template/navigation.gohtml",
+		"core/template/navigation1.gohtml",
+		"core/template/navigation2.gohtml",
 	)
 	tmpl := template.New("")
 	tmpl.Funcs(template.FuncMap{
@@ -79,11 +79,11 @@ func Redirect(writer http.ResponseWriter, request *http.Request, path string) {
 	http.Redirect(writer, request, path, http.StatusTemporaryRedirect)
 }
 
-func active(currentPath string, linkPath string) string {
+func active(currentPath string, linkPath string) bool {
 	if currentPath == "/" && linkPath == "/" || strings.HasPrefix(currentPath, linkPath) && linkPath != "/" {
-		return " active"
+		return true
 	}
-	return ""
+	return false
 }
 
 func paginate(count int64) []int64 {

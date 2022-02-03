@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	core.AddConstructors(
+	core.Register(
 		repository.Categories,
 		repository.Payments,
 		controller.Payments,
