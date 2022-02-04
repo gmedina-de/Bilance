@@ -19,9 +19,9 @@ func init() {
 
 	menuItem := template.AddNavigation("assets", "box")
 	for i, m := range models {
-		menuItem.WithChild(model2.NamePlural(m), model.Icons[i])
+		menuItem.WithChild(model2.Plural(m), model.Icons[i])
 	}
-	menuItem.Path = "/assets/" + model2.NamePlural(models[0])
+	menuItem.Path = "/assets/" + model2.Plural(models[0])
 }
 
 func controllerProvider[T any](model T) func(repository repository.Repository[T]) controller.Controller {
@@ -29,7 +29,7 @@ func controllerProvider[T any](model T) func(repository repository.Repository[T]
 		return &controller.Generic[T]{
 			Repository:   repository,
 			BaseTemplate: "assets/template/model.gohtml",
-			BasePath:     "/assets/" + model2.NamePlural(model),
+			BasePath:     "/assets/" + model2.Plural(model),
 		}
 	}
 }

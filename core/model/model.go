@@ -2,43 +2,34 @@ package model
 
 import (
 	"bytes"
-	"database/sql"
 	"encoding/base64"
 	"encoding/gob"
 	"github.com/jinzhu/inflection"
 	"reflect"
-	"strconv"
 	"strings"
 	"time"
 )
 
 type Model any
 
-func NamePlural(model any) string {
+func Plural(model any) string {
 	return inflection.Plural(Name(model))
 }
 
 func Name(model any) string {
-	return strings.ToLower(reflect.TypeOf(model).Name())
+	return strings.ToLower(RealValueOf(model).Type().Name())
 }
 
-func ScanAndPanic(row *sql.Rows, dest ...interface{}) {
-	err := row.Scan(dest...)
-	if err != nil {
-		panic(err)
+func RealValueOf(v interface{}) reflect.Value {
+	rv := reflect.ValueOf(v)
+	if rv.Type().Kind() == reflect.Ptr && rv.IsNil() {
+		rv = reflect.New(rv.Type().Elem()).Elem()
 	}
-}
-
-func StringToIds(input string) []int64 {
-	split := strings.Split(input, ",")
-	var result []int64
-	for _, id := range split {
-		parseInt, _ := strconv.ParseInt(id, 10, 64)
-		result = append(result, parseInt)
+	for rv.Kind() == reflect.Ptr || rv.Kind() == reflect.Interface {
+		rv = rv.Elem()
 	}
-	return result
+	return rv
 }
-
 func Serialize(T any) string {
 	b := bytes.Buffer{}
 	e := gob.NewEncoder(&b)

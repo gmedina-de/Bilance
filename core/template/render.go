@@ -40,6 +40,7 @@ func Render(writer http.ResponseWriter, request *http.Request, parameters *Param
 		"paginate":  paginate,
 		"sum":       sum,
 		"contains":  contains,
+		"inputs":    inputs,
 	})
 	tmpl, err := tmpl.ParseFiles(templates...)
 	if err != nil {

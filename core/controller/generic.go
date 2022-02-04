@@ -37,20 +37,9 @@ func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
 		toast = "record_saved_successfully"
 	}
 
-	//projectIdString := GetSelectedProjectIdString(request)
-	projectIdString := "0"
-	//modelName := model.NamePlural(g.Repository.NewEmpty())
-	modelName := "model"
-	var conditions []string
-	switch modelName {
-	case "categories":
-		conditions = append(conditions, "ProjectId = "+projectIdString)
-	case "payments":
-		conditions = append(conditions, "ProjectId = "+projectIdString)
-		conditions = append(conditions, "ORDER BY Date DESC")
-	}
-
-	pagination, _ := g.handlePagination(request, projectIdString)
+	empty := g.Repository.NewEmpty()
+	modelName := model.Plural(empty)
+	pagination, _ := g.handlePagination(request)
 	parameters := &template.Parameters{
 		Model: g.Repository.All(),
 		//Model:      g.repository.Raw(strings.Join(conditions, " AND ") + " " + limitCondition),
@@ -68,7 +57,7 @@ func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
 	)
 }
 
-func (g *Generic[T]) handlePagination(request *http.Request, projectIdString string) (*template.Pagination, string) {
+func (g *Generic[T]) handlePagination(request *http.Request) (*template.Pagination, string) {
 	if strings.HasPrefix(request.URL.Path, "/admin/") {
 		return nil, ""
 	}
@@ -78,7 +67,7 @@ func (g *Generic[T]) handlePagination(request *http.Request, projectIdString str
 		page, _ = strconv.ParseInt(request.URL.Query().Get("page"), 10, 64)
 	}
 	var offset = limit * (page - 1)
-	var pages = g.Repository.Count("ProjectId = "+projectIdString) / limit
+	var pages = g.Repository.Count("") / limit
 	pages++
 	return &template.Pagination{pages, page},
 		"LIMIT " + strconv.FormatInt(limit, 10) + " OFFSET " + strconv.FormatInt(offset, 10)

@@ -21,7 +21,12 @@
 {{end}}
 
 {{define "form"}}
-{{/*    <div class="col-sm-6">*/}}
+
+    {{inputs .Parameters.Model}}
+
+
+
+    {{/*    <div class="col-sm-6">*/}}
 {{/*        <div class="form-floating">*/}}
 {{/*            <input type="text" class="form-control" name="Name" id="name" placeholder="{{translate "username"}}"*/}}
 {{/*                   value="{{.Parameters.Model.Name}}" required>*/}}
