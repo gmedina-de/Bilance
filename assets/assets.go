@@ -1,7 +1,7 @@
-package accounting
+package assets
 
 import (
-	"gorm.io/gorm"
+	"homecloud/assets/model"
 	"homecloud/core"
 	"homecloud/core/controller"
 	"homecloud/core/database"
@@ -11,32 +11,17 @@ import (
 )
 
 func init() {
-
-	person := Person{}
-	models := []interface{}{person, Note{}}
-
-	for _, model := range models {
-		core.Implementations(controllerProvider(model))
-		core.Implementations(repositoryProvider(model))
+	models := model.Models
+	for _, m := range models {
+		core.Implementations(controllerProvider(m))
+		core.Implementations(repositoryProvider(m))
 	}
 
 	menuItem := template.AddNavigation("assets", "box")
-	for _, model := range models {
-		menuItem.WithChild(model2.NamePlural(model), "box")
+	for i, m := range models {
+		menuItem.WithChild(model2.NamePlural(m), model.Icons[i])
 	}
 	menuItem.Path = "/assets/" + model2.NamePlural(models[0])
-}
-
-type Person struct {
-	gorm.Model
-	Name string
-	Age  int
-}
-
-type Note struct {
-	gorm.Model
-	Name        string
-	Description string
 }
 
 func controllerProvider[T any](model T) func(repository repository.Repository[T]) controller.Controller {
