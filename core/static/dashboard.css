@@ -59,6 +59,19 @@
     -o-animation-direction: reverse;
     animation-direction: reverse;
 }
+
+/*.sidebar {*/
+/*    position: fixed;*/
+/*    top: 50px;*/
+/*    bottom: 0;*/
+/*    z-index: 100; !* Behind the navbar *!*/
+/*}*/
+
+.navbar-brand {
+    margin-left: 1rem;
+}
+
+
 .sidebar-heading {
     font-size: .75rem;
     text-transform: uppercase;
@@ -71,6 +84,12 @@
 
 #sidebarMenu{
     margin-top: -5px !important;
+}
+
+@media (min-width: 992px) {
+    #sidebarMenu{
+        /*height: 100%;*/
+    }
 }
 
 .sidebar .nav-link .feather {
