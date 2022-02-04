@@ -69,6 +69,10 @@
     color: #333;
 }
 
+#sidebarMenu{
+    margin-top: -5px !important;
+}
+
 .sidebar .nav-link .feather {
     margin-right: 4px;
     width: 16px;
