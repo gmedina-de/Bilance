@@ -1,10 +1,6 @@
 {{define "navigation1"}}
     <nav class="navbar navbar-expand-md navbar-dark sticky-top py-md-0 bg-dark shadow">
         <div class="container">
-            <a class="navbar-brand" href="/">
-                Homecloud
-                <span data-feather="cloud"></span>
-            </a>
             <div class="btn-group d-block">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarsExample03">
@@ -21,6 +17,10 @@
                     </button>
                 {{end}}
             </div>
+            <a class="navbar-brand" href="/">
+                Homecloud
+                <span data-feather="cloud"></span>
+            </a>
             <div class="collapse navbar-collapse" id="navbarsExample03">
                 <ul class="navbar-nav mx-auto mb-2 mb-sm-0">
                     {{$Path := .Path}}
