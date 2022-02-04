@@ -12,17 +12,19 @@ import (
 
 func init() {
 
-	models := []interface{}{Person{}, Note{}}
+	person := Person{}
+	models := []interface{}{person, Note{}}
 
 	for _, model := range models {
 		core.Implementations(controllerProvider(model))
 		core.Implementations(repositoryProvider(model))
 	}
 
-	menuItem := template.AddNavigation("assets", "box", "/assets/persons")
+	menuItem := template.AddNavigation("assets", "box")
 	for _, model := range models {
-		menuItem.WithChild(model2.NamePlural(model), "box", "/assets/"+model2.NamePlural(model))
+		menuItem.WithChild(model2.NamePlural(model), "box")
 	}
+	menuItem.Path = "/assets/" + model2.NamePlural(models[0])
 }
 
 type Person struct {

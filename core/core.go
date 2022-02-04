@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	template.AddNavigation("home", "home", "/")
+	template.AddNavigation("home", "home").Path = "/"
 	Implementations(
 		log.Console,
 		database.Gorm,

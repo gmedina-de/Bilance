@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"encoding/gob"
+	"github.com/jinzhu/inflection"
 	"reflect"
 	"strconv"
 	"strings"
@@ -14,11 +15,7 @@ import (
 type Model any
 
 func NamePlural(model any) string {
-	name := Name(model)
-	if name[len(name)-1] == 'y' {
-		return name[0:len(name)-1] + "ies"
-	}
-	return name + "s"
+	return inflection.Plural(Name(model))
 }
 
 func Name(model any) string {

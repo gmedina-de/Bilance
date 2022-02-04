@@ -4,7 +4,7 @@
             {{$Path := .Path}}
             {{$CurrentNavigation2 := .CurrentNavigation2}}
             {{range .Navigation2}}
-                {{if ne .Path ""}}
+                {{if ne .Icon ""}}
                     <li>
                         <a href="{{.Path}}" class="nav-link{{if eq $CurrentNavigation2 .}} text-primary{{end}}">
                             <span data-feather="{{.Icon}}"></span>

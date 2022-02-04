@@ -8,14 +8,15 @@ import (
 )
 
 func init() {
-	template.AddNavigation("accounting", "book", "/accounting/payments").
-		WithChild("payments", "layers", "/accounting/payments").
-		WithChild("categories", "tag", "/accounting/categories").
-		WithChild("analysis", "", "").
-		WithChild("balances", "activity", "/accounting/balances").
-		WithChild("expenses", "", "").
-		WithChild("by_period", "bar-chart-2", "/accounting/expenses/by_period").
-		WithChild("by_category", "pie-chart", "/accounting/expenses/by_category")
+	template.AddNavigation("accounting", "book").
+		WithChild("payments", "layers").
+		WithChild("categories", "tag").
+		WithChild("analysis", "").
+		WithChild("balances", "activity").
+		WithChild("expenses", "").
+		WithChild("by_period", "bar-chart-2").
+		WithChild("by_category", "pie-chart").
+		Path = "/accounting/payments"
 
 	core.Implementations(
 		repository.Categories,

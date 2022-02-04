@@ -16,8 +16,10 @@ func Homecloud(server server.Server, controllers []controller.Controller) *homec
 }
 
 func (b *homecloud) Run() {
-	template.AddNavigation("settings", "settings", "/settings/users").
-		WithChild("users", "users", "/settings/users")
+	// adds settings to the end of navigation
+	template.AddNavigation("settings", "settings").
+		WithChild("users", "users").
+		Path = "/settings/users"
 
 	for _, c := range b.controllers {
 		c.Routing(b.server)

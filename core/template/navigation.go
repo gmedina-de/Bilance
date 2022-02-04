@@ -9,18 +9,18 @@ type MenuItem struct {
 	SubMenu []*MenuItem
 }
 
-func (i *MenuItem) WithChild(name string, icon string, path string) *MenuItem {
+func (i *MenuItem) WithChild(name string, icon string) *MenuItem {
 	if i.SubMenu == nil {
 		i.SubMenu = []*MenuItem{}
 	}
-	i.SubMenu = append(i.SubMenu, &MenuItem{name, icon, path, nil})
+	i.SubMenu = append(i.SubMenu, &MenuItem{name, icon, i.Path + "/" + name, nil})
 	return i
 }
 
 var navigation []*MenuItem
 
-func AddNavigation(name string, icon string, path string) *MenuItem {
-	menuItem := &MenuItem{name, icon, path, nil}
+func AddNavigation(name string, icon string) *MenuItem {
+	menuItem := &MenuItem{name, icon, "/" + name, nil}
 	navigation = append(navigation, menuItem)
 	return menuItem
 }
