@@ -10,12 +10,14 @@ import (
 )
 
 type Context struct {
-	User        *model.User
-	Path        string
-	Title       string
-	Navigation  []*menuItem
-	Navigation2 []*menuItem
-	Parameters  *Parameters
+	User               *model.User
+	Path               string
+	Title              string
+	Navigation         []*menuItem
+	Navigation2        []*menuItem
+	CurrentNavigation1 *menuItem
+	CurrentNavigation2 *menuItem
+	Parameters         *Parameters
 }
 
 type Parameters struct {
@@ -35,7 +37,6 @@ func Render(writer http.ResponseWriter, request *http.Request, parameters *Param
 	tmpl := template.New("")
 	tmpl.Funcs(template.FuncMap{
 		"translate": localization.Translate,
-		"active":    active,
 		"paginate":  paginate,
 		"sum":       sum,
 		"contains":  contains,
@@ -47,24 +48,20 @@ func Render(writer http.ResponseWriter, request *http.Request, parameters *Param
 
 	var user model.User
 	model.Deserialize(request.Header.Get("user"), &user)
+	currentNavigation := getCurrentNavigation(request.URL.Path, navigation)
 	err = tmpl.ExecuteTemplate(writer, "base", &Context{
 		&user,
 		request.URL.Path,
 		title,
 		navigation,
-		getCurrentNavigation(request.URL.Path).subMenu,
+		currentNavigation.SubMenu,
+		currentNavigation,
+		getCurrentNavigation(request.URL.Path, currentNavigation.SubMenu),
 		parameters,
 	})
 	if err != nil {
 		panic(err)
 	}
-}
-
-func active(currentPath string, linkPath string) bool {
-	if currentPath == "/" && linkPath == "/" || strings.HasPrefix(currentPath, linkPath) && linkPath != "/" {
-		return true
-	}
-	return false
 }
 
 func sum(a int64, b int64) int64 {

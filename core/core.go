@@ -17,7 +17,9 @@ func init() {
 		template.MenuItem("home", "home", "/"),
 	)
 	template.AddNavigation(
-		template.MenuItem("users", "user", "/users"),
+		template.MenuItem("settings", "settings", "/settings/users").WithSubItems(
+			template.MenuItem("users", "users", "/settings/users"),
+		),
 	)
 	Register(
 		log.Console,

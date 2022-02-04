@@ -14,11 +14,11 @@ func Index() Controller {
 }
 
 func (c *index) Routing(server server.Server) {
-	server.Get("", c.Index)
+	server.Get("/", c.Index)
 }
 
 func (c *index) Index(writer http.ResponseWriter, request *http.Request) {
-	template.Render(writer, request, nil, "", "core/template/index.gohtml")
+	template.Render(writer, request, nil, "/", "core/template/index.gohtml")
 }
 
 //

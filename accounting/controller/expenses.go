@@ -24,8 +24,8 @@ func Expenses(payments repository.Repository[model2.Payment], categories reposit
 }
 
 func (c *expenses) Routing(server server.Server) {
-	server.Get("/by_period", c.Expenses)
-	server.Get("/by_category", c.Expenses)
+	server.Get("/accounting/expenses/by_period", c.Expenses)
+	server.Get("/accounting/expenses/by_category", c.Expenses)
 }
 
 func (c *expenses) Expenses(writer http.ResponseWriter, request *http.Request) {

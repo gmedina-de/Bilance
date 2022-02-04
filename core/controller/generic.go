@@ -11,17 +11,18 @@ import (
 )
 
 type Generic[T model.Model] struct {
-	BaseTemplate string
 	Repository   repository.Repository[T]
+	BaseTemplate string
+	BasePath     string
 	DataProvider func(request *http.Request) interface{}
 }
 
 func (g *Generic[T]) Routing(server server.Server) {
-	server.Get("", g.Index)
-	server.Post("", g.Index)
-	server.Get("/edit", g.Edit)
-	server.Post("/edit", g.Edit)
-	server.Get("/edit/delete", g.Delete)
+	server.Get(g.BasePath+"", g.Index)
+	server.Post(g.BasePath+"", g.Index)
+	server.Get(g.BasePath+"/edit", g.Edit)
+	server.Post(g.BasePath+"/edit", g.Edit)
+	server.Get(g.BasePath+"/edit/delete", g.Delete)
 }
 
 func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {

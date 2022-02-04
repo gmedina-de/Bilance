@@ -25,6 +25,7 @@ func Payments(
 		controller.Generic[model2.Payment]{
 			Repository:   repository,
 			BaseTemplate: "accounting/template/payments.gohtml",
+			BasePath:     "/accounting/payments",
 			DataProvider: func(request *http.Request) interface{} {
 				return struct {
 					Categories map[int64]*model2.Category
@@ -40,10 +41,8 @@ func Payments(
 
 func (c *payments) Routing(server server.Server) {
 	c.Generic.Routing(server)
-	server.Get("", c.List)
-	server.Post("", c.List)
-	server.SetBasePath("/accounting")
-	server.Get("", c.List)
+	server.Get("/accounting/payments", c.List)
+	server.Post("/accounting/payments", c.List)
 }
 
 func (c *payments) List(writer http.ResponseWriter, request *http.Request) {

@@ -20,7 +20,7 @@ func Balances(payments repository.Repository[model2.Payment], users repository.R
 }
 
 func (b *balances) Routing(server server.Server) {
-	server.Get("", b.Balances)
+	server.Get("/accounting/balances", b.Balances)
 }
 
 func (b *balances) Balances(writer http.ResponseWriter, request *http.Request) {

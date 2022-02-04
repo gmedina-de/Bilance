@@ -9,7 +9,7 @@ import (
 
 func init() {
 	template.AddNavigation(
-		template.MenuItem("accounting", "book", "/accounting").WithSubItems(
+		template.MenuItem("accounting", "book", "/accounting/payments").WithSubItems(
 			template.MenuItem("payments", "layers", "/accounting/payments"),
 			template.MenuItem("categories", "tag", "/accounting/categories"),
 			template.MenuItem("analysis", "", ""),
