@@ -8,7 +8,7 @@ import (
 )
 
 type users struct {
-	*Generic[model.User]
+	Repository[model.User]
 }
 
 func Users(database database.Database) Repository[model.User] {

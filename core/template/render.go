@@ -13,10 +13,10 @@ type Context struct {
 	User               *model.User
 	Path               string
 	Title              string
-	Navigation         []*menuItem
-	Navigation2        []*menuItem
-	CurrentNavigation1 *menuItem
-	CurrentNavigation2 *menuItem
+	Navigation         []*MenuItem
+	Navigation2        []*MenuItem
+	CurrentNavigation1 *MenuItem
+	CurrentNavigation2 *MenuItem
 	Parameters         *Parameters
 }
 

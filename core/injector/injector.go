@@ -3,6 +3,7 @@ package injector
 import "reflect"
 
 type Injector interface {
-	Add(constructors ...interface{})
+	AddImplementation(constructor interface{})
+	AddInstance(Type reflect.Type, instance interface{})
 	Inject(constructor interface{}) reflect.Value
 }

@@ -5,12 +5,25 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"encoding/gob"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
 )
 
 type Model any
+
+func NamePlural(model any) string {
+	name := Name(model)
+	if name[len(name)-1] == 'y' {
+		return name[0:len(name)-1] + "ies"
+	}
+	return name + "s"
+}
+
+func Name(model any) string {
+	return strings.ToLower(reflect.TypeOf(model).Name())
+}
 
 func ScanAndPanic(row *sql.Rows, dest ...interface{}) {
 	err := row.Scan(dest...)

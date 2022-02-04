@@ -9,7 +9,7 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarsExample03">
                     <span data-feather="{{.CurrentNavigation1.Icon}}"></span>
-                    {{translate .CurrentNavigation1.Name}}
+{{/*                    {{translate .CurrentNavigation1.Name}}*/}}
                 </button>
                 {{if .CurrentNavigation2}}
                     <span data-feather="chevron-right" class="text-light d-md-none"></span>
@@ -17,7 +17,7 @@
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#sidebarMenu">
                         <span data-feather="{{.CurrentNavigation2.Icon}}"></span>
-                        {{translate .CurrentNavigation2.Name}}
+{{/*                        {{translate .CurrentNavigation2.Name}}*/}}
                     </button>
                 {{end}}
             </div>

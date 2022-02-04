@@ -8,7 +8,7 @@ import (
 )
 
 type categories struct {
-	*repository.Generic[model.Category]
+	repository.Repository[model.Category]
 }
 
 func Categories(database database.Database) repository.Repository[model.Category] {

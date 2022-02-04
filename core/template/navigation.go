@@ -2,32 +2,33 @@ package template
 
 import "strings"
 
-type menuItem struct {
+type MenuItem struct {
 	Name    string
 	Icon    string
 	Path    string
-	SubMenu []*menuItem
+	SubMenu []*MenuItem
 }
 
-func MenuItem(name string, icon string, path string) *menuItem {
-	return &menuItem{Name: name, Icon: icon, Path: path}
-}
-
-func (i *menuItem) WithSubItems(menuItems ...*menuItem) *menuItem {
-	i.SubMenu = menuItems
+func (i *MenuItem) WithChild(name string, icon string, path string) *MenuItem {
+	if i.SubMenu == nil {
+		i.SubMenu = []*MenuItem{}
+	}
+	i.SubMenu = append(i.SubMenu, &MenuItem{name, icon, path, nil})
 	return i
 }
 
-var navigation []*menuItem
+var navigation []*MenuItem
 
-func AddNavigation(item *menuItem) {
-	navigation = append(navigation, item)
+func AddNavigation(name string, icon string, path string) *MenuItem {
+	menuItem := &MenuItem{name, icon, path, nil}
+	navigation = append(navigation, menuItem)
+	return menuItem
 }
 
-func getCurrentNavigation(path string, navigation []*menuItem) *menuItem {
+func getCurrentNavigation(path string, navigation []*MenuItem) *MenuItem {
 	pathParts := strings.Split(path, "/")
 
-	var result *menuItem
+	var result *MenuItem
 	max := 0
 
 	for _, n := range navigation {

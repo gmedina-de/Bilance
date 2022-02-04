@@ -10,13 +10,12 @@ import (
 	"homecloud/core/repository"
 	"homecloud/core/server"
 	"homecloud/core/template"
+	"reflect"
 )
 
 func init() {
-	template.AddNavigation(
-		template.MenuItem("home", "home", "/"),
-	)
-	Register(
+	template.AddNavigation("home", "home", "/")
+	Implementations(
 		log.Console,
 		database.Gorm,
 		authenticator.Basic,
@@ -29,8 +28,16 @@ func init() {
 
 var inj injector.Injector = injector.Recursive()
 
-func Register(constructors ...interface{}) {
-	inj.Add(constructors...)
+func Implementations(constructors ...interface{}) {
+	for _, constructor := range constructors {
+		inj.AddImplementation(constructor)
+	}
+}
+
+func Instances[T any](instances ...T) {
+	for _, instance := range instances {
+		inj.AddInstance(reflect.TypeOf(instances[0]), instance)
+	}
 }
 
 func Init() {

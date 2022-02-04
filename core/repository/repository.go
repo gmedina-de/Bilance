@@ -6,9 +6,6 @@ import (
 )
 
 type Repository[T model.Model] interface {
-	ModelName() string
-	ModelNamePlural() string
-
 	NewEmpty() *T
 	FromRequest(request *http.Request, id int64) *T
 

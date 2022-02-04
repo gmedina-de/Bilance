@@ -11,7 +11,7 @@ import (
 )
 
 type payments struct {
-	*repository.Generic[model.Payment]
+	repository.Repository[model.Payment]
 }
 
 func Payments(database database.Database) repository.Repository[model.Payment] {

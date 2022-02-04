@@ -4,9 +4,11 @@ go 1.18
 
 replace homecloud/core => ./core
 replace homecloud/accounting => ./accounting
+replace homecloud/assets => ./assets
 
 require homecloud/core v0.0.0
 require homecloud/accounting v0.0.0
+require homecloud/assets v0.0.0
 
 require (
 	github.com/jinzhu/inflection v1.0.0 // indirect

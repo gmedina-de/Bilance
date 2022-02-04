@@ -39,7 +39,8 @@ func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
 
 	//projectIdString := GetSelectedProjectIdString(request)
 	projectIdString := "0"
-	modelName := g.Repository.ModelNamePlural()
+	//modelName := model.NamePlural(g.Repository.NewEmpty())
+	modelName := "model.NamePlural(g.Repository.NewEmpty())"
 	var conditions []string
 	switch modelName {
 	case "categories":

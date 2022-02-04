@@ -63,7 +63,7 @@ func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
 			},
 			"search_results",
 			"crud_table",
-			c.Repository.ModelNamePlural(),
+			"payments",
 		)
 	} else {
 		c.Generic.Index(writer, request)

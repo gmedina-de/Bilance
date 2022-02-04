@@ -7,12 +7,12 @@ import (
 )
 
 type categories struct {
-	controller.Generic[model.Category]
+	controller.Controller
 }
 
 func Categories(repository repository.Repository[model.Category]) controller.Controller {
 	return &categories{
-		controller.Generic[model.Category]{
+		&controller.Generic[model.Category]{
 			Repository:   repository,
 			BaseTemplate: "accounting/template/categories.gohtml",
 			BasePath:     "/accounting/categories",

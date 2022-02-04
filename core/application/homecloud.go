@@ -16,11 +16,8 @@ func Homecloud(server server.Server, controllers []controller.Controller) *homec
 }
 
 func (b *homecloud) Run() {
-	template.AddNavigation(
-		template.MenuItem("settings", "settings", "/settings/users").WithSubItems(
-			template.MenuItem("users", "users", "/settings/users"),
-		),
-	)
+	template.AddNavigation("settings", "settings", "/settings/users").
+		WithChild("users", "users", "/settings/users")
 
 	for _, c := range b.controllers {
 		c.Routing(b.server)

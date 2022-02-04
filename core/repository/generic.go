@@ -3,8 +3,8 @@ package repository
 import (
 	"homecloud/core/database"
 	"homecloud/core/model"
+	"net/http"
 	"reflect"
-	"strings"
 )
 
 type Generic[T model.Model] struct {
@@ -12,25 +12,18 @@ type Generic[T model.Model] struct {
 	model    T
 }
 
-func NewGeneric[T model.Model](database database.Database, model T) *Generic[T] {
+func NewGeneric[T model.Model](database database.Database, model T) Repository[T] {
 	database.AutoMigrate(model)
 	return &Generic[T]{database: database, model: model}
 }
 
-func (r *Generic[T]) ModelName() string {
-	return strings.ToLower(reflect.TypeOf(r.model).Name())
-}
-
-func (r *Generic[T]) ModelNamePlural() string {
-	name := r.ModelName()
-	if name[len(name)-1] == 'y' {
-		return name[0:len(name)-1] + "ies"
-	}
-	return name + "s"
-}
-
 func (r *Generic[T]) NewEmpty() *T {
 	return &r.model
+}
+
+func (r *Generic[T]) FromRequest(request *http.Request, id int64) *T {
+	//TODO implement me
+	panic("implement me")
 }
 
 func (r *Generic[T]) All() []T {
