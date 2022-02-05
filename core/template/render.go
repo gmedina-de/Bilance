@@ -33,7 +33,7 @@ var funcMap = template.FuncMap{
 	"inputs":    inputs,
 	"td":        td,
 	"th":        th,
-	"sum": func(a int64, b int64) int64 {
+	"sum": func(a int, b int) int {
 		return a + b
 	},
 	"contains": func(a string, b int64) bool {
@@ -41,7 +41,7 @@ var funcMap = template.FuncMap{
 	},
 }
 
-func Render(writer http.ResponseWriter, request *http.Request, parameters *Parameters, title string, templates ...string) {
+func Render(writer http.ResponseWriter, request *http.Request, title string, parameters *Parameters, templates ...string) {
 	// prepare templates (optimized?)
 	templates = append(templates,
 		"core/template/base.gohtml",

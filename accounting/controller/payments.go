@@ -53,17 +53,10 @@ func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
 			"OR Date LIKE '"+term+"%'",
 			"ORDER BY Date",
 		)
-		template.Render(
-			writer,
-			request,
-			&template.Parameters{
-				Model: list,
-				Toast: strconv.Itoa(len(list)) + " " + localization.Translate("records_found"),
-			},
-			"search_results",
-			"crud_table",
-			"payments",
-		)
+		template.Render(writer, request, "search_results", &template.Parameters{
+			Model: list,
+			Toast: strconv.Itoa(len(list)) + " " + localization.Translate("records_found"),
+		}, "crud_table", "payments")
 	} else {
 		c.Generic.Index(writer, request)
 	}

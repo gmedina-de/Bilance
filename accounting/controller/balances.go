@@ -25,13 +25,7 @@ func (b *balances) Routing(server server.Server) {
 
 func (b *balances) Balances(writer http.ResponseWriter, request *http.Request) {
 	balanceData := b.prepareBalanceData()
-	template.Render(
-		writer,
-		request,
-		&template.Parameters{Model: &balanceData},
-		"balances",
-		"accounting/template/balances.gohtml",
-	)
+	template.Render(writer, request, "balances", &template.Parameters{Model: &balanceData}, "accounting/template/balances.gohtml")
 }
 
 func (b *balances) prepareBalanceData() []*BalanceData {

@@ -18,7 +18,7 @@ func (c *index) Routing(server server.Server) {
 }
 
 func (c *index) Index(writer http.ResponseWriter, request *http.Request) {
-	template.Render(writer, request, nil, "/", "core/template/index.gohtml")
+	template.Render(writer, request, "/", nil, "core/template/index.gohtml")
 }
 
 //

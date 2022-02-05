@@ -22,14 +22,16 @@ func (r *generic[T]) All() []T {
 	return result
 }
 
-func (r *generic[T]) Find(id int64) *T {
+func (r *generic[T]) Limit(limit int, offset int) []T {
 	var result []T
-	r.database.Find(&result, id)
-	if len(result) > 0 {
-		return &result[0]
-	} else {
-		return nil
-	}
+	r.database.Model(r.model).Limit(limit).Offset(offset).Find(&result)
+	return result
+}
+
+func (r *generic[T]) Find(id int64) *T {
+	var result T
+	r.database.First(&result, id)
+	return &result
 }
 
 func (r *generic[T]) List(query string, args ...string) []T {

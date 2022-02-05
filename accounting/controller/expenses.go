@@ -39,8 +39,8 @@ func (c *expenses) Expenses(writer http.ResponseWriter, request *http.Request) {
 	template.Render(
 		writer,
 		request,
-		&template.Parameters{Model: c.prepareGraphData(request), Data: c.prepareYears()},
 		title,
+		&template.Parameters{Model: c.prepareGraphData(request), Data: c.prepareYears()},
 		"accounting/template/expenses.gohtml",
 	)
 }

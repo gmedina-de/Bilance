@@ -1,6 +1,6 @@
 {{define "content"}}
     {{if .Parameters.Model}}
-        <table class="table table-striped">
+        <table class="table table-hover table-responsive">
             <thead>
             <tr>
                 {{range th (index .Parameters.Model 0)}}
@@ -8,7 +8,7 @@
                 {{end}}
             </tr>
             </thead>
-            <tbody>
+            <tbody class="bg-white">
             {{$Path:=.Path}}
             {{range .Parameters.Model}}
                 <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
@@ -26,8 +26,8 @@
 {{end}}
 
 {{define "options"}}
-    <div class="btn-group">
-        <a class="btn btn-sm btn-outline-secondary">
+    <div class="btn-group me-2">
+        <a class="btn btn-sm btn-outline-warning">
             <span data-feather="download"></span> {{translate "export"}}
         </a>
     </div>

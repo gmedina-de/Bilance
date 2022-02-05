@@ -28,7 +28,6 @@ func (g *Generic[T]) Routing(server server.Server) {
 }
 
 func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
-
 	var data interface{}
 	if g.DataProvider != nil {
 		data = g.DataProvider(request)
@@ -40,39 +39,15 @@ func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	modelName := model.Plural(g.Model)
-	pagination, _ := g.handlePagination(request)
-	all := g.Repository.All()
+
+	limit, offset, pagination := template.HandlePagination(request)
 	parameters := &template.Parameters{
-		Model: all,
-		//Model:      g.repository.Raw(strings.Join(conditions, " AND ") + " " + limitCondition),
+		Model:      g.Repository.Limit(limit, offset),
 		Data:       data,
 		Pagination: pagination,
 		Toast:      toast,
 	}
-	template.Render(
-		writer,
-		request,
-		parameters,
-		modelName,
-		"core/template/table.gohtml",
-	)
-}
-
-func (g *Generic[T]) handlePagination(request *http.Request) (*template.Pagination, string) {
-	if strings.HasPrefix(request.URL.Path, "/admin/") {
-		return nil, ""
-	}
-	var limit int64 = 10
-	var page int64 = 1
-	if request.URL.Query().Get("page") != "" {
-		page, _ = strconv.ParseInt(request.URL.Query().Get("page"), 10, 64)
-	}
-	var offset = limit * (page - 1)
-	//var pages = g.Repository.Count("") / limit
-	var pages int64 = 10
-	pages++
-	return &template.Pagination{pages, page},
-		"LIMIT " + strconv.FormatInt(limit, 10) + " OFFSET " + strconv.FormatInt(offset, 10)
+	template.Render(writer, request, modelName, parameters, "core/template/table.gohtml")
 }
 
 func (g *Generic[T]) Edit(writer http.ResponseWriter, request *http.Request) {
@@ -85,9 +60,9 @@ func (g *Generic[T]) Edit(writer http.ResponseWriter, request *http.Request) {
 			idString := request.URL.Query().Get("Id")
 			id, _ := strconv.ParseInt(idString, 10, 64)
 			model := g.Repository.Find(id)
-			template.Render(writer, request, &template.Parameters{Model: model, Data: data}, "edit", "core/template/form.gohtml")
+			template.Render(writer, request, "edit", &template.Parameters{Model: model, Data: data}, "core/template/form.gohtml")
 		} else {
-			template.Render(writer, request, &template.Parameters{Model: g.Model, Data: data}, "new", "core/template/form.gohtml")
+			template.Render(writer, request, "new", &template.Parameters{Model: g.Model, Data: data}, "core/template/form.gohtml")
 		}
 	} else if request.Method == "POST" {
 		err := request.ParseForm()

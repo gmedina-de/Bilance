@@ -13,27 +13,8 @@
     }
 }
 
-.flex-md-nowrap {
-    flex-wrap: nowrap !important;
-}
-
 .table > tbody > tr {
     cursor: pointer;
-}
-
-.table > tbody {
-    border-bottom: 2px solid black;
-}
-
-.table > tbody > tr:hover {
-    --bs-table-bg: #cfe2ff;
-    --bs-table-striped-bg: #c5d7f2;
-    --bs-table-striped-color: #000;
-    --bs-table-active-bg: #bacbe6;
-    --bs-table-active-color: #000;
-    --bs-table-hover-bg: #bfd1ec;
-    --bs-table-hover-color: #000;
-    color: #000;
 }
 
 .list-group-item:hover {
