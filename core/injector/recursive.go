@@ -1,9 +1,7 @@
 package injector
 
 import (
-	"fmt"
 	. "reflect"
-	"strings"
 )
 
 type recursive struct {
@@ -33,7 +31,6 @@ func (inj *recursive) Inject(constructor interface{}) Value {
 	constructorType := constructorValue.Type()
 	parameters := make([]Value, constructorType.NumIn())
 
-	fmt.Println(strings.Repeat("\t", inj.currentLevel), "Instantiating", constructorType)
 	for i := 0; i < len(parameters); i++ {
 		inj.currentLevel++
 		instances := inj.instances(constructorType.In(i))
@@ -55,7 +52,6 @@ func (inj *recursive) instances(parameterType Type) Value {
 	}
 	instances, found := inj.instancesMap[parameterType]
 	if !found {
-		fmt.Println(strings.Repeat("\t", inj.currentLevel), parameterName, "wasn't instantiated. ")
 		constructors, found := inj.constructorsMap[parameterType]
 		if !found {
 			panic("No constructors found for " + parameterName + ", required for dependency injection, please provide at least one")
@@ -65,8 +61,6 @@ func (inj *recursive) instances(parameterType Type) Value {
 			instances = Append(instances, inj.Inject(c))
 		}
 		inj.instancesMap[parameterType] = instances
-	} else {
-		fmt.Println(strings.Repeat("\t", inj.currentLevel), parameterName, "was already instantiated. ")
 	}
 	return instances
 }

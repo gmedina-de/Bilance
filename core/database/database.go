@@ -1,7 +1,7 @@
 package database
 
 import (
-	"gorm.io/gorm"
+	"github.com/beego/beego/v2/client/orm"
 )
 
-type Database = *gorm.DB
+type Database = orm.Ormer

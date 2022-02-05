@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/beego/beego/v2/client/orm"
 	"homecloud/core/database"
 	"homecloud/core/model"
 	"reflect"
@@ -12,41 +13,39 @@ type generic[T model.Model] struct {
 }
 
 func Generic[T model.Model](database database.Database, model T) Repository[T] {
-	database.AutoMigrate(model)
+	orm.RegisterModel(&model)
 	return &generic[T]{database: database, model: model}
 }
 
 func (r *generic[T]) All() []T {
 	var result []T
-	r.database.Find(&result)
+	r.database.Raw("SELECT * FROM " + model.Plural(r.model)).QueryRows(&result)
 	return result
 }
-
-func (r *generic[T]) Count() int64 {
-	var result = new(int64)
-	r.database.Model(r.model).Count(result)
-	return *result
+func (r *generic[T]) Count() int {
+	var count int
+	r.database.Raw("SELECT COUNT(*) FROM " + model.Plural(r.model)).QueryRow(&count)
+	return count
 }
-
 func (r *generic[T]) Limit(limit int, offset int) []T {
 	var result []T
-	r.database.Model(r.model).Limit(limit).Offset(offset).Find(&result)
+	r.database.Raw("SELECT * FROM "+model.Plural(r.model)+" LIMIT ? OFFSET ?", limit, offset).QueryRows(&result)
 	return result
 }
 
 func (r *generic[T]) Find(id int64) *T {
 	var result T
-	r.database.First(&result, id)
+	r.database.Raw("SELECT * FROM "+model.Plural(r.model)+" WHERE Id = ?", id).QueryRow(&result)
 	return &result
 }
 
-func (r *generic[T]) List(query string, args ...string) []T {
+func (r *generic[T]) List(query string, args ...any) []T {
 	var result []T
-	r.database.Where(query, args).Find(&result)
+	r.database.Raw("SELECT * FROM "+model.Plural(r.model)+" "+query, args...).QueryRows(&result)
 	return result
 }
 
-func (r *generic[T]) Map(query string, args ...string) map[int64]*T {
+func (r *generic[T]) Map(query string, args ...any) map[int64]*T {
 	var result = make(map[int64]*T)
 	list := r.List(query, args...)
 	for _, elem := range list {
@@ -56,11 +55,11 @@ func (r *generic[T]) Map(query string, args ...string) map[int64]*T {
 }
 
 func (r *generic[T]) Insert(entity any) {
-	r.database.Create(entity)
+	r.database.Insert(entity)
 }
 
 func (r *generic[T]) Update(entity any) {
-	r.database.Save(entity)
+	r.database.Update(entity)
 }
 
 func (r *generic[T]) Delete(entity any) {

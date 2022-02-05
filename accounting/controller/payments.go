@@ -56,6 +56,6 @@ func (c *payments) Routing(server server.Server) {
 //			Toast: strconv.Itoa(len(list)) + " " + localization.Translate("records_found"),
 //		}, "crud_table", "payments")
 //	} else {
-//		c.Generic.Get(writer, request)
+//		c.GenericOld.Get(writer, request)
 //	}
 //}

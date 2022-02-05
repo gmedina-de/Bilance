@@ -22,5 +22,5 @@ type Book struct {
 	Id          int64
 	Name        string
 	Description string
-	Note        Note
+	//Note        *Note
 }

@@ -20,7 +20,7 @@ func init() {
 	template.AddNavigation("home", "home").Path = "/"
 	Implementations(
 		log.Console,
-		database.Gorm,
+		database.Orm,
 		authenticator.Basic,
 		server.Authenticated,
 		repository.Users,

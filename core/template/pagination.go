@@ -20,7 +20,7 @@ func paginate(count int) []int {
 	return items
 }
 
-func HandlePagination(request *http.Request, count int64) (int, int, *Pagination) {
+func HandlePagination(request *http.Request, count int) (int, int, *Pagination) {
 	var limit = 10
 	var page = 1
 	if request.URL.Query().Get("page") != "" {

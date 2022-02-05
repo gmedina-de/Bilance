@@ -6,11 +6,11 @@ import (
 
 type Repository[T model.Model] interface {
 	All() []T
-	Count() int64
+	Count() int
 	Find(id int64) *T
 	Limit(limit int, offset int) []T
-	List(query string, args ...string) []T
-	Map(query string, args ...string) map[int64]*T
+	List(query string, args ...any) []T
+	Map(query string, args ...any) map[int64]*T
 
 	Insert(entity any)
 	Update(entity any)
