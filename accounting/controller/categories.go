@@ -13,9 +13,8 @@ type categories struct {
 func Categories(repository repository.Repository[model.Category]) controller.Controller {
 	return &categories{
 		&controller.Generic[model.Category]{
-			Repository:   repository,
-			BaseTemplate: "accounting/template/categories.gohtml",
-			BasePath:     "/accounting/categories",
+			Repository: repository,
+			BasePath:   "/accounting/categories",
 		},
 	}
 }

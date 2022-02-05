@@ -23,9 +23,8 @@ func Payments(
 ) controller.Controller {
 	return &payments{
 		controller.Generic[model2.Payment]{
-			Repository:   repository,
-			BaseTemplate: "accounting/template/payments.gohtml",
-			BasePath:     "/accounting/payments",
+			Repository: repository,
+			BasePath:   "/accounting/payments",
 			DataProvider: func(request *http.Request) interface{} {
 				return struct {
 					Categories map[int64]*model2.Category

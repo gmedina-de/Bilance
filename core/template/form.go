@@ -7,16 +7,14 @@ import (
 	"strings"
 )
 
-var inputTpl = `
+var inputTemplate = template.Must(template.New("").Parse(`
 <div class="col-md-6">
 	<div class="form-floating">
 		<input type="{{.Type}}" class="form-control" name="{{.Name}}" id="{{.Id}}" placeholder="{{.Placeholder}}" {{with .Value}}value="{{.}}"{{end}}>
 		<label for="{{.Id}}">{{.Label}}</label>
 	</div>
 </div>
-`
-
-var inputTemplate = template.Must(template.New("").Parse(inputTpl))
+`))
 
 func inputs(v interface{}, errs ...error) (template.HTML, error) {
 	tpl, err := inputTemplate.Clone()
@@ -47,9 +45,6 @@ type field struct {
 
 func fields(v interface{}, names ...string) []field {
 	rv := model.RealValueOf(v)
-	if rv.Kind() != reflect.Struct {
-		panic("invalid value; only structs are supported")
-	}
 	t := rv.Type()
 	ret := make([]field, 0, t.NumField())
 	for i := 0; i < t.NumField(); i++ {
@@ -75,7 +70,7 @@ func fields(v interface{}, names ...string) []field {
 			Placeholder: structField.Name,
 			Type:        fieldInputType(structField),
 			Id:          finalName,
-			Value:       rv.Field(i).Interface(),
+			Value:       rf.Interface(),
 		}
 		ret = append(ret, f)
 	}

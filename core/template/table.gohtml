@@ -1,0 +1,39 @@
+{{define "content"}}
+    {{if .Parameters.Model}}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                {{range th (index .Parameters.Model 0)}}
+                    <th>{{translate .}}</th>
+                {{end}}
+            </tr>
+            </thead>
+            <tbody>
+            {{$Path:=.Path}}
+            {{range .Parameters.Model}}
+                <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
+                    {{td .}}
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+    {{else}}
+        {{translate "no_records_found"}}
+    {{end}}
+    {{if .Parameters.Pagination}}
+        {{template "pagination" .}}
+    {{end}}
+{{end}}
+
+{{define "options"}}
+    <div class="btn-group">
+        <a class="btn btn-sm btn-outline-secondary">
+            <span data-feather="download"></span> {{translate "export"}}
+        </a>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-sm btn-success" href="{{.Path}}/edit">
+            <span data-feather="plus-square"></span> {{translate "new"}}
+        </a>
+    </div>
+{{end}}

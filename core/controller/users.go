@@ -12,9 +12,8 @@ type users struct {
 func Users(repository repository.Repository[model.User]) Controller {
 	return &users{
 		&Generic[model.User]{
-			BaseTemplate: "core/template/users.gohtml",
-			BasePath:     "/settings/users",
-			Repository:   repository,
+			Repository: repository,
+			BasePath:   "/settings/users",
 		},
 	}
 }

@@ -1,0 +1,28 @@
+{{define "pagination"}}
+    {{$Path := .Path}}
+    {{$Pages := .Parameters.Pagination.Pages}}
+    {{$Active := .Parameters.Pagination.Active}}
+    {{if gt $Pages 1}}
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item{{if le $Active 1}} disabled{{end}}">
+                    <a class="page-link" href="{{$Path}}?page={{sum $Active -1}}">
+                        {{translate "previous"}}
+                    </a>
+                </li>
+                {{ range $i := paginate $Pages}}
+                    <li class="page-item{{if eq $i $Active}} active{{end}}">
+                        <a class="page-link" href="{{$Path}}?page={{$i}}">
+                            {{$i}}
+                        </a>
+                    </li>
+                {{end}}
+                <li class="page-item{{if ge $Active $Pages}} disabled{{end}}">
+                    <a class="page-link" href="{{$Path}}?page={{sum $Active 1}}">
+                        {{translate "next"}}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    {{end}}
+{{end}}

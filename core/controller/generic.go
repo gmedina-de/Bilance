@@ -15,7 +15,6 @@ import (
 type Generic[T any] struct {
 	Model        T
 	Repository   repository.Repository[T]
-	BaseTemplate string
 	BasePath     string
 	DataProvider func(request *http.Request) interface{}
 }
@@ -42,8 +41,9 @@ func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
 
 	modelName := model.Plural(g.Model)
 	pagination, _ := g.handlePagination(request)
+	all := g.Repository.All()
 	parameters := &template.Parameters{
-		Model: g.Repository.All(),
+		Model: all,
 		//Model:      g.repository.Raw(strings.Join(conditions, " AND ") + " " + limitCondition),
 		Data:       data,
 		Pagination: pagination,
@@ -54,8 +54,7 @@ func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
 		request,
 		parameters,
 		modelName,
-		"core/template/crud_table.gohtml",
-		g.BaseTemplate,
+		"core/template/table.gohtml",
 	)
 }
 
@@ -86,9 +85,9 @@ func (g *Generic[T]) Edit(writer http.ResponseWriter, request *http.Request) {
 			idString := request.URL.Query().Get("Id")
 			id, _ := strconv.ParseInt(idString, 10, 64)
 			model := g.Repository.Find(id)
-			template.Render(writer, request, &template.Parameters{Model: model, Data: data}, "edit", "core/template/crud_table.gohtml", g.BaseTemplate)
+			template.Render(writer, request, &template.Parameters{Model: model, Data: data}, "edit", "core/template/form.gohtml")
 		} else {
-			template.Render(writer, request, &template.Parameters{Model: g.Model, Data: data}, "new", "core/template/crud_form.gohtml", g.BaseTemplate)
+			template.Render(writer, request, &template.Parameters{Model: g.Model, Data: data}, "new", "core/template/form.gohtml")
 		}
 	} else if request.Method == "POST" {
 		err := request.ParseForm()

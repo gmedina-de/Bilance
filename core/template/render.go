@@ -27,26 +27,35 @@ type Parameters struct {
 	Toast      string
 }
 
+var funcMap = template.FuncMap{
+	"translate": localization.Translate,
+	"paginate":  paginate,
+	"inputs":    inputs,
+	"td":        td,
+	"th":        th,
+	"sum": func(a int64, b int64) int64 {
+		return a + b
+	},
+	"contains": func(a string, b int64) bool {
+		return strings.Contains(a, strconv.FormatInt(b, 10))
+	},
+}
+
 func Render(writer http.ResponseWriter, request *http.Request, parameters *Parameters, title string, templates ...string) {
-	// prepare templates
+	// prepare templates (optimized?)
 	templates = append(templates,
 		"core/template/base.gohtml",
 		"core/template/navigation1.gohtml",
 		"core/template/navigation2.gohtml",
+		"core/template/pagination.gohtml",
 	)
 	tmpl := template.New("")
-	tmpl.Funcs(template.FuncMap{
-		"translate": localization.Translate,
-		"paginate":  paginate,
-		"sum":       sum,
-		"contains":  contains,
-		"inputs":    inputs,
-	})
+
+	tmpl.Funcs(funcMap)
 	tmpl, err := tmpl.ParseFiles(templates...)
 	if err != nil {
 		panic(err)
 	}
-
 	var user model.User
 	model.Deserialize(request.Header.Get("user"), &user)
 	currentNavigation := getCurrentNavigation(request.URL.Path, navigation)
@@ -63,12 +72,4 @@ func Render(writer http.ResponseWriter, request *http.Request, parameters *Param
 	if err != nil {
 		panic(err)
 	}
-}
-
-func sum(a int64, b int64) int64 {
-	return a + b
-}
-
-func contains(a string, b int64) bool {
-	return strings.Contains(a, strconv.FormatInt(b, 10))
 }
