@@ -10,5 +10,5 @@ type users struct {
 }
 
 func Users(database database.Database) Repository[model.User] {
-	return &users{NewGeneric(database, model.User{})}
+	return &users{Generic(database, model.User{})}
 }

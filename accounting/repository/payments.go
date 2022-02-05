@@ -11,7 +11,7 @@ type payments struct {
 }
 
 func Payments(database database.Database) repository.Repository[model.Payment] {
-	return &payments{repository.NewGeneric(database, model.Payment{})}
+	return &payments{repository.Generic(database, model.Payment{})}
 }
 
 //func (p *payments) FromRequest(request *http.Request, id int64) *model.Payment {

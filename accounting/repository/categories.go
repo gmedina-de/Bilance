@@ -11,5 +11,5 @@ type categories struct {
 }
 
 func Categories(database database.Database) repository.Repository[model.Category] {
-	return &categories{repository.NewGeneric(database, model.Category{})}
+	return &categories{repository.Generic(database, model.Category{})}
 }

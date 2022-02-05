@@ -11,7 +11,7 @@ import (
 
 func init() {
 	models := model.Models
-	core.Implementations(repository.NewAgnostic)
+	core.Implementations(repository.Agnostic)
 	for _, m := range models {
 		core.Implementations(controllerProvider(m))
 	}

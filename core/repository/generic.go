@@ -6,23 +6,23 @@ import (
 	"reflect"
 )
 
-type Generic[T model.Model] struct {
+type generic[T model.Model] struct {
 	database database.Database
 	model    T
 }
 
-func NewGeneric[T model.Model](database database.Database, model T) Repository[T] {
+func Generic[T model.Model](database database.Database, model T) Repository[T] {
 	database.AutoMigrate(model)
-	return &Generic[T]{database: database, model: model}
+	return &generic[T]{database: database, model: model}
 }
 
-func (r *Generic[T]) All() []T {
+func (r *generic[T]) All() []T {
 	var result []T
 	r.database.Find(&result)
 	return result
 }
 
-func (r *Generic[T]) Find(id int64) *T {
+func (r *generic[T]) Find(id int64) *T {
 	var result []T
 	r.database.Find(&result, id)
 	if len(result) > 0 {
@@ -32,13 +32,13 @@ func (r *Generic[T]) Find(id int64) *T {
 	}
 }
 
-func (r *Generic[T]) List(query string, args ...string) []T {
+func (r *generic[T]) List(query string, args ...string) []T {
 	var result []T
 	r.database.Where(query, args).Find(&result)
 	return result
 }
 
-func (r *Generic[T]) Map(query string, args ...string) map[int64]*T {
+func (r *generic[T]) Map(query string, args ...string) map[int64]*T {
 	var result = make(map[int64]*T)
 	list := r.List(query, args...)
 	for _, elem := range list {
@@ -47,14 +47,14 @@ func (r *Generic[T]) Map(query string, args ...string) map[int64]*T {
 	return result
 }
 
-func (r *Generic[T]) Insert(entity any) {
+func (r *generic[T]) Insert(entity any) {
 	r.database.Create(entity)
 }
 
-func (r *Generic[T]) Update(entity any) {
+func (r *generic[T]) Update(entity any) {
 	r.database.Save(entity)
 }
 
-func (r *Generic[T]) Delete(entity any) {
+func (r *generic[T]) Delete(entity any) {
 	r.database.Delete(entity)
 }

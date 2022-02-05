@@ -19,6 +19,7 @@ func init() {
 		database.Gorm,
 		authenticator.Basic,
 		server.Authenticated,
+		repository.Agnostic,
 		repository.Users,
 		controller.Index,
 		controller.Users,
