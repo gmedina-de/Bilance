@@ -1,0 +1,47 @@
+{{define "content"}}
+    {{if .Model}}
+        <div class="table-responsive">
+            <table class="table table-hover" data-toggle="table">
+                <thead class="table-dark">
+                <tr>
+                    {{range th (index .Model 0)}}
+                        <th data-field="{{.}}" data-sortable="true">{{translate .}}</th>
+                    {{end}}
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody class="bg-white">
+                {{$Path:=.Path}}
+                {{range .Model}}
+                    <tr>
+                        {{td .}}
+                        <td style="width: 10px!important;">
+                            <a href="{{$Path}}/edit?Id={{.Id}}">
+                            <span data-feather="edit"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+    {{else}}
+        {{translate "no_records_found"}}
+    {{end}}
+    {{if .Pagination}}
+        {{template "pagination" .}}
+    {{end}}
+{{end}}
+
+{{define "options"}}
+    <div class="btn-group me-2">
+        <a class="btn btn-sm btn-outline-warning">
+            <span data-feather="download"></span> {{translate "export"}}
+        </a>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-sm btn-success" href="{{.Path}}/edit">
+            <span data-feather="plus-square"></span> {{translate "new"}}
+        </a>
+    </div>
+{{end}}

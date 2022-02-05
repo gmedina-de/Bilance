@@ -17,15 +17,15 @@ func (i *MenuItem) WithChild(name string, icon string) *MenuItem {
 	return i
 }
 
-var navigation []*MenuItem
+var Navigation []*MenuItem
 
 func AddNavigation(name string, icon string) *MenuItem {
 	menuItem := &MenuItem{name, icon, "/" + name, nil}
-	navigation = append(navigation, menuItem)
+	Navigation = append(Navigation, menuItem)
 	return menuItem
 }
 
-func getCurrentNavigation(path string, navigation []*MenuItem) *MenuItem {
+func GetCurrentNavigation(path string, navigation []*MenuItem) *MenuItem {
 	pathParts := strings.Split(path, "/")
 
 	var result *MenuItem
@@ -37,6 +37,23 @@ func getCurrentNavigation(path string, navigation []*MenuItem) *MenuItem {
 			if i < len(nParts) && p == nParts[i] && max < i {
 				max++
 				result = n
+			}
+		}
+	}
+	return result
+}
+
+func GetCurrentNavigationIndex(path string, navigation []*MenuItem) int {
+	pathParts := strings.Split(path, "/")
+
+	var result int
+	max := 0
+	for j, n := range navigation {
+		nParts := strings.Split(n.Path, "/")
+		for i, p := range pathParts {
+			if i < len(nParts) && p == nParts[i] && max < i {
+				max++
+				result = j
 			}
 		}
 	}

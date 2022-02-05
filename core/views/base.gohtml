@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <title>{{if .Title}}{{translate .Title}}{{end}}</title>
+    {{/*        <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">*/}}
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap-table.min.css">
+    <link rel="stylesheet" href="/static/custom.css">
+</head>
+<body class="bg-light">
+{{template "navigation1.gohtml" .}}
+<div class="container">
+    <div class="row">
+        {{if .Navigation2}}
+            <div class="col-lg-3 col-xl-2">
+                {{template "navigation2.gohtml" .}}
+            </div>
+        {{end}}
+        <main class="ms-sm-auto{{if .Navigation2}} col-lg-9 col-xl-10{{end}} mb-2">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+                {{if .Title}}<h1 class="h2">{{translate .Title}}</h1>{{end}}
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    {{/*                    {{template "options" .}}*/}}
+                </div>
+            </div>
+
+            {{block "content" .}}{{end}}
+        </main>
+    </div>
+</div>
+
+{{if .Toast}}
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div class="alert alert-info fade show shadow" role="alert">
+            <span data-feather="info"></span> {{translate .Toast}}
+        </div>
+    </div>
+{{end}}
+
+<script src="/static/jquery.min.js"></script>
+<script src="/static/bootstrap.bundle.min.js"></script>
+<script src="/static/bootstrap-table.min.js"></script>
+<script src="/static/feather.min.js"></script>
+<script src="/static/custom.js"></script>
+</body>
+</html>

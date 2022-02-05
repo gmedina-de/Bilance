@@ -2,7 +2,7 @@ package model
 
 import (
 	"homecloud/core"
-	"homecloud/core/controller"
+	"homecloud/core/controllers"
 	"homecloud/core/database"
 	model2 "homecloud/core/model"
 	"homecloud/core/repository"
@@ -22,8 +22,8 @@ func AddModel[T any](model T, icon string) {
 	)
 
 	core.Implementations(
-		func(repository repository.Repository[T]) controller.Controller {
-			return &controller.Generic[T]{
+		func(repository repository.Repository[T]) controllers.ControllerOld {
+			return &controllers.Generic[T]{
 				Model:      model,
 				Repository: repository,
 				BasePath:   "/assets/" + model2.Plural(model),

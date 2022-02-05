@@ -2,27 +2,24 @@ package controller
 
 import (
 	model2 "homecloud/accounting/model"
-	"homecloud/core/controller"
-	"homecloud/core/localization"
+	"homecloud/core/controllers"
 	"homecloud/core/model"
 	"homecloud/core/repository"
 	"homecloud/core/server"
-	"homecloud/core/template"
 	"net/http"
-	"strconv"
 )
 
 type payments struct {
-	controller.Generic[model2.Payment]
+	controllers.Generic[model2.Payment]
 }
 
 func Payments(
 	repository repository.Repository[model2.Payment],
 	categories repository.Repository[model2.Category],
 	users repository.Repository[model.User],
-) controller.Controller {
+) controllers.ControllerOld {
 	return &payments{
-		controller.Generic[model2.Payment]{
+		controllers.Generic[model2.Payment]{
 			Repository: repository,
 			BasePath:   "/accounting/payments",
 			DataProvider: func(request *http.Request) interface{} {
@@ -40,24 +37,25 @@ func Payments(
 
 func (c *payments) Routing(server server.Server) {
 	c.Generic.Routing(server)
-	server.Get("/accounting/payments", c.List)
-	server.Post("/accounting/payments", c.List)
+	//server.Get("/accounting/payments", c.List)
+	//server.Post("/accounting/payments", c.List)
 }
 
-func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
-	if request.URL.Query().Get("search") != "" {
-		term := request.URL.Query().Get("search")
-		list := c.Repository.List(
-			"Name LIKE '%"+term+"%'",
-			"OR CategoryId IN (SELECT Id FROM Category WHERE Name LIKE '%"+term+"%')",
-			"OR Date LIKE '"+term+"%'",
-			"ORDER BY Date",
-		)
-		template.Render(writer, request, "search_results", &template.Parameters{
-			Model: list,
-			Toast: strconv.Itoa(len(list)) + " " + localization.Translate("records_found"),
-		}, "crud_table", "payments")
-	} else {
-		c.Generic.Index(writer, request)
-	}
-}
+//
+//func (c *payments) List(writer http.ResponseWriter, request *http.Request) {
+//	if request.URL.Query().Get("search") != "" {
+//		term := request.URL.Query().Get("search")
+//		list := c.Repository.List(
+//			"Name LIKE '%"+term+"%'",
+//			"OR CategoryId IN (SELECT Id FROM Category WHERE Name LIKE '%"+term+"%')",
+//			"OR Date LIKE '"+term+"%'",
+//			"ORDER BY Date",
+//		)
+//		template.Render(writer, request, "search_results", &template.Parameters{
+//			Model: list,
+//			Toast: strconv.Itoa(len(list)) + " " + localization.Translate("records_found"),
+//		}, "crud_table", "payments")
+//	} else {
+//		c.Generic.Get(writer, request)
+//	}
+//}

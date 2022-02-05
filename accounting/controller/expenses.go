@@ -2,7 +2,7 @@ package controller
 
 import (
 	model2 "homecloud/accounting/model"
-	"homecloud/core/controller"
+	"homecloud/core/controllers"
 	"homecloud/core/localization"
 	"homecloud/core/model"
 	"homecloud/core/repository"
@@ -19,7 +19,7 @@ type expenses struct {
 	categories repository.Repository[model2.Category]
 }
 
-func Expenses(payments repository.Repository[model2.Payment], categories repository.Repository[model2.Category]) controller.Controller {
+func Expenses(payments repository.Repository[model2.Payment], categories repository.Repository[model2.Category]) controllers.ControllerOld {
 	return &expenses{payments, categories}
 }
 

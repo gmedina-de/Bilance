@@ -1,7 +1,7 @@
 {{define "content"}}
     <form method="post" class="mb-3">
         <div class="row g-3 pb-3 border-bottom">
-            {{inputs .Parameters.Model}}
+            {{inputs .Model}}
         </div>
         <button class="w-100 btn btn-primary btn-lg" type="submit">
             {{translate "save"}}
@@ -11,7 +11,7 @@
 
 {{define "options"}}
     <div class="btn-group" role="group">
-        {{if .Parameters.Model.Id}}
+        {{if .Model.Id}}
             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
                     data-bs-target="#deleteConfirmationModal">
                 <span data-feather="trash-2"></span> {{translate "delete"}}
@@ -35,7 +35,7 @@
                     <button type="button" class="btn btn-secondary"
                             data-bs-dismiss="modal">{{translate "cancel"}}</button>
                     <a type="button" class="btn btn-danger"
-                       href="{{.Path}}/delete?Id={{.Parameters.Model.Id}}">{{translate "delete"}}</a>
+                       href="{{.Path}}/delete?Id={{.Model.Id}}">{{translate "delete"}}</a>
                 </div>
             </div>
         </div>

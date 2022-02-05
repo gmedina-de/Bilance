@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"homecloud/core/model"

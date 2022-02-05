@@ -1,0 +1,20 @@
+<nav id="sidebarMenu" class="d-lg-block card sidebar collapse">
+    <ul class="nav flex-column pt-3 pb-2">
+        {{$Path := .Path}}
+        {{$CurrentNavigation2Index := .CurrentNavigation2Index}}
+        {{range $i, $a := .Navigation2}}
+            {{if ne .Icon ""}}
+                <li>
+                    <a href="{{.Path}}" class="nav-link{{if eq $CurrentNavigation2Index $i}} text-primary{{end}}">
+                        <span data-feather="{{.Icon}}"></span>
+                        {{translate .Name}}
+                    </a>
+                </li>
+            {{else}}
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>{{translate .Name}}</span>
+                </h6>
+            {{end}}
+        {{end}}
+    </ul>
+</nav>

@@ -2,17 +2,17 @@ package controller
 
 import (
 	"homecloud/accounting/model"
-	"homecloud/core/controller"
+	"homecloud/core/controllers"
 	"homecloud/core/repository"
 )
 
 type categories struct {
-	controller.Controller
+	controllers.ControllerOld
 }
 
-func Categories(repository repository.Repository[model.Category]) controller.Controller {
+func Categories(repository repository.Repository[model.Category]) controllers.ControllerOld {
 	return &categories{
-		&controller.Generic[model.Category]{
+		&controllers.Generic[model.Category]{
 			Repository: repository,
 			BasePath:   "/accounting/categories",
 		},

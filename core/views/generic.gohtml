@@ -1,10 +1,12 @@
+{{ template "base.gohtml" . }}
+
 {{define "content"}}
-    {{if .Parameters.Model}}
+    {{if .Model}}
         <div class="table-responsive">
             <table class="table table-hover" data-toggle="table">
                 <thead class="table-dark">
                 <tr>
-                    {{range th (index .Parameters.Model 0)}}
+                    {{range th (index .Model 0)}}
                         <th data-field="{{.}}" data-sortable="true">{{translate .}}</th>
                     {{end}}
                     <th></th>
@@ -12,7 +14,7 @@
                 </thead>
                 <tbody class="bg-white">
                 {{$Path:=.Path}}
-                {{range .Parameters.Model}}
+                {{range .Model}}
                     <tr>
                         {{td .}}
                         <td style="width: 10px!important;">
@@ -28,8 +30,8 @@
     {{else}}
         {{translate "no_records_found"}}
     {{end}}
-    {{if .Parameters.Pagination}}
-        {{template "pagination" .}}
+    {{if .Pagination}}
+        {{template "pagination.gohtml" .}}
     {{end}}
 {{end}}
 
