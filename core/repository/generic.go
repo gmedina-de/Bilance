@@ -3,7 +3,6 @@ package repository
 import (
 	"homecloud/core/database"
 	"homecloud/core/model"
-	"net/http"
 	"reflect"
 )
 
@@ -15,15 +14,6 @@ type Generic[T model.Model] struct {
 func NewGeneric[T model.Model](database database.Database, model T) Repository[T] {
 	database.AutoMigrate(model)
 	return &Generic[T]{database: database, model: model}
-}
-
-func (r *Generic[T]) NewEmpty() *T {
-	return &r.model
-}
-
-func (r *Generic[T]) FromRequest(request *http.Request, id int64) *T {
-	//TODO implement me
-	panic("implement me")
 }
 
 func (r *Generic[T]) All() []T {
@@ -38,7 +28,7 @@ func (r *Generic[T]) Find(id int64) *T {
 	if len(result) > 0 {
 		return &result[0]
 	} else {
-		return r.NewEmpty()
+		return nil
 	}
 }
 
@@ -57,26 +47,14 @@ func (r *Generic[T]) Map(query string, args ...string) map[int64]*T {
 	return result
 }
 
-func (r *Generic[T]) Raw(query string) []T {
-	var result []T
-	r.database.Raw("SELECT * FROM " + r.database.Model(r.model).Name() + " WHERE " + query).Scan(&result)
-	return result
-}
-
-func (r *Generic[T]) Count(query string, args ...string) int64 {
-	var result int64
-	r.database.Model(r.model).Where(query, args).Count(&result)
-	return result
-}
-
-func (r *Generic[T]) Insert(entity *T) {
+func (r *Generic[T]) Insert(entity any) {
 	r.database.Create(entity)
 }
 
-func (r *Generic[T]) Update(entity *T) {
+func (r *Generic[T]) Update(entity any) {
 	r.database.Save(entity)
 }
 
-func (r *Generic[T]) Delete(entity *T) {
+func (r *Generic[T]) Delete(entity any) {
 	r.database.Delete(entity)
 }

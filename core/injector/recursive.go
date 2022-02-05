@@ -20,22 +20,12 @@ func Recursive() Injector {
 	}
 }
 
-func (inj *recursive) AddImplementation(constructor interface{}) {
+func (inj *recursive) Add(constructor interface{}) {
 	constructorReturnType := ValueOf(constructor).Type().Out(0)
 	if _, already := inj.constructorsMap[constructorReturnType]; !already {
 		inj.constructorsMap[constructorReturnType] = []interface{}{}
 	}
 	inj.constructorsMap[constructorReturnType] = append(inj.constructorsMap[constructorReturnType], constructor)
-}
-
-func (inj *recursive) AddInstance(Type Type, instance interface{}) {
-	result, found := inj.instancesMap[Type]
-	if !found {
-		result = MakeSlice(SliceOf(Type), 0, 0)
-	}
-	result = Append(result, ValueOf(instance))
-	inj.instancesMap[Type] = result
-
 }
 
 func (inj *recursive) Inject(constructor interface{}) Value {

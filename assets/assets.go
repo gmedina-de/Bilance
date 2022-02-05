@@ -4,7 +4,6 @@ import (
 	"homecloud/assets/model"
 	"homecloud/core"
 	"homecloud/core/controller"
-	"homecloud/core/database"
 	model2 "homecloud/core/model"
 	"homecloud/core/repository"
 	"homecloud/core/template"
@@ -12,9 +11,9 @@ import (
 
 func init() {
 	models := model.Models
+	core.Implementations(repository.NewAgnostic)
 	for _, m := range models {
 		core.Implementations(controllerProvider(m))
-		core.Implementations(repositoryProvider(m))
 	}
 
 	menuItem := template.AddNavigation("assets", "box")
@@ -24,18 +23,13 @@ func init() {
 	menuItem.Path = "/assets/" + model2.Plural(models[0])
 }
 
-func controllerProvider[T any](model T) func(repository repository.Repository[T]) controller.Controller {
-	return func(repository repository.Repository[T]) controller.Controller {
-		return &controller.Generic[T]{
+func controllerProvider[T any](model T) func(repository repository.Repository[any]) controller.Controller {
+	return func(repository repository.Repository[any]) controller.Controller {
+		return &controller.Generic[any]{
+			Model:        model,
 			Repository:   repository,
 			BaseTemplate: "assets/template/model.gohtml",
 			BasePath:     "/assets/" + model2.Plural(model),
 		}
-	}
-}
-
-func repositoryProvider[T any](model T) func(database database.Database) repository.Repository[T] {
-	return func(database database.Database) repository.Repository[T] {
-		return repository.NewGeneric(database, model)
 	}
 }

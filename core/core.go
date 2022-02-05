@@ -10,7 +10,6 @@ import (
 	"homecloud/core/repository"
 	"homecloud/core/server"
 	"homecloud/core/template"
-	"reflect"
 )
 
 func init() {
@@ -30,13 +29,7 @@ var inj injector.Injector = injector.Recursive()
 
 func Implementations(constructors ...interface{}) {
 	for _, constructor := range constructors {
-		inj.AddImplementation(constructor)
-	}
-}
-
-func Instances[T any](instances ...T) {
-	for _, instance := range instances {
-		inj.AddInstance(reflect.TypeOf(instances[0]), instance)
+		inj.Add(constructor)
 	}
 }
 
