@@ -67,7 +67,7 @@ func (c *expenses) prepareGraphData(request *http.Request) *GraphData {
 	case "/expenses/by_category/":
 		graphData.Type = "doughnut"
 		categories := c.categories.All()
-		categories = append(categories, model2.Category{0, localization.Translate("uncategorized"), neutralColor, 0})
+		categories = append(categories, model2.Category{0, localization.Translate("uncategorized"), neutralColor})
 		c.fillExpensesByCategoryGraphData(start, end, categories, &graphData)
 	}
 	return &graphData

@@ -14,8 +14,8 @@ func init() {
 		WithChild("analysis", "").
 		WithChild("balances", "activity").
 		WithChild("expenses", "").
-		WithChild("by_period", "bar-chart-2").
-		WithChild("by_category", "pie-chart").
+		WithChild("expenses/by_period", "bar-chart-2").
+		WithChild("expenses/by_category", "pie-chart").
 		Path = "/accounting/payments"
 
 	core.Implementations(

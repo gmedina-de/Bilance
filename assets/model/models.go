@@ -8,8 +8,8 @@ func init() {
 
 type Person struct {
 	Id       int64
-	Name     string
-	Password string
+	Name     string `form:"required"`
+	Password string `form:"required"`
 }
 
 type Note struct {

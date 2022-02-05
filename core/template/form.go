@@ -10,7 +10,7 @@ import (
 var inputTemplate = template.Must(template.New("").Parse(`
 <div class="col-md-6">
 	<div class="form-floating">
-		<input type="{{.Type}}" class="form-control" name="{{.Name}}" id="{{.Id}}" placeholder="{{.Placeholder}}" {{with .Value}}value="{{.}}"{{end}}>
+		<input type="{{.Type}}" class="form-control" name="{{.Name}}" id="{{.Id}}" placeholder="{{.Placeholder}}" value="{{.Value}}" {{.Custom}}>
 		<label for="{{.Id}}">{{.Label}}</label>
 	</div>
 </div>
@@ -41,6 +41,7 @@ type field struct {
 	Type        string
 	Id          string
 	Value       interface{}
+	Custom      string
 }
 
 func fields(v interface{}, names ...string) []field {
@@ -71,6 +72,7 @@ func fields(v interface{}, names ...string) []field {
 			Type:        fieldInputType(structField),
 			Id:          finalName,
 			Value:       rf.Interface(),
+			Custom:      structField.Tag.Get("form"),
 		}
 		ret = append(ret, f)
 	}

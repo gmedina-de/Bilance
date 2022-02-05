@@ -26,12 +26,11 @@ func HandlePagination(request *http.Request, count int64) (int, int, *Pagination
 	if request.URL.Query().Get("page") != "" {
 		page, _ = strconv.Atoi(request.URL.Query().Get("page"))
 	}
+	var pages = int(count-1) / limit
 	if page == 0 {
 		limit = math.MaxInt
 	}
-
 	var offset = limit * (page - 1)
-	var pages = int(count-1) / limit
 	pages++
 	pagination := &Pagination{pages, page}
 	return limit, offset, pagination

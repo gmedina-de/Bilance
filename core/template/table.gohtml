@@ -1,22 +1,30 @@
 {{define "content"}}
     {{if .Parameters.Model}}
-        <table class="table table-hover table-responsive">
-            <thead>
-            <tr>
-                {{range th (index .Parameters.Model 0)}}
-                    <th data-field="{{.}}" data-sortable="true">{{translate .}}</th>
-                {{end}}
-            </tr>
-            </thead>
-            <tbody class="bg-white">
-            {{$Path:=.Path}}
-            {{range .Parameters.Model}}
-                <tr onclick="window.location.href='{{$Path}}/edit?Id={{.Id}}';">
-                    {{td .}}
+        <div class="table-responsive">
+            <table class="table table-hover" data-toggle="table">
+                <thead class="table-dark">
+                <tr>
+                    {{range th (index .Parameters.Model 0)}}
+                        <th data-field="{{.}}" data-sortable="true">{{translate .}}</th>
+                    {{end}}
+                    <th></th>
                 </tr>
-            {{end}}
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="bg-white">
+                {{$Path:=.Path}}
+                {{range .Parameters.Model}}
+                    <tr>
+                        {{td .}}
+                        <td style="width: 10px!important;">
+                            <a href="{{$Path}}/edit?Id={{.Id}}">
+                            <span data-feather="edit"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
     {{else}}
         {{translate "no_records_found"}}
     {{end}}
