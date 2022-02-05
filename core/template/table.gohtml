@@ -4,7 +4,7 @@
             <thead>
             <tr>
                 {{range th (index .Parameters.Model 0)}}
-                    <th>{{translate .}}</th>
+                    <th data-field="{{.}}" data-sortable="true">{{translate .}}</th>
                 {{end}}
             </tr>
             </thead>

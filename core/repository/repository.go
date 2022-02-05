@@ -6,6 +6,7 @@ import (
 
 type Repository[T model.Model] interface {
 	All() []T
+	Count() int64
 	Find(id int64) *T
 	Limit(limit int, offset int) []T
 	List(query string, args ...string) []T

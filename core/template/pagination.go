@@ -1,6 +1,7 @@
 package template
 
 import (
+	"math"
 	"net/http"
 	"strconv"
 )
@@ -19,14 +20,18 @@ func paginate(count int) []int {
 	return items
 }
 
-func HandlePagination(request *http.Request) (int, int, *Pagination) {
+func HandlePagination(request *http.Request, count int64) (int, int, *Pagination) {
 	var limit = 10
 	var page = 1
 	if request.URL.Query().Get("page") != "" {
 		page, _ = strconv.Atoi(request.URL.Query().Get("page"))
 	}
+	if page == 0 {
+		limit = math.MaxInt
+	}
+
 	var offset = limit * (page - 1)
-	var pages = 10
+	var pages = int(count-1) / limit
 	pages++
 	pagination := &Pagination{pages, page}
 	return limit, offset, pagination

@@ -22,6 +22,12 @@ func (r *generic[T]) All() []T {
 	return result
 }
 
+func (r *generic[T]) Count() int64 {
+	var result = new(int64)
+	r.database.Model(r.model).Count(result)
+	return *result
+}
+
 func (r *generic[T]) Limit(limit int, offset int) []T {
 	var result []T
 	r.database.Model(r.model).Limit(limit).Offset(offset).Find(&result)

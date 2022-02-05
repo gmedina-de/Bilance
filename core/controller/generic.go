@@ -40,7 +40,7 @@ func (g *Generic[T]) Index(writer http.ResponseWriter, request *http.Request) {
 
 	modelName := model.Plural(g.Model)
 
-	limit, offset, pagination := template.HandlePagination(request)
+	limit, offset, pagination := template.HandlePagination(request, g.Repository.Count())
 	parameters := &template.Parameters{
 		Model:      g.Repository.Limit(limit, offset),
 		Data:       data,

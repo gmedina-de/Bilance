@@ -9,9 +9,10 @@
         <meta name="generator" content="Hugo 0.88.1">
         <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
         <title>{{translate .Title}}</title>
-        <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
-        <link href="/static/bootstrap.min.css" rel="stylesheet">
-        <link href="/static/dashboard.css" rel="stylesheet">
+        {{/*        <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">*/}}
+        <link rel="stylesheet" href="/static/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/bootstrap-table.min.css">
+        <link rel="stylesheet" href="/static/custom.css">
     </head>
     <body class="bg-light">
     {{template "navigation1" .}}
@@ -44,11 +45,11 @@
         {{end}}
     {{end}}
 
+    <script src="/static/jquery.min.js"></script>
     <script src="/static/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
-            integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
-            crossorigin="anonymous"></script>
-    <script src="/static/dashboard.js"></script>
+    <script src="/static/bootstrap-table.min.js"></script>
+    <script src="/static/feather.min.js"></script>
+    <script src="/static/custom.js"></script>
     </body>
     </html>
 {{end}}

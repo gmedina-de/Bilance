@@ -3,23 +3,35 @@
     {{$Pages := .Parameters.Pagination.Pages}}
     {{$Active := .Parameters.Pagination.Active}}
     {{if gt $Pages 1}}
-        <nav>
+        <nav class="pt-3">
             <ul class="pagination justify-content-center">
                 <li class="page-item{{if le $Active 1}} disabled{{end}}">
                     <a class="page-link" href="{{$Path}}?page={{sum $Active -1}}">
-                        {{translate "previous"}}
+                        <
                     </a>
                 </li>
                 {{ range $i := paginate $Pages}}
-                    <li class="page-item{{if eq $i $Active}} active{{end}}">
-                        <a class="page-link" href="{{$Path}}?page={{$i}}">
-                            {{$i}}
-                        </a>
-                    </li>
+                    {{$Top := 5}}
+                    {{$Bottom := -5}}
+                    {{if and (ge $i (sum $Active $Bottom)) (le $i (sum $Active $Top))}}
+                        <li class="page-item{{if eq $i $Active}} active{{end}}">
+                            <a class="page-link" href="{{$Path}}?page={{$i}}">
+                                {{if eq $i (sum $Active $Bottom)}}...{{end}}
+                                {{$i}}
+                                {{if eq $i (sum $Active $Top)}}...{{end}}
+                            </a>
+                        </li>
+                    {{end}}
                 {{end}}
                 <li class="page-item{{if ge $Active $Pages}} disabled{{end}}">
                     <a class="page-link" href="{{$Path}}?page={{sum $Active 1}}">
-                        {{translate "next"}}
+                        >
+                    </a>
+                </li>
+                <span class="ms-2 mt-2" data-feather="more-horizontal"></span>
+                <li class="ms-2 page-item{{if eq 0 $Active}} active{{end}}">
+                    <a class="page-link" href="{{$Path}}?page=0">
+                        {{translate "all"}}
                     </a>
                 </li>
             </ul>
