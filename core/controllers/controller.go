@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/beego/beego/v2/server/web"
 	"homecloud/core/template"
-	"reflect"
 	"strings"
 )
 
@@ -12,27 +11,8 @@ type Controller interface {
 	Routing()
 }
 
-func PackageName(c Controller) string {
-	reflectVal := reflect.ValueOf(c)
-	ct := reflect.Indirect(reflectVal).Type()
-	packageName := strings.TrimSuffix(ct.PkgPath(), "/controllers")
-	packageName = packageName[strings.LastIndex(packageName, "/")+1:]
-	return packageName
-}
-
-func ControllerName(c Controller) string {
-	reflectVal := reflect.ValueOf(c)
-	ct := reflect.Indirect(reflectVal).Type()
-	controllerName := strings.TrimSuffix(ct.Name(), "Controller")
-	return controllerName
-}
-
 type BaseController struct {
 	web.Controller
-}
-
-func (this *BaseController) Routing() {
-	web.Router("/"+PackageName(this)+"/"+ControllerName(this), this)
 }
 
 func (this *BaseController) Prepare() {
@@ -40,7 +20,6 @@ func (this *BaseController) Prepare() {
 	currentNavigation1 := template.GetCurrentNavigation(path, template.Navigation)
 
 	c, _ := this.GetControllerAndAction()
-	this.ViewPath = PackageName(this) + "/views"
 	this.TplName = strings.ToLower(c) + ".gohtml"
 
 	if this.Data["Title"] == nil || this.Data["Title"] == "" {

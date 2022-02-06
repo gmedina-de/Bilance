@@ -18,7 +18,7 @@
                     <tr>
                         {{td .}}
                         <td style="width: 10px!important;">
-                            <a href="{{$Path}}/edit?Id={{.Id}}">
+                            <a href="{{$Path}}/{{.Id}}">
                             <span data-feather="edit"></span>
                             </a>
                         </td>
@@ -42,7 +42,7 @@
         </a>
     </div>
     <div class="btn-group">
-        <a class="btn btn-sm btn-success" href="{{.Path}}/edit">
+        <a class="btn btn-sm btn-success" href="{{.Path}}/new">
             <span data-feather="plus-square"></span> {{translate "new"}}
         </a>
     </div>

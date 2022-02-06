@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/beego/beego/v2/server/web"
 	model2 "homecloud/accounting/model"
 	"homecloud/core/controllers"
 	"homecloud/core/localization"
@@ -22,7 +23,11 @@ func Expenses(payments repositories.Repository[model2.Payment], categories repos
 	return &expenses{payments: payments, categories: categories}
 }
 
-func (c *expenses) Expenses(writer http.ResponseWriter, request *http.Request) {
+func (c *expenses) Routing() {
+	web.AutoPrefix("/accounting", c)
+}
+
+func (c *expenses) Expenses() {
 	//var title string
 	//switch request.URL.Path {
 	//case "/expenses/by_period/":

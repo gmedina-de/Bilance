@@ -1,6 +1,11 @@
 package template
 
-import "strings"
+import (
+	"sort"
+	"strings"
+)
+
+var Navigation []*MenuItem
 
 type MenuItem struct {
 	Name    string
@@ -9,20 +14,21 @@ type MenuItem struct {
 	SubMenu []*MenuItem
 }
 
+func AddNavigation(name string, icon string) *MenuItem {
+	menuItem := &MenuItem{name, icon, "/" + name, nil}
+	Navigation = append(Navigation, menuItem)
+	sort.Slice(Navigation, func(i, j int) bool {
+		return Navigation[i].Path < Navigation[j].Path
+	})
+	return menuItem
+}
+
 func (i *MenuItem) WithChild(name string, icon string) *MenuItem {
 	if i.SubMenu == nil {
 		i.SubMenu = []*MenuItem{}
 	}
 	i.SubMenu = append(i.SubMenu, &MenuItem{name, icon, i.Path + "/" + name, nil})
 	return i
-}
-
-var Navigation []*MenuItem
-
-func AddNavigation(name string, icon string) *MenuItem {
-	menuItem := &MenuItem{name, icon, "/" + name, nil}
-	Navigation = append(Navigation, menuItem)
-	return menuItem
 }
 
 func GetCurrentNavigation(path string, navigation []*MenuItem) *MenuItem {

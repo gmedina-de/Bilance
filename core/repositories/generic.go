@@ -8,40 +8,41 @@ import (
 )
 
 type generic[T model.Model] struct {
-	database database.Database
-	model    T
+	database  database.Database
+	model     T
+	modelName string
 }
 
-func Generic[T model.Model](database database.Database, model T) Repository[T] {
-	orm.RegisterModel(&model)
-	return &generic[T]{database: database, model: model}
+func Generic[T model.Model](database database.Database, t T) Repository[T] {
+	orm.RegisterModel(&t)
+	return &generic[T]{database: database, model: t, modelName: model.Name(t)}
 }
 
 func (r *generic[T]) All() []T {
 	var result []T
-	r.database.Raw("SELECT * FROM " + model.Name(r.model)).QueryRows(&result)
+	r.database.Raw("SELECT * FROM " + r.modelName).QueryRows(&result)
 	return result
 }
 func (r *generic[T]) Count() int {
 	var count int
-	r.database.Raw("SELECT COUNT(*) FROM " + model.Name(r.model)).QueryRow(&count)
+	r.database.Raw("SELECT COUNT(*) FROM " + r.modelName).QueryRow(&count)
 	return count
 }
 func (r *generic[T]) Limit(limit int, offset int) []T {
 	var result []T
-	r.database.Raw("SELECT * FROM "+model.Name(r.model)+" LIMIT ? OFFSET ?", limit, offset).QueryRows(&result)
+	r.database.Raw("SELECT * FROM "+r.modelName+" LIMIT ? OFFSET ?", limit, offset).QueryRows(&result)
 	return result
 }
 
 func (r *generic[T]) Find(id int64) *T {
 	var result T
-	r.database.Raw("SELECT * FROM "+model.Name(r.model)+" WHERE Id = ?", id).QueryRow(&result)
+	r.database.Raw("SELECT * FROM "+r.modelName+" WHERE Id = ?", id).QueryRow(&result)
 	return &result
 }
 
 func (r *generic[T]) List(query string, args ...any) []T {
 	var result []T
-	r.database.Raw("SELECT * FROM "+model.Name(r.model)+" "+query, args...).QueryRows(&result)
+	r.database.Raw("SELECT * FROM "+r.modelName+" "+query, args...).QueryRows(&result)
 	return result
 }
 

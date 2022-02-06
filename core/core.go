@@ -11,14 +11,13 @@ import (
 )
 
 func init() {
+
 	template.AddNavigation("home", "home").
 		Path = "/"
 
 	template.AddNavigation("settings", "settings").
 		WithChild("users", "users").
 		Path = "/settings/users"
-
-	_ = web.AddViewPath("core/views")
 
 	injector.Implementations(
 		log2.Console,
@@ -34,6 +33,10 @@ func init() {
 	web.BConfig.RunMode = web.DEV
 	web.BConfig.WebConfig.AutoRender = true
 	web.BConfig.RecoverPanic = false
+
+	web.AddViewPath("core/views")
+	web.ExceptMethodAppend("Routing")
+
 }
 
 func Init() {

@@ -1,7 +1,9 @@
+{{ template "base.gohtml" . }}
+
 {{define "content"}}
     <form method="post" class="mb-3">
-        <div class="row g-3 pb-3 border-bottom">
-            {{inputs .Model}}
+        <div class="w-100 g-3 pb-3 border-bottom">
+            {{renderform .Form}}
         </div>
         <button class="w-100 btn btn-primary btn-lg" type="submit">
             {{translate "save"}}

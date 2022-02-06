@@ -1,11 +1,11 @@
 package controller
 
 import (
+	"github.com/beego/beego/v2/server/web"
 	model2 "homecloud/accounting/model"
 	"homecloud/core/controllers"
 	"homecloud/core/model"
 	"homecloud/core/repositories"
-	"net/http"
 )
 
 type balances struct {
@@ -17,7 +17,11 @@ type balances struct {
 func Balances(payments repositories.Repository[model2.Payment], users repositories.Repository[model.User]) controllers.Controller {
 	return &balances{payments: payments, users: users}
 }
-func (b *balances) Balances(writer http.ResponseWriter, request *http.Request) {
+
+func (b *balances) Routing() {
+	web.AutoPrefix("/accounting", b)
+}
+func (b *balances) Balances() {
 	//balanceData := b.prepareBalanceData()
 	//template.Render(writer, request, "balances", &template.Parameters{model: &balanceData}, "accounting/template/balances.gohtml")
 	return

@@ -72,7 +72,7 @@ func fields(v interface{}, names ...string) []field {
 			Type:        fieldInputType(structField),
 			Id:          finalName,
 			Value:       rf.Interface(),
-			Custom:      structField.Tag.Get("form"),
+			Custom:      structField.Tag.Get("input"),
 		}
 		ret = append(ret, f)
 	}

@@ -2,9 +2,11 @@ package controllers
 
 import (
 	"github.com/beego/beego/v2/server/web"
+	"homecloud/core/model"
 	"homecloud/core/repositories"
 	"homecloud/core/template"
 	"net/http"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -20,55 +22,53 @@ func Generics[T any](repository repositories.Repository[T], model T, route strin
 	return &Generic[T]{Repository: repository, Model: model, Route: route}
 }
 
-const GenericMethods = "get:List"
-
 func (this *Generic[T]) Routing() {
-	web.Router(this.Route, this, GenericMethods)
+	web.Router(this.Route, this, "get:List;post:List")
+	web.Router(this.Route+"/:id", this, "get:Edit;post:Save")
 }
 
 func (this *Generic[T]) List() {
-
 	var toast string
 	if this.Ctx.Request.URL.Query().Get("success") != "" {
 		toast = "record_saved_successfully"
 	}
-
 	//todo use framework pagination
-	count := this.Repository.Count()
-	limit, offset, pagination := template.HandlePagination(this.Ctx.Request, count)
+	limit, offset, pagination := template.HandlePagination(this.Ctx.Request, this.Repository.Count())
 	i := this.Repository.Limit(limit, offset)
 	this.Data["Model"] = i
 	this.Data["Pagination"] = pagination
 	this.Data["Toast"] = toast
+	this.Data["Title"] = model.Plural(this.Model)
 	this.TplName = "generic.gohtml"
 }
 
 func (this *Generic[T]) Edit() {
-	//if request.Method == "GET" {
-	//	//var data interface{}
-	//	//if this.DataProvider != nil {
-	//	//	data = this.DataProvider(request)
-	//	//}
-	//	if request.URL.Query().Get("Id") != "" {
-	//		idString := request.URL.Query().Get("Id")
-	//		id, _ := strconv.ParseInt(idString, 10, 64)
-	//		_ = this.Repository.Find(id)
-	//		//template.Render(writer, request, "edit", &template.Parameters{Model: Model, Data: data}, "core/template/form.gohtml")
-	//	} else {
-	//		//template.Render(writer, request, "new", &template.Parameters{Model: this.Model, Data: data}, "core/template/form.gohtml")
-	//	}
-	//} else if request.Method == "POST" {
-	//	err := request.ParseForm()
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//	if request.Form.Get("Id") != "" {
-	//		//this.Repository.Update(this.FromRequest(request))
-	//	} else {
-	//		//this.Repository.Insert(this.FromRequest(request))
-	//	}
-	//	http.Redirect(writer, request, strings.Replace(request.URL.Path, "/edit", "", 1)+"?success", http.StatusTemporaryRedirect)
-	//}
+	param := this.Ctx.Input.Param(":id")
+	if param == "new" {
+		this.Data["Form"] = this.Model
+		this.Data["Title"] = "new"
+	} else {
+		id, _ := strconv.ParseInt(param, 10, 64)
+		this.Data["Form"] = this.Repository.Find(id)
+		this.Data["Title"] = "edit"
+	}
+	this.TplName = "form.gohtml"
+}
+
+func (this *Generic[T]) Save() {
+	param := this.Ctx.Input.Param(":id")
+	record := &this.Model
+	if err := this.ParseForm(record); err != nil {
+		panic(err)
+	}
+	if param == "new" {
+		this.Repository.Insert(record)
+	} else {
+		id, _ := strconv.ParseInt(param, 10, 64)
+		reflect.ValueOf(record).Elem().FieldByName("Id").SetInt(id)
+		this.Repository.Update(record)
+	}
+	this.Redirect(this.Route, http.StatusTemporaryRedirect)
 }
 
 func (this *Generic[T]) Remove(writer http.ResponseWriter, request *http.Request) {
