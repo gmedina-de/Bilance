@@ -37,7 +37,6 @@ func init() {
 	web.BConfig.WebConfig.AutoRender = true
 	web.BConfig.RecoverPanic = false
 
-	web.AddFuncMap("paginate", template.Paginate)
 	web.AddFuncMap("td", template.Td)
 	web.AddFuncMap("th", template.Th)
 	web.AddFuncMap("i18n", i18n.Tr)

@@ -23,8 +23,8 @@ func (r *generic[T]) All() []T {
 	r.database.Raw("SELECT * FROM " + r.modelName).QueryRows(&result)
 	return result
 }
-func (r *generic[T]) Count() int {
-	var count int
+func (r *generic[T]) Count() int64 {
+	var count int64
 	r.database.Raw("SELECT COUNT(*) FROM " + r.modelName).QueryRow(&count)
 	return count
 }

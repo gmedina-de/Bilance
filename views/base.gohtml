@@ -36,14 +36,6 @@
         </main>
     </div>
 </div>
-
-{{if .Toast}}
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div class="alert alert-info fade show shadow" role="alert">
-            <span data-feather="info"></span> {{i18n .Lang .Toast}}
-        </div>
-    </div>
-{{end}}
 {{assets_js "/static/jquery.min.js"}}
 {{assets_js "/static/bootstrap.bundle.min.js"}}
 {{assets_js "/static/bootstrap-table.min.js"}}

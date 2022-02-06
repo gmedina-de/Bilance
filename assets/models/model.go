@@ -23,7 +23,7 @@ func AddModel[T any](model T, icon string) {
 
 	injector.Implementations(
 		func(repository repositories.Repository[T]) controllers.Controller {
-			return controllers.Generics(repository, model, "/assets/"+model2.Plural(model))
+			return controllers.Generic(repository, model, "/assets/"+model2.Plural(model))
 		},
 	)
 

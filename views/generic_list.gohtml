@@ -20,7 +20,7 @@
                         {{td .}}
                         <td style="width: 10px!important;">
                             <a href="{{$Path}}/{{.Id}}">
-                            <span data-feather="edit"></span>
+                                <span data-feather="edit"></span>
                             </a>
                         </td>
                     </tr>
@@ -31,9 +31,7 @@
     {{else}}
         {{i18n .Lang "no_records_found"}}
     {{end}}
-    {{if .Pagination}}
-        {{template "pagination.gohtml" .}}
-    {{end}}
+    {{template "pagination.gohtml" .}}
 {{end}}
 
 {{define "options"}}

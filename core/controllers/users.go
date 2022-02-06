@@ -6,9 +6,9 @@ import (
 )
 
 type users struct {
-	*Generic[models.User]
+	Controller
 }
 
 func Users(repository repositories.Repository[models.User]) Controller {
-	return &users{Generics(repository, models.User{}, "/settings/users")}
+	return &users{Generic(repository, models.User{}, "/settings/users")}
 }
