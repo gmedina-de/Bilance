@@ -9,7 +9,7 @@ import (
 
 var tdTemplate = template.Must(template.New("").Parse("<td>{{.}}</td>"))
 
-func td(v interface{}) (template.HTML, error) {
+func Td(v interface{}) (template.HTML, error) {
 	tpl, err := tdTemplate.Clone()
 	if err != nil {
 		return "", err
@@ -25,7 +25,7 @@ func td(v interface{}) (template.HTML, error) {
 		}
 		if rf.Kind() == reflect.Struct {
 			var t2 template.HTML
-			t2, _ = td(rf.Interface())
+			t2, _ = Td(rf.Interface())
 			html = html + t2
 			continue
 		}
@@ -43,7 +43,7 @@ func td(v interface{}) (template.HTML, error) {
 	return html, nil
 }
 
-func th(v interface{}) []string {
+func Th(v interface{}) []string {
 	rv := model.RealValueOf(v)
 	t := rv.Type()
 	ret := make([]string, 0, t.NumField())
@@ -54,7 +54,7 @@ func th(v interface{}) []string {
 			rf = reflect.New(structField.Type.Elem()).Elem()
 		}
 		if rf.Kind() == reflect.Struct {
-			ret = append(ret, th(rf.Interface())...)
+			ret = append(ret, Th(rf.Interface())...)
 			continue
 		}
 		ret = append(ret, structField.Name)

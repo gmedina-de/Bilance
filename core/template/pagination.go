@@ -11,7 +11,7 @@ type Pagination struct {
 	Active int
 }
 
-func paginate(count int) []int {
+func Paginate(count int) []int {
 	var i int
 	var items []int
 	for i = 1; i <= count; i++ {

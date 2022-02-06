@@ -4,11 +4,13 @@ go 1.18
 
 require (
 	github.com/beego/beego/v2 v2.0.2
+	github.com/beego/i18n v0.0.0-20161101132742-e9308947f407
 	github.com/jinzhu/inflection v1.0.0
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 )
 
 require (
+	github.com/Unknwon/goconfig v1.0.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect

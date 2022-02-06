@@ -4,7 +4,6 @@ import (
 	"github.com/beego/beego/v2/server/web"
 	model2 "homecloud/accounting/model"
 	"homecloud/core/controllers"
-	"homecloud/core/localization"
 	"homecloud/core/model"
 	"homecloud/core/repositories"
 	"net/http"
@@ -66,7 +65,7 @@ func (c *expenses) prepareGraphData(request *http.Request) *GraphData {
 	case "/expenses/by_category/":
 		graphData.Type = "doughnut"
 		categories := c.categories.All()
-		categories = append(categories, model2.Category{0, localization.Translate("uncategorized"), neutralColor})
+		categories = append(categories, model2.Category{0, "uncategorized", neutralColor})
 		c.fillExpensesByCategoryGraphData(start, end, categories, &graphData)
 	}
 	return &graphData
@@ -111,7 +110,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 	case model.TimeUnitMonth:
 		for i := start.Month(); i <= end.Month(); i++ {
 			t := start.AddDate(0, int(i)-1, 0)
-			data.X = append(data.X, localization.Translate(t.Month().String()))
+			data.X = append(data.X, t.Month().String())
 			y := model2.SumAmounts(c.payments.List(
 				"PayeeId = 0",
 				"AND Date LIKE '"+t.Format("2006-01")+"%'",
@@ -135,7 +134,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 	case model.TimeUnitWeekday:
 		for i := model.NormalWeekday(start.Weekday()); i <= model.NormalWeekday(end.Weekday()); i++ {
 			t := start.AddDate(0, 0, i)
-			data.X = append(data.X, localization.Translate(t.Weekday().String()))
+			data.X = append(data.X, t.Weekday().String())
 			y := model2.SumAmounts(c.payments.List(
 				"PayeeId = 0",
 				"AND Date = '"+t.Format(model.DateLayoutISO)+"'",

@@ -7,7 +7,7 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <title>{{translate .Title}}</title>
+    <title>{{i18n .Lang .Title}}</title>
     {{/*        <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">*/}}
     {{assets_css "/static/bootstrap.min.css"}}
     {{assets_css "/static/bootstrap-table.min.css"}}
@@ -26,7 +26,7 @@
         {{end}}
         <main class="ms-sm-auto{{if .Navigation2}} col-lg-9 col-xl-10{{end}} mb-2">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
-                <h1 class="h2">{{translate .Title}}</h1>
+                <h1 class="h2">{{i18n .Lang .Title}}</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     {{block "options" .}}{{end}}
                 </div>
@@ -40,7 +40,7 @@
 {{if .Toast}}
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div class="alert alert-info fade show shadow" role="alert">
-            <span data-feather="info"></span> {{translate .Toast}}
+            <span data-feather="info"></span> {{i18n .Lang .Toast}}
         </div>
     </div>
 {{end}}

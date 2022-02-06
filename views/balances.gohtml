@@ -3,9 +3,9 @@
     <table class="w-100 text-center mb-3">
         <thead>
         <tr>
-            <th style="width: 40%">{{translate "debts"}}</th>
+            <th style="width: 40%">{{i18n .Lang "debts"}}</th>
             <th style="width: 20%"></th>
-            <th style="width: 40%">{{translate "receivables"}}</th>
+            <th style="width: 40%">{{i18n .Lang "receivables"}}</th>
         </tr>
         </thead>
         <tbody>
@@ -51,33 +51,33 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>{{translate "description"}}</th>
-                                <th>{{translate "amount"}}</th>
+                                <th>{{i18n .Lang "description"}}</th>
+                                <th>{{i18n .Lang "amount"}}</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td>{{translate "total_expenses"}}</td>
+                                <td>{{i18n .Lang "total_expenses"}}</td>
                                 <td>{{.TotalExpenses.FormatWithCurrency}}</td>
                             </tr>
                             <tr>
-                                <td>/ {{translate "user_amount"}}</td>
+                                <td>/ {{i18n .Lang "user_amount"}}</td>
                                 <td>{{.UserAmount}}</td>
                             </tr>
                             <tr class="fw-bold">
-                                <td>{{translate "proportional_expenses"}}</td>
+                                <td>{{i18n .Lang "proportional_expenses"}}</td>
                                 <td>{{.ProportionalExpenses.FormatWithCurrency}}</td>
                             </tr>
                             <tr>
-                                <td>+ {{translate "sent_expenses"}}</td>
+                                <td>+ {{i18n .Lang "sent_expenses"}}</td>
                                 <td>{{.SentExpenses.FormatWithCurrency}}</td>
                             </tr>
                             <tr>
-                                <td>+ {{translate "sent_transfer"}}</td>
+                                <td>+ {{i18n .Lang "sent_transfer"}}</td>
                                 <td>{{.SentTransfer.FormatWithCurrency}}</td>
                             </tr>
                             <tr>
-                                <td>- {{translate "received_transfer"}}</td>
+                                <td>- {{i18n .Lang "received_transfer"}}</td>
                                 <td>{{.ReceivedTransfer.FormatWithCurrency}}</td>
                             </tr>
                             {{$ResultClass := ""}}
@@ -87,7 +87,7 @@
                                 {{$ResultClass = "text-success"}}
                             {{end}}
                             <tr class="fw-bolder">
-                                <td>{{translate "result"}}</td>
+                                <td>{{i18n .Lang "result"}}</td>
                                 <td class="{{$ResultClass}}">{{.Result.FormatWithCurrency}}</td>
                             </tr>
                             </tbody>

@@ -6,8 +6,9 @@
             <table class="table table-hover" data-toggle="table">
                 <thead class="table-dark">
                 <tr>
+                    {{$Lang := .Lang}}
                     {{range th (index .Model 0)}}
-                        <th data-field="{{.}}" data-sortable="true">{{translate .}}</th>
+                        <th data-field="{{.}}" data-sortable="true">{{i18n $Lang .}}</th>
                     {{end}}
                     <th></th>
                 </tr>
@@ -28,7 +29,7 @@
             </table>
         </div>
     {{else}}
-        {{translate "no_records_found"}}
+        {{i18n .Lang "no_records_found"}}
     {{end}}
     {{if .Pagination}}
         {{template "pagination.gohtml" .}}
@@ -38,12 +39,12 @@
 {{define "options"}}
     <div class="btn-group me-2">
         <a class="btn btn-sm btn-outline-warning">
-            <span data-feather="download"></span> {{translate "export"}}
+            <span data-feather="download"></span> {{i18n .Lang "export"}}
         </a>
     </div>
     <div class="btn-group">
         <a class="btn btn-sm btn-success" href="{{.Path}}/new">
-            <span data-feather="plus-square"></span> {{translate "new"}}
+            <span data-feather="plus-square"></span> {{i18n .Lang "new"}}
         </a>
     </div>
 {{end}}
