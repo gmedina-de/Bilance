@@ -7,5 +7,5 @@ import (
 )
 
 func Categories(repository repositories.Repository[model.Category]) controllers.Controller {
-	return controllers.Generic(repository, model.Category{})
+	return controllers.Generics(repository, model.Category{}, "/accounting/categories")
 }

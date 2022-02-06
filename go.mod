@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/beego/beego/v2 v2.0.2
+	github.com/jinzhu/inflection v1.0.0
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 )
 

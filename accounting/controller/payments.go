@@ -12,7 +12,7 @@ func Payments(
 	categories repositories.Repository[model2.Category],
 	users repositories.Repository[model.User],
 ) controllers.Controller {
-	return controllers.Generic(repository, model2.Payment{})
+	return controllers.Generics(repository, model2.Payment{}, "/accounting/payments")
 }
 
 //

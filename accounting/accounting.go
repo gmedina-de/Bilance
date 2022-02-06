@@ -3,7 +3,7 @@ package accounting
 import (
 	"homecloud/accounting/controller"
 	"homecloud/accounting/repository"
-	"homecloud/core"
+	"homecloud/core/injector"
 	"homecloud/core/template"
 )
 
@@ -18,7 +18,7 @@ func init() {
 		WithChild("expenses/by_category", "pie-chart").
 		Path = "/accounting/payments"
 
-	core.Implementations(
+	injector.Implementations(
 		repository.Categories,
 		repository.Payments,
 		controller.Payments,

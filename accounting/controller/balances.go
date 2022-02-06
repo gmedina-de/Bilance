@@ -17,11 +17,6 @@ type balances struct {
 func Balances(payments repositories.Repository[model2.Payment], users repositories.Repository[model.User]) controllers.Controller {
 	return &balances{payments: payments, users: users}
 }
-
-func (b *balances) Routing() string {
-	return "/accounting/balances"
-}
-
 func (b *balances) Balances(writer http.ResponseWriter, request *http.Request) {
 	//balanceData := b.prepareBalanceData()
 	//template.Render(writer, request, "balances", &template.Parameters{model: &balanceData}, "accounting/template/balances.gohtml")

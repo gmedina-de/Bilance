@@ -7,18 +7,32 @@ import (
 	"strings"
 )
 
-type Controller = web.ControllerInterface
+type Controller interface {
+	web.ControllerInterface
+	Routing()
+}
 
 func PackageName(c Controller) string {
 	reflectVal := reflect.ValueOf(c)
 	ct := reflect.Indirect(reflectVal).Type()
-	controllerName := strings.TrimSuffix(ct.PkgPath(), "/controllers")
-	controllerName = controllerName[strings.LastIndex(controllerName, "/")+1:]
+	packageName := strings.TrimSuffix(ct.PkgPath(), "/controllers")
+	packageName = packageName[strings.LastIndex(packageName, "/")+1:]
+	return packageName
+}
+
+func ControllerName(c Controller) string {
+	reflectVal := reflect.ValueOf(c)
+	ct := reflect.Indirect(reflectVal).Type()
+	controllerName := strings.TrimSuffix(ct.Name(), "Controller")
 	return controllerName
 }
 
 type BaseController struct {
 	web.Controller
+}
+
+func (this *BaseController) Routing() {
+	web.Router("/"+PackageName(this)+"/"+ControllerName(this), this)
 }
 
 func (this *BaseController) Prepare() {

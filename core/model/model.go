@@ -4,12 +4,17 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/gob"
+	"github.com/jinzhu/inflection"
 	"reflect"
 	"strings"
 	"time"
 )
 
 type Model any
+
+func Plural(model any) string {
+	return inflection.Plural(Name(model))
+}
 
 func Name(model any) string {
 	return strings.ToLower(RealValueOf(model).Type().Name())

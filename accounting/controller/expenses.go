@@ -22,10 +22,6 @@ func Expenses(payments repositories.Repository[model2.Payment], categories repos
 	return &expenses{payments: payments, categories: categories}
 }
 
-func (c *expenses) Routing() string {
-	return "/accounting/expenses"
-}
-
 func (c *expenses) Expenses(writer http.ResponseWriter, request *http.Request) {
 	//var title string
 	//switch request.URL.Path {
