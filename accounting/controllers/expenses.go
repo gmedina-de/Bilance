@@ -1,10 +1,10 @@
-package controller
+package controllers
 
 import (
 	"github.com/beego/beego/v2/server/web"
-	model2 "homecloud/accounting/model"
+	model2 "homecloud/accounting/models"
 	"homecloud/core/controllers"
-	"homecloud/core/model"
+	"homecloud/core/models"
 	"homecloud/core/repositories"
 	"net/http"
 	"strconv"
@@ -38,7 +38,7 @@ func (c *expenses) Expenses() {
 	//	writer,
 	//	request,
 	//	title,
-	//	&template.Parameters{model: c.prepareGraphData(request), Data: c.prepareYears()},
+	//	&template.Parameters{models: c.prepareGraphData(request), Data: c.prepareYears()},
 	//	"accounting/template/expenses.gohtml",
 	//)
 }
@@ -71,43 +71,43 @@ func (c *expenses) prepareGraphData(request *http.Request) *GraphData {
 	return &graphData
 }
 
-func (c *expenses) calculateBoundaries(request *http.Request, data *GraphData) (time.Time, time.Time, model.TimeUnit) {
+func (c *expenses) calculateBoundaries(request *http.Request, data *GraphData) (time.Time, time.Time, models.TimeUnit) {
 	location, _ := time.LoadLocation("Europe/Berlin")
 	now := time.Now().In(location)
 	var start time.Time
 	var end time.Time
-	var step model.TimeUnit
+	var step models.TimeUnit
 	data.Filter = request.URL.Query().Get("filter")
 	if strings.HasPrefix(data.Filter, "year") {
 		yearString := strings.Replace(data.Filter, "year", "", 1)
 		data.Filter = yearString
 		year, _ := strconv.Atoi(yearString)
 		start = time.Date(year, time.January, 1, 0, 0, 0, 0, location)
-		step = model.TimeUnitMonth
+		step = models.TimeUnitMonth
 		end = time.Date(year, time.December, 31, 0, 0, 0, 0, location)
 	} else {
 		switch data.Filter {
 		case "this_year":
 			start = time.Date(now.Year(), 1, 1, 0, 0, 0, 0, location)
-			step = model.TimeUnitMonth
+			step = models.TimeUnitMonth
 		case "this_month":
 			start = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, location)
-			step = model.TimeUnitMonthday
+			step = models.TimeUnitMonthday
 		case "this_week":
 			fallthrough
 		case "":
 			data.Filter = "this_week"
-			start = time.Date(now.Year(), now.Month(), now.Day()-model.NormalWeekday(now.Weekday()), 0, 0, 0, 0, location)
-			step = model.TimeUnitWeekday
+			start = time.Date(now.Year(), now.Month(), now.Day()-models.NormalWeekday(now.Weekday()), 0, 0, 0, 0, location)
+			step = models.TimeUnitWeekday
 		}
 		end = now
 	}
 	return start, end, step
 }
 
-func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time, step model.TimeUnit, data *GraphData) {
+func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time, step models.TimeUnit, data *GraphData) {
 	switch step {
-	case model.TimeUnitMonth:
+	case models.TimeUnitMonth:
 		for i := start.Month(); i <= end.Month(); i++ {
 			t := start.AddDate(0, int(i)-1, 0)
 			data.X = append(data.X, t.Month().String())
@@ -119,25 +119,25 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 			data.Z = append(data.Z, primaryColor)
 			data.Total += y
 		}
-	case model.TimeUnitMonthday:
+	case models.TimeUnitMonthday:
 		for i := start.Day(); i <= end.Day(); i++ {
 			t := start.AddDate(0, 0, i-1)
-			data.X = append(data.X, t.Format(model.DateLayoutDE))
+			data.X = append(data.X, t.Format(models.DateLayoutDE))
 			y := model2.SumAmounts(c.payments.List(
 				"PayeeId = 0",
-				"AND Date = '"+t.Format(model.DateLayoutISO)+"'",
+				"AND Date = '"+t.Format(models.DateLayoutISO)+"'",
 			))
 			data.Y = append(data.Y, y)
 			data.Z = append(data.Z, primaryColor)
 			data.Total += y
 		}
-	case model.TimeUnitWeekday:
-		for i := model.NormalWeekday(start.Weekday()); i <= model.NormalWeekday(end.Weekday()); i++ {
+	case models.TimeUnitWeekday:
+		for i := models.NormalWeekday(start.Weekday()); i <= models.NormalWeekday(end.Weekday()); i++ {
 			t := start.AddDate(0, 0, i)
 			data.X = append(data.X, t.Weekday().String())
 			y := model2.SumAmounts(c.payments.List(
 				"PayeeId = 0",
-				"AND Date = '"+t.Format(model.DateLayoutISO)+"'",
+				"AND Date = '"+t.Format(models.DateLayoutISO)+"'",
 			))
 			data.Y = append(data.Y, y)
 			data.Z = append(data.Z, primaryColor)
@@ -147,8 +147,8 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 }
 
 func (c *expenses) fillExpensesByCategoryGraphData(start time.Time, end time.Time, categories []model2.Category, data *GraphData) {
-	startDate := start.Format(model.DateLayoutISO)
-	endDate := end.Format(model.DateLayoutISO)
+	startDate := start.Format(models.DateLayoutISO)
+	endDate := end.Format(models.DateLayoutISO)
 	for _, category := range categories {
 		data.X = append(data.X, category.Name)
 		var y model2.EUR

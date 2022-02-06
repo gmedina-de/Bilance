@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/beego/beego/v2/server/web"
-	"homecloud/core/model"
+	"homecloud/core/models"
 	"homecloud/core/repositories"
 	"homecloud/core/template"
 	"net/http"
@@ -38,7 +38,7 @@ func (this *Generic[T]) List() {
 	this.Data["Model"] = i
 	this.Data["Pagination"] = pagination
 	this.Data["Toast"] = toast
-	this.Data["Title"] = model.Plural(this.Model)
+	this.Data["Title"] = models.Plural(this.Model)
 	this.TplName = "generic.gohtml"
 }
 

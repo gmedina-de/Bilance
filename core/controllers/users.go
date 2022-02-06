@@ -1,14 +1,14 @@
 package controllers
 
 import (
-	"homecloud/core/model"
+	"homecloud/core/models"
 	"homecloud/core/repositories"
 )
 
 type users struct {
-	*Generic[model.User]
+	*Generic[models.User]
 }
 
-func Users(repository repositories.Repository[model.User]) Controller {
-	return &users{Generics(repository, model.User{}, "/settings/users")}
+func Users(repository repositories.Repository[models.User]) Controller {
+	return &users{Generics(repository, models.User{}, "/settings/users")}
 }

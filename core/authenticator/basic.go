@@ -3,17 +3,17 @@ package authenticator
 import (
 	"crypto/sha256"
 	"crypto/subtle"
-	"homecloud/core/model"
+	"homecloud/core/models"
 	"homecloud/core/repositories"
 	"net/http"
 	"strings"
 )
 
 type basic struct {
-	users repositories.Repository[model.User]
+	users repositories.Repository[models.User]
 }
 
-func Basic(users repositories.Repository[model.User]) Authenticator {
+func Basic(users repositories.Repository[models.User]) Authenticator {
 	return &basic{users}
 }
 
@@ -32,7 +32,7 @@ func (b *basic) Authenticate(writer http.ResponseWriter, request *http.Request) 
 			passwordMatch := subtle.ConstantTimeCompare(passwordHash[:], expectedPasswordHash[:]) == 1
 
 			if usernameMatch && passwordMatch {
-				if !strings.HasPrefix(request.URL.Path, "/admin") || user.Role == model.UserRoleAdmin {
+				if !strings.HasPrefix(request.URL.Path, "/admin") || user.Role == models.UserRoleAdmin {
 					return true
 				}
 			}
@@ -44,11 +44,11 @@ func (b *basic) Authenticate(writer http.ResponseWriter, request *http.Request) 
 	return false
 }
 
-func (b *basic) retrieveUser(username string) (model.User, bool) {
+func (b *basic) retrieveUser(username string) (models.User, bool) {
 	users := b.users.List("name = ?", username)
 	if len(users) > 0 {
 		return users[0], true
 	} else {
-		return model.User{}, false
+		return models.User{}, false
 	}
 }

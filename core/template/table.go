@@ -1,7 +1,7 @@
 package template
 
 import (
-	"homecloud/core/model"
+	"homecloud/core/models"
 	"html/template"
 	"reflect"
 	"strings"
@@ -15,7 +15,7 @@ func Td(v interface{}) (template.HTML, error) {
 		return "", err
 	}
 	var html template.HTML
-	rv := model.RealValueOf(v)
+	rv := models.RealValueOf(v)
 	t := rv.Type()
 	for i := 0; i < t.NumField(); i++ {
 		rf := rv.Field(i)
@@ -44,7 +44,7 @@ func Td(v interface{}) (template.HTML, error) {
 }
 
 func Th(v interface{}) []string {
-	rv := model.RealValueOf(v)
+	rv := models.RealValueOf(v)
 	t := rv.Type()
 	ret := make([]string, 0, t.NumField())
 	for i := 0; i < t.NumField(); i++ {

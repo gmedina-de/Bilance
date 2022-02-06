@@ -3,19 +3,19 @@ package repositories
 import (
 	"github.com/beego/beego/v2/client/orm"
 	"homecloud/core/database"
-	"homecloud/core/model"
+	"homecloud/core/models"
 	"reflect"
 )
 
-type generic[T model.Model] struct {
+type generic[T models.Model] struct {
 	database  database.Database
 	model     T
 	modelName string
 }
 
-func Generic[T model.Model](database database.Database, t T) Repository[T] {
+func Generic[T models.Model](database database.Database, t T) Repository[T] {
 	orm.RegisterModel(&t)
-	return &generic[T]{database: database, model: t, modelName: model.Name(t)}
+	return &generic[T]{database: database, model: t, modelName: models.Name(t)}
 }
 
 func (r *generic[T]) All() []T {

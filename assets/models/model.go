@@ -1,10 +1,10 @@
-package model
+package models
 
 import (
 	"homecloud/core/controllers"
 	"homecloud/core/database"
 	"homecloud/core/injector"
-	model2 "homecloud/core/model"
+	model2 "homecloud/core/models"
 	"homecloud/core/repositories"
 )
 

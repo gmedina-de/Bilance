@@ -1,8 +1,8 @@
 package accounting
 
 import (
-	"homecloud/accounting/controller"
-	"homecloud/accounting/repository"
+	"homecloud/accounting/controllers"
+	"homecloud/accounting/repositories"
 	"homecloud/core/injector"
 	"homecloud/core/template"
 )
@@ -19,11 +19,11 @@ func init() {
 		Path = "/accounting/payments"
 
 	injector.Implementations(
-		repository.Categories,
-		repository.Payments,
-		controller.Payments,
-		controller.Categories,
-		controller.Balances,
-		controller.Expenses,
+		repositories.Categories,
+		repositories.Payments,
+		controllers.Payments,
+		controllers.Categories,
+		controllers.Balances,
+		controllers.Expenses,
 	)
 }

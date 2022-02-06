@@ -1,20 +1,20 @@
-package controller
+package controllers
 
 import (
 	"github.com/beego/beego/v2/server/web"
-	model2 "homecloud/accounting/model"
+	model2 "homecloud/accounting/models"
 	"homecloud/core/controllers"
-	"homecloud/core/model"
+	"homecloud/core/models"
 	"homecloud/core/repositories"
 )
 
 type balances struct {
 	controllers.BaseController
 	payments repositories.Repository[model2.Payment]
-	users    repositories.Repository[model.User]
+	users    repositories.Repository[models.User]
 }
 
-func Balances(payments repositories.Repository[model2.Payment], users repositories.Repository[model.User]) controllers.Controller {
+func Balances(payments repositories.Repository[model2.Payment], users repositories.Repository[models.User]) controllers.Controller {
 	return &balances{payments: payments, users: users}
 }
 
@@ -23,7 +23,7 @@ func (b *balances) Routing() {
 }
 func (b *balances) Balances() {
 	//balanceData := b.prepareBalanceData()
-	//template.Render(writer, request, "balances", &template.Parameters{model: &balanceData}, "accounting/template/balances.gohtml")
+	//template.Render(writer, request, "balances", &template.Parameters{models: &balanceData}, "accounting/template/balances.gohtml")
 	return
 }
 
@@ -32,7 +32,7 @@ func (b *balances) prepareBalanceData() []*BalanceData {
 	//totalExpenses := -model2.SumAmounts(b.payments.List(
 	//	"PayeeId = 0",
 	//))
-	//userIds := model.StringToIds(project.UserIds)
+	//userIds := models.StringToIds(project.UserIds)
 	//userAmount := len(userIds)
 	//proportionalExpenses := model2.EUR(int64(totalExpenses) / int64(userAmount))
 	//var maxBalance float64

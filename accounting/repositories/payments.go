@@ -1,21 +1,21 @@
-package repository
+package repositories
 
 import (
-	"homecloud/accounting/model"
+	"homecloud/accounting/models"
 	"homecloud/core/database"
 	"homecloud/core/repositories"
 )
 
 type payments struct {
-	repositories.Repository[model.Payment]
+	repositories.Repository[models.Payment]
 }
 
-func Payments(database database.Database) repositories.Repository[model.Payment] {
-	return &payments{repositories.Generic(database, model.Payment{})}
+func Payments(database database.Database) repositories.Repository[models.Payment] {
+	return &payments{repositories.Generic(database, models.Payment{})}
 }
 
-//func (p *payments) FromRequest(request *http.Request, id int64) *model.Payment {
-//	payment := model.Payment{}
+//func (p *payments) FromRequest(request *http.Request, id int64) *models.Payment {
+//	payment := models.Payment{}
 //	payment.Id = id
 //	payment.Name = request.Form.Get("Name")
 //	payment.Date = model2.Date(request.Form.Get("Date"))
@@ -25,7 +25,7 @@ func Payments(database database.Database) repositories.Repository[model.Payment]
 //	if !strings.Contains(amountInput, ".") {
 //		amount *= 100
 //	}
-//	payment.Amount = model.EUR(amount)
+//	payment.Amount = models.EUR(amount)
 //	payment.CategoryId, _ = strconv.ParseInt(request.Form.Get("CategoryId"), 10, 64)
 //	payment.PayerId, _ = strconv.ParseInt(request.Form.Get("PayerId"), 10, 64)
 //	payment.PayeeId, _ = strconv.ParseInt(request.Form.Get("PayeeId"), 10, 64)

@@ -6,7 +6,7 @@ import (
 	"homecloud/core/controllers"
 	"homecloud/core/database"
 	"homecloud/core/injector"
-	log2 "homecloud/core/log"
+	"homecloud/core/log"
 	"homecloud/core/repositories"
 	"homecloud/core/template"
 	"strconv"
@@ -23,7 +23,7 @@ func init() {
 		Path = "/settings/users"
 
 	injector.Implementations(
-		log2.Console,
+		log.Beego,
 		database.Orm,
 		repositories.Users,
 		controllers.Index,
@@ -53,16 +53,13 @@ func init() {
 			return
 		}
 	}
-
 }
 
 func Init() {
-	injector.Inj.Inject(homecloud)
-}
-
-func homecloud(controllers []controllers.Controller) {
-	for _, c := range controllers {
-		c.Routing()
-	}
-	web.Run()
+	injector.Injector(func(controllers []controllers.Controller) {
+		for _, c := range controllers {
+			c.Routing()
+		}
+		web.Run()
+	})
 }

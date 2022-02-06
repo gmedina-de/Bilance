@@ -1,15 +1,15 @@
-package model
+package models
 
 import (
 	"fmt"
-	"homecloud/core/model"
+	"homecloud/core/models"
 )
 
 type Payment struct {
 	Id         int64
 	Name       string
 	Amount     EUR
-	Date       model.Date
+	Date       models.Date
 	CategoryId int64
 	PayerId    int64
 	PayeeId    int64

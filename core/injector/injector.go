@@ -1,90 +1,86 @@
 package injector
 
 import (
-	"fmt"
-	"github.com/beego/beego/v2/server/web"
-	"log"
+	"homecloud/core/log"
 	. "reflect"
 	"strings"
 )
 
-type Injector struct {
-	Debug           bool
-	ConstructorsMap map[Type][]interface{}
-	InstancesMap    map[Type]Value
-	CurrentLevel    int
+var implementations = make(map[Type][]interface{})
+
+func Implementations(constructors ...interface{}) {
+	for _, constructor := range constructors {
+		returnType := ValueOf(constructor).Type().Out(0)
+		if _, already := implementations[returnType]; !already {
+			implementations[returnType] = []interface{}{}
+		}
+		implementations[returnType] = append(implementations[returnType], constructor)
+	}
 }
 
-func Instance(typ Type) Value {
-	instancesMap := Inj.InstancesMap
-	fmt.Println(instancesMap)
-	value := instancesMap[typ]
-	return value
+type injector struct {
+	instanceMap map[Type]Value
+	level       int
+	log         log.Log
 }
 
-func (inj *Injector) Inject(constructor interface{}) Value {
-	inj.Debug = web.BConfig.RunMode == web.DEV
+func Injector(constructor interface{}) *injector {
+	i := &injector{
+		instanceMap: make(map[Type]Value),
+		level:       0,
+	}
 
+	// log must be instantiated at first place, because injector depends on it
+	i.log = i.instances(TypeOf((*log.Log)(nil)).Elem()).Interface().([]log.Log)[0].(log.Log)
+	i.construct(constructor)
+	return i
+}
+
+func (inj *injector) construct(constructor interface{}) Value {
 	constructorValue := ValueOf(constructor)
 	constructorType := constructorValue.Type()
 	parameters := make([]Value, constructorType.NumIn())
 
-	inj.debug(strings.Repeat("\t", inj.CurrentLevel), "Instantiating", constructorType)
+	inj.debug("Instantiating %s", constructorValue)
 	for i := 0; i < len(parameters); i++ {
-		inj.CurrentLevel++
+		inj.level++
 		instances := inj.instances(constructorType.In(i))
 		if constructorType.In(i).Kind() == Slice {
 			parameters[i] = instances
 		} else {
 			parameters[i] = instances.Index(0)
 		}
-		inj.CurrentLevel--
+		inj.level--
 	}
 	return constructorValue.Call(parameters)[0]
 }
 
-func (inj *Injector) instances(parameterType Type) Value {
+func (inj *injector) instances(parameterType Type) Value {
 	parameterName := parameterType.Name()
 	if parameterType.Kind() == Slice {
 		parameterType = parameterType.Elem()
 		parameterName = "[]" + parameterType.Name()
 	}
-	instances, found := inj.InstancesMap[parameterType]
+	instances, found := inj.instanceMap[parameterType]
 	if !found {
-		inj.debug(strings.Repeat("\t", inj.CurrentLevel), parameterName, "wasn't instantiated. ")
-		constructors, found := inj.ConstructorsMap[parameterType]
+		inj.debug("%s wasn't instantiated", parameterName)
+		constructors, found := implementations[parameterType]
 		if !found {
 			panic("No constructors found for " + parameterName + ", required for dependency injection, please provide at least one")
 		}
 		instances = MakeSlice(SliceOf(parameterType), 0, 0)
 		for _, c := range constructors {
-			instances = Append(instances, inj.Inject(c))
+			instances = Append(instances, inj.construct(c))
 		}
-		inj.InstancesMap[parameterType] = instances
+		inj.instanceMap[parameterType] = instances
 	} else {
-		inj.debug(strings.Repeat("\t", inj.CurrentLevel), parameterName, "was already instantiated. ")
+		inj.debug("Parameter %s was already instantiated", parameterName)
 	}
 	return instances
 }
 
-func (inj *Injector) debug(a ...any) {
-	if inj.Debug {
-		log.Println(a...)
-	}
-}
-
-var Inj = &Injector{
-	ConstructorsMap: make(map[Type][]interface{}),
-	InstancesMap:    make(map[Type]Value),
-	CurrentLevel:    0,
-}
-
-func Implementations(constructors ...interface{}) {
-	for _, constructor := range constructors {
-		constructorReturnType := ValueOf(constructor).Type().Out(0)
-		if _, already := Inj.ConstructorsMap[constructorReturnType]; !already {
-			Inj.ConstructorsMap[constructorReturnType] = []interface{}{}
-		}
-		Inj.ConstructorsMap[constructorReturnType] = append(Inj.ConstructorsMap[constructorReturnType], constructor)
+func (inj *injector) debug(format string, v ...interface{}) {
+	if inj.log != nil {
+		inj.log.Debug(strings.Repeat("-", inj.level)+format, v...)
 	}
 }

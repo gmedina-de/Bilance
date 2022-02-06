@@ -1,4 +1,4 @@
-package model
+package models
 
 func init() {
 	AddModel(Person{}, "user")
@@ -8,7 +8,7 @@ func init() {
 
 type Person struct {
 	Id       int64  `form:"-"`
-	Name     string `form:"Password,password" required:"true" class:"form-control"`
+	Name     string `required:"true" class:"form-control"`
 	Password string `form:"Password,password" required:"true" class:"form-control"`
 }
 

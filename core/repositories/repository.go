@@ -1,10 +1,10 @@
 package repositories
 
 import (
-	"homecloud/core/model"
+	"homecloud/core/models"
 )
 
-type Repository[T model.Model] interface {
+type Repository[T models.Model] interface {
 	All() []T
 	Count() int
 	Find(id int64) *T
