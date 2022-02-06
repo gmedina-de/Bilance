@@ -1,18 +1,16 @@
 package controllers
 
+import "github.com/beego/beego/v2/server/web"
+
 type index struct {
 	BaseController
 }
 
 func Index() Controller {
-	return &index{}
+	i := &index{}
+	web.Router("/", i, "get:Index")
+	return i
 }
 
-func (this *index) Route() string {
-	this.ViewPath = "core/views"
-	return "/"
-}
-
-func (this *index) Get() {
-	this.TplName = "index.gohtml"
+func (this *index) Index() {
 }

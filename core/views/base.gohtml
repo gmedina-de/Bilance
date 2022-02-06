@@ -14,7 +14,9 @@
     <link rel="stylesheet" href="/static/custom.css">
 </head>
 <body class="bg-light">
-{{template "navigation1.gohtml" .}}
+{{if .Navigation1}}
+    {{template "navigation1.gohtml" .}}
+{{end}}
 <div class="container">
     <div class="row">
         {{if .Navigation2}}
@@ -26,7 +28,7 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
                 <h1 class="h2">{{translate .Title}}</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
-                    {{/*                    {{template "options" .}}*/}}
+                    {{block "options" .}}{{end}}
                 </div>
             </div>
 

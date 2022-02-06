@@ -10,7 +10,7 @@ func init() {
 	menuItem := template.AddNavigation("assets", "box")
 	models := model.Models
 	for i, m := range models {
-		menuItem = menuItem.WithChild(model2.Plural(m), model.Icons[i])
+		menuItem = menuItem.WithChild(model2.Name(m), model.Icons[i])
 	}
-	menuItem.Path = "/assets/" + model2.Plural(models[0])
+	menuItem.Path = "/assets/" + model2.Name(models[0])
 }

@@ -4,8 +4,7 @@ import (
 	"homecloud/core"
 	"homecloud/core/controllers"
 	"homecloud/core/database"
-	model2 "homecloud/core/model"
-	"homecloud/core/repository"
+	"homecloud/core/repositories"
 )
 
 var Models []any
@@ -16,18 +15,14 @@ func AddModel[T any](model T, icon string) {
 	Icons = append(Icons, icon)
 
 	core.Implementations(
-		func(database database.Database) repository.Repository[T] {
-			return repository.Generic(database, model)
+		func(database database.Database) repositories.Repository[T] {
+			return repositories.Generic(database, model)
 		},
 	)
 
 	core.Implementations(
-		func(repository repository.Repository[T]) controllers.ControllerOld {
-			return &controllers.Generic[T]{
-				Model:      model,
-				Repository: repository,
-				BasePath:   "/assets/" + model2.Plural(model),
-			}
+		func(repository repositories.Repository[T]) controllers.Controller {
+			return controllers.Generic(repository, model)
 		},
 	)
 

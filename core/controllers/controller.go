@@ -2,16 +2,19 @@ package controllers
 
 import (
 	"github.com/beego/beego/v2/server/web"
-	"homecloud/core/server"
 	"homecloud/core/template"
+	"reflect"
+	"strings"
 )
 
-type ControllerOld interface {
-	Routing(server server.Server)
-}
-type Controller interface {
-	web.ControllerInterface
-	Route() string
+type Controller = web.ControllerInterface
+
+func PackageName(c Controller) string {
+	reflectVal := reflect.ValueOf(c)
+	ct := reflect.Indirect(reflectVal).Type()
+	controllerName := strings.TrimSuffix(ct.PkgPath(), "/controllers")
+	controllerName = controllerName[strings.LastIndex(controllerName, "/")+1:]
+	return controllerName
 }
 
 type BaseController struct {
@@ -19,15 +22,26 @@ type BaseController struct {
 }
 
 func (this *BaseController) Prepare() {
-	this.Data["Title"] = web.BConfig.AppName
 	path := this.Ctx.Request.URL.Path
 	currentNavigation1 := template.GetCurrentNavigation(path, template.Navigation)
+
+	c, _ := this.GetControllerAndAction()
+	this.ViewPath = PackageName(this) + "/views"
+	this.TplName = strings.ToLower(c) + ".gohtml"
+
+	if this.Data["Title"] == nil || this.Data["Title"] == "" {
+		this.Data["Title"] = web.BConfig.AppName
+	}
+	this.Data["Path"] = path
 	this.Data["Navigation1"] = template.Navigation
-	this.Data["Navigation2"] = currentNavigation1.SubMenu
 	this.Data["CurrentNavigation1"] = currentNavigation1
-	this.Data["CurrentNavigation2"] = template.GetCurrentNavigation(path, currentNavigation1.SubMenu)
 	this.Data["CurrentNavigation1Index"] = template.GetCurrentNavigationIndex(path, template.Navigation)
-	this.Data["CurrentNavigation2Index"] = template.GetCurrentNavigationIndex(path, currentNavigation1.SubMenu)
+	if currentNavigation1 != nil {
+		this.Data["Navigation2"] = currentNavigation1.SubMenu
+		this.Data["CurrentNavigation2"] = template.GetCurrentNavigation(path, currentNavigation1.SubMenu)
+		this.Data["CurrentNavigation2Index"] = template.GetCurrentNavigationIndex(path, currentNavigation1.SubMenu)
+	}
+
 }
 
 func (this *BaseController) Finish() {

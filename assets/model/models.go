@@ -7,9 +7,10 @@ func init() {
 }
 
 type Person struct {
-	Id       int64
-	Name     string `form:"required"`
-	Password string `form:"required"`
+	Id        int64
+	Name      string `form:"required"`
+	Password  string `form:"required"`
+	Password2 string `form:"required"`
 }
 
 type Note struct {

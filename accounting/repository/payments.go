@@ -3,15 +3,15 @@ package repository
 import (
 	"homecloud/accounting/model"
 	"homecloud/core/database"
-	"homecloud/core/repository"
+	"homecloud/core/repositories"
 )
 
 type payments struct {
-	repository.Repository[model.Payment]
+	repositories.Repository[model.Payment]
 }
 
-func Payments(database database.Database) repository.Repository[model.Payment] {
-	return &payments{repository.Generic(database, model.Payment{})}
+func Payments(database database.Database) repositories.Repository[model.Payment] {
+	return &payments{repositories.Generic(database, model.Payment{})}
 }
 
 //func (p *payments) FromRequest(request *http.Request, id int64) *model.Payment {

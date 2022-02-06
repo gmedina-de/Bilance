@@ -4,16 +4,16 @@ import (
 	"crypto/sha256"
 	"crypto/subtle"
 	"homecloud/core/model"
-	"homecloud/core/repository"
+	"homecloud/core/repositories"
 	"net/http"
 	"strings"
 )
 
 type basic struct {
-	users repository.Repository[model.User]
+	users repositories.Repository[model.User]
 }
 
-func Basic(users repository.Repository[model.User]) Authenticator {
+func Basic(users repositories.Repository[model.User]) Authenticator {
 	return &basic{users}
 }
 

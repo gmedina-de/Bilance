@@ -3,13 +3,13 @@ package repository
 import (
 	"homecloud/accounting/model"
 	"homecloud/core/database"
-	"homecloud/core/repository"
+	"homecloud/core/repositories"
 )
 
 type categories struct {
-	repository.Repository[model.Category]
+	repositories.Repository[model.Category]
 }
 
-func Categories(database database.Database) repository.Repository[model.Category] {
-	return &categories{repository.Generic(database, model.Category{})}
+func Categories(database database.Database) repositories.Repository[model.Category] {
+	return &categories{repositories.Generic(database, model.Category{})}
 }

@@ -5,9 +5,7 @@ import (
 	"homecloud/core/controllers"
 	"homecloud/core/localization"
 	"homecloud/core/model"
-	"homecloud/core/repository"
-	"homecloud/core/server"
-	"homecloud/core/template"
+	"homecloud/core/repositories"
 	"net/http"
 	"strconv"
 	"strings"
@@ -15,34 +13,34 @@ import (
 )
 
 type expenses struct {
-	payments   repository.Repository[model2.Payment]
-	categories repository.Repository[model2.Category]
+	controllers.BaseController
+	payments   repositories.Repository[model2.Payment]
+	categories repositories.Repository[model2.Category]
 }
 
-func Expenses(payments repository.Repository[model2.Payment], categories repository.Repository[model2.Category]) controllers.ControllerOld {
-	return &expenses{payments, categories}
+func Expenses(payments repositories.Repository[model2.Payment], categories repositories.Repository[model2.Category]) controllers.Controller {
+	return &expenses{payments: payments, categories: categories}
 }
 
-func (c *expenses) Routing(server server.Server) {
-	server.Get("/accounting/expenses/by_period", c.Expenses)
-	server.Get("/accounting/expenses/by_category", c.Expenses)
+func (c *expenses) Routing() string {
+	return "/accounting/expenses"
 }
 
 func (c *expenses) Expenses(writer http.ResponseWriter, request *http.Request) {
-	var title string
-	switch request.URL.Path {
-	case "/expenses/by_period/":
-		title = localization.Translate("expenses") + " " + localization.Translate("by_period")
-	case "/expenses/by_category/":
-		title = localization.Translate("expenses") + " " + localization.Translate("by_category")
-	}
-	template.Render(
-		writer,
-		request,
-		title,
-		&template.Parameters{Model: c.prepareGraphData(request), Data: c.prepareYears()},
-		"accounting/template/expenses.gohtml",
-	)
+	//var title string
+	//switch request.URL.Path {
+	//case "/expenses/by_period/":
+	//	title = localization.Translate("expenses") + " " + localization.Translate("by_period")
+	//case "/expenses/by_category/":
+	//	title = localization.Translate("expenses") + " " + localization.Translate("by_category")
+	//}
+	//template.Render(
+	//	writer,
+	//	request,
+	//	title,
+	//	&template.Parameters{model: c.prepareGraphData(request), Data: c.prepareYears()},
+	//	"accounting/template/expenses.gohtml",
+	//)
 }
 
 type GraphData struct {
