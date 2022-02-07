@@ -5,7 +5,6 @@ import (
 	"github.com/beego/i18n"
 	"homecloud/core/controllers"
 	"homecloud/core/database"
-	"homecloud/core/injector"
 	"homecloud/core/log"
 	"homecloud/core/repositories"
 	"homecloud/core/template"
@@ -22,7 +21,7 @@ func init() {
 		WithChild("users", "users").
 		Path = "/settings/users"
 
-	injector.Implementations(
+	Implementations(
 		log.Beego,
 		database.Orm,
 		repositories.Users,
@@ -36,6 +35,7 @@ func init() {
 	web.BConfig.RunMode = web.DEV
 	web.BConfig.WebConfig.AutoRender = true
 	web.BConfig.RecoverPanic = false
+	web.BConfig.Listen.EnableAdmin = true
 
 	web.AddFuncMap("td", template.Td)
 	web.AddFuncMap("th", template.Th)
@@ -55,9 +55,10 @@ func init() {
 }
 
 func Init() {
-	injector.Injector(func(controllers []controllers.Controller) {
-		for _, c := range controllers {
-			c.Routing()
+	Injector(func(cs []controllers.Controller) {
+		for _, c := range cs {
+			c.Routing(controllers.NewRouter(c))
+			web.Include(c)
 		}
 		web.Run()
 	})

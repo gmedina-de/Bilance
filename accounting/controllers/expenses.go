@@ -22,7 +22,7 @@ func Expenses(payments repositories.Repository[model2.Payment], categories repos
 	return &expenses{payments: payments, categories: categories}
 }
 
-func (c *expenses) Routing() {
+func (c *expenses) Routing(router controllers.Router) {
 	web.AutoPrefix("/accounting", c)
 }
 

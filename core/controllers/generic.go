@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/pagination"
 	"homecloud/core/models"
 	"homecloud/core/repositories"
@@ -22,15 +21,15 @@ func Generic[T any](repository repositories.Repository[T], model T, route string
 	return &generic[T]{Repository: repository, Model: model, Route: route}
 }
 
-func (this *generic[T]) Routing() {
-	web.Router(this.Route, this, "get:List;post:List")
-	web.Router(this.Route+"/:id", this, "get:Edit;post:Save")
+func (this *generic[T]) Routing(router Router) {
+	router.Add(this.Route, "get:List(p)")
+	router.Add(this.Route+"/:Id", "get:Edit();post:Save()")
 }
 
 const PageSize = 1
 const PageSizeAll = 9223372036854775807
 
-func (this *generic[T]) List() {
+func (this *generic[T]) List(p string) {
 	pageSize := PageSize
 	if this.GetString("p") == "all" {
 		pageSize = PageSizeAll

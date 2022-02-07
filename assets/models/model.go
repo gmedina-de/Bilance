@@ -1,9 +1,9 @@
 package models
 
 import (
+	"homecloud/core"
 	"homecloud/core/controllers"
 	"homecloud/core/database"
-	"homecloud/core/injector"
 	model2 "homecloud/core/models"
 	"homecloud/core/repositories"
 )
@@ -15,13 +15,13 @@ func AddModel[T any](model T, icon string) {
 	Models = append(Models, model)
 	Icons = append(Icons, icon)
 
-	injector.Implementations(
+	core.Implementations(
 		func(database database.Database) repositories.Repository[T] {
 			return repositories.Generic(database, model)
 		},
 	)
 
-	injector.Implementations(
+	core.Implementations(
 		func(repository repositories.Repository[T]) controllers.Controller {
 			return controllers.Generic(repository, model, "/assets/"+model2.Plural(model))
 		},

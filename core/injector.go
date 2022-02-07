@@ -1,4 +1,4 @@
-package injector
+package core
 
 import (
 	"homecloud/core/log"
@@ -11,9 +11,6 @@ var implementations = make(map[Type][]interface{})
 func Implementations(constructors ...interface{}) {
 	for _, constructor := range constructors {
 		returnType := ValueOf(constructor).Type().Out(0)
-		if _, already := implementations[returnType]; !already {
-			implementations[returnType] = []interface{}{}
-		}
 		implementations[returnType] = append(implementations[returnType], constructor)
 	}
 }

@@ -9,7 +9,7 @@ import (
 
 type Controller interface {
 	web.ControllerInterface
-	Routing()
+	Routing(Router)
 }
 
 type BaseController struct {
