@@ -9,7 +9,7 @@ import (
 
 type Controller interface {
 	web.ControllerInterface
-	Routing(Router)
+	Routing()
 }
 
 type BaseController struct {
@@ -47,7 +47,4 @@ func (this *BaseController) Prepare() {
 
 	c, _ := this.GetControllerAndAction()
 	this.TplName = strings.ToLower(c) + ".gohtml"
-}
-
-func (this *BaseController) Finish() {
 }

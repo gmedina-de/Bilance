@@ -57,7 +57,7 @@ func init() {
 func Init() {
 	Injector(func(cs []controllers.Controller) {
 		for _, c := range cs {
-			c.Routing(controllers.NewRouter(c))
+			c.Routing()
 			web.Include(c)
 		}
 		web.Run()

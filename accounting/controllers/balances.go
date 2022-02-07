@@ -18,7 +18,7 @@ func Balances(payments repositories.Repository[model2.Payment], users repositori
 	return &balances{payments: payments, users: users}
 }
 
-func (b *balances) Routing(controllers.Router) {
+func (b *balances) Routing() {
 	web.AutoPrefix("/accounting", b)
 }
 func (b *balances) Balances() {

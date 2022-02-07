@@ -1,4 +1,4 @@
-package controllers
+package router
 
 import (
 	"github.com/beego/beego/v2/server/web"
@@ -7,21 +7,9 @@ import (
 	"strings"
 )
 
-type Router interface {
-	Add(route string, mappingMethods ...string)
-}
-
-type router struct {
-	Controller Controller
-}
-
-func NewRouter(controller Controller) Router {
-	return &router{Controller: controller}
-}
-
-func (this *router) Add(route string, mappingMethods ...string) {
-	methods := this.parseMappingMethods(mappingMethods)
-	of := reflect.TypeOf(this.Controller).Elem()
+func Add(controller web.ControllerInterface, route string, mappingMethods ...string) {
+	methods := parseMappingMethods(mappingMethods)
+	of := reflect.TypeOf(controller).Elem()
 	key := of.PkgPath() + ":" + of.Name()
 	for k, v := range methods {
 		name := k[:strings.Index(k, "(")]
@@ -60,7 +48,7 @@ func (this *router) Add(route string, mappingMethods ...string) {
 	}
 }
 
-func (this *router) parseMappingMethods(mappingMethods []string) map[string]string {
+func parseMappingMethods(mappingMethods []string) map[string]string {
 	methods := make(map[string]string)
 	semi := strings.Split(mappingMethods[0], ";")
 	for _, v := range semi {

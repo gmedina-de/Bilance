@@ -4,6 +4,7 @@ import (
 	"github.com/beego/beego/v2/server/web/pagination"
 	"homecloud/core/models"
 	"homecloud/core/repositories"
+	"homecloud/core/router"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -21,17 +22,17 @@ func Generic[T any](repository repositories.Repository[T], model T, route string
 	return &generic[T]{Repository: repository, Model: model, Route: route}
 }
 
-func (this *generic[T]) Routing(router Router) {
-	router.Add(this.Route, "get:List(p)")
-	router.Add(this.Route+"/:Id", "get:Edit();post:Save()")
+func (this *generic[T]) Routing() {
+	router.Add(this, this.Route, "get,post:List(p)")
+	router.Add(this, this.Route+"/:id", "get:Edit(id path);post:Save(id path)")
 }
 
-const PageSize = 1
+const PageSize = 5
 const PageSizeAll = 9223372036854775807
 
 func (this *generic[T]) List(p string) {
 	pageSize := PageSize
-	if this.GetString("p") == "all" {
+	if p == "all" {
 		pageSize = PageSizeAll
 	}
 	paginator := pagination.SetPaginator(this.Ctx, pageSize, this.Repository.Count())
@@ -41,33 +42,31 @@ func (this *generic[T]) List(p string) {
 	this.TplName = "generic_list.gohtml"
 }
 
-func (this *generic[T]) Edit() {
-	param := this.Ctx.Input.Param(":id")
-	if param == "new" {
+func (this *generic[T]) Edit(id string) {
+	if id == "new" {
 		this.Data["Form"] = this.Model
 		this.Data["Title"] = "new"
 	} else {
-		id, _ := strconv.ParseInt(param, 10, 64)
+		id, _ := strconv.ParseInt(id, 10, 64)
 		this.Data["Form"] = this.Repository.Find(id)
 		this.Data["Title"] = "edit"
 	}
 	this.TplName = "generic_edit.gohtml"
 }
 
-func (this *generic[T]) Save() {
-	param := this.Ctx.Input.Param(":id")
+func (this *generic[T]) Save(id string) {
 	record := &this.Model
 	if err := this.ParseForm(record); err != nil {
 		panic(err)
 	}
-	if param == "new" {
+	if id == "new" {
 		this.Repository.Insert(record)
 	} else {
-		id, _ := strconv.ParseInt(param, 10, 64)
+		id, _ := strconv.ParseInt(id, 10, 64)
 		reflect.ValueOf(record).Elem().FieldByName("Id").SetInt(id)
 		this.Repository.Update(record)
 	}
-	this.Redirect(this.Route+"?success", http.StatusTemporaryRedirect)
+	this.Redirect(this.Route, http.StatusTemporaryRedirect)
 }
 
 func (this *generic[T]) Remove(writer http.ResponseWriter, request *http.Request) {
