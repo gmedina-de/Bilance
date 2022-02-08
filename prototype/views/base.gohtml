@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <link rel="icon" type="image/x-icon" href="/prototype/staticype/static/favicon.ico">
+    <title>{{i18n .Lang .Title}}</title>
+    {{/*        <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">*/}}
+    {{assets_css "/static/bootstrap.min.css"}}
+    {{assets_css "/static/bootstrap-table.min.css"}}
+    {{assets_css "/static/custom.css"}}
+</head>
+<body class="bg-light">
+{{if .Navigation1}}
+    {{template "navigation1.gohtml" .}}
+{{end}}
+<div class="container">
+    <div class="row">
+        {{if .Navigation2}}
+            <div class="col-lg-3 col-xl-2">
+                {{template "navigation2.gohtml" .}}
+            </div>
+        {{end}}
+        <main class="ms-sm-auto{{if .Navigation2}} col-lg-9 col-xl-10{{end}} mb-2">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+                <h1 class="h2">{{i18n .Lang .Title}}</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    {{block "options" .}}{{end}}
+                </div>
+            </div>
+
+            {{block "content" .}}{{end}}
+        </main>
+    </div>
+</div>
+{{assets_js "/static/jquery.min.js"}}
+{{assets_js "/static/bootstrap.bundle.min.js"}}
+{{assets_js "/static/bootstrap-table.min.js"}}
+{{assets_js "/static/feather.min.js"}}
+{{assets_js "/static/custom.js"}}
+</body>
+</html>

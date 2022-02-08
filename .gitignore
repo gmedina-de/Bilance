@@ -4,8 +4,7 @@
 *.dll
 *.so
 *.dylib
-database.db
-go.sum
+prototype/database.db
 main
 build.sh
 

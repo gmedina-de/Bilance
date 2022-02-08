@@ -1,4 +1,4 @@
-module homecloud
+module genuine
 
 go 1.18
 
