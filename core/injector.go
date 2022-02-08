@@ -1,6 +1,7 @@
 package core
 
 import (
+	"github.com/beego/beego/v2/server/web"
 	"homecloud/core/log"
 	. "reflect"
 	"strings"
@@ -77,7 +78,7 @@ func (inj *injector) instances(parameterType Type) Value {
 }
 
 func (inj *injector) debug(format string, v ...interface{}) {
-	if inj.log != nil {
+	if inj.log != nil && web.BConfig.RunMode == web.DEV {
 		inj.log.Debug(strings.Repeat("-", inj.level)+format, v...)
 	}
 }
