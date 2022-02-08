@@ -9,7 +9,7 @@ import (
 
 var logger = logs.GetBeeLogger()
 
-func Beego() Log {
+func Console() Log {
 	// adapt orm logger
 	l := log.New(os.Stdout, "", 0)
 	l.SetFlags(0)

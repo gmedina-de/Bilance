@@ -23,7 +23,7 @@ func init() {
 		Path = "/settings/users"
 
 	Implementations(
-		log.Beego,
+		log.Console,
 		database.Orm,
 		repositories.Users,
 		controllers.Index,
