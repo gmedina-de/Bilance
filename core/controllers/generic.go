@@ -44,7 +44,7 @@ func (this *generic[T]) List(p string) {
 
 func (this *generic[T]) Edit(id string) {
 	if id == "new" {
-		this.Data["Form"] = this.Model
+		this.Data["Form"] = &this.Model
 		this.Data["Title"] = "new"
 	} else {
 		id, _ := strconv.ParseInt(id, 10, 64)
