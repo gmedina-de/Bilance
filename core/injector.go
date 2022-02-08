@@ -63,7 +63,7 @@ func (inj *injector) instances(parameterType Type) Value {
 		inj.debug("%s wasn't instantiated", parameterName)
 		constructors, found := implementations[parameterType]
 		if !found {
-			panic("No constructors found for " + parameterName + ", required for dependency injection, please provide at least one")
+			panic("No constructors found for " + parameterName + ", required for dependency injection, provide at least one")
 		}
 		instances = MakeSlice(SliceOf(parameterType), 0, 0)
 		for _, c := range constructors {

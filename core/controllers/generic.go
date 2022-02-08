@@ -18,7 +18,7 @@ type generic[T any] struct {
 	Route      string
 }
 
-func Generic[T any](repository repositories.Repository[T], model T, route string) Controller {
+func Generic[T any](repository repositories.Repository[T], model T, route string) *generic[T] {
 	return &generic[T]{Repository: repository, Model: model, Route: route}
 }
 

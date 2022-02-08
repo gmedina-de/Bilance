@@ -5,6 +5,7 @@ import (
 	"github.com/beego/i18n"
 	"homecloud/core/controllers"
 	"homecloud/core/database"
+	"homecloud/core/filters"
 	"homecloud/core/log"
 	"homecloud/core/repositories"
 	"homecloud/core/template"
@@ -27,6 +28,7 @@ func init() {
 		repositories.Users,
 		controllers.Index,
 		controllers.Users,
+		filters.Auth,
 	)
 
 	web.BConfig.AppName = "HomeCloud"
@@ -55,10 +57,13 @@ func init() {
 }
 
 func Init() {
-	Injector(func(cs []controllers.Controller) {
+	Injector(func(cs []controllers.Controller, fs []filters.Filter) {
 		for _, c := range cs {
 			c.Routing()
 			web.Include(c)
+		}
+		for _, f := range fs {
+			web.InsertFilter(f.Pattern(), f.Pos(), f.Func(), f.Opts()...)
 		}
 		web.Run()
 	})

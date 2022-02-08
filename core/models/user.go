@@ -9,5 +9,5 @@ type User struct {
 
 type UserRole int64
 
-const UserRoleNormal UserRole = 0
-const UserRoleAdmin UserRole = 1
+const UserRoleAdmin UserRole = 0
+const UserRoleNormal UserRole = 1
