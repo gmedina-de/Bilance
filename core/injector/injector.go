@@ -1,4 +1,4 @@
-package core
+package injector
 
 import (
 	"genuine/core/log"

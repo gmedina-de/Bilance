@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"genuine/core/log"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/server/web"
@@ -16,11 +15,4 @@ func Orm(log log.Log) Database {
 	log.Debug("Opening %s database from %s", Name, Path)
 	orm.RegisterDataBase(Name, "sqlite3", Path)
 	return orm.NewOrm()
-}
-
-func SyncDB(force bool, verbose bool) {
-	err := orm.RunSyncdb(Name, force, verbose)
-	if err != nil {
-		fmt.Println(err)
-	}
 }

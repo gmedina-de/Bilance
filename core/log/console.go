@@ -9,12 +9,15 @@ import (
 
 var logger = logs.GetBeeLogger()
 
+type console struct {
+	beeLogger *logs.BeeLogger
+}
+
 func Console() Log {
 	// adapt orm logger
 	l := log.New(os.Stdout, "", 0)
 	l.SetFlags(0)
 	l.SetOutput(new(ormLogAdapter))
-
 	orm.DebugLog.Logger = l
 	return logger
 }

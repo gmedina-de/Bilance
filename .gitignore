@@ -16,5 +16,8 @@ build.sh
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Custom
 /.idea/*
+/data/
 database.db

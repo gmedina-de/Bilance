@@ -1,12 +1,14 @@
 package core
 
 import (
+	"genuine/core/authenticator"
 	"genuine/core/controllers"
 	"genuine/core/database"
-	"genuine/core/filters"
+	"genuine/core/injector"
 	"genuine/core/log"
 	"genuine/core/repositories"
 	"genuine/core/template"
+	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/i18n"
 	"strconv"
@@ -22,13 +24,13 @@ func init() {
 		WithChild("users", "users").
 		Path = "/settings/users"
 
-	Implementations(
+	injector.Implementations(
 		log.Console,
 		database.Orm,
 		repositories.Users,
 		controllers.Index,
 		controllers.Users,
-		filters.Auth,
+		authenticator.Basic,
 	)
 
 	web.BConfig.AppName = "HomeCloud"
@@ -57,14 +59,17 @@ func init() {
 }
 
 func Init() {
-	Injector(func(cs []controllers.Controller, fs []filters.Filter) {
+	injector.Injector(func(cs []controllers.Controller, auth authenticator.Authenticator, other []any) {
+		err := orm.RunSyncdb(database.Name, false, true)
+		if err != nil {
+			panic(err)
+		}
+
 		for _, c := range cs {
 			c.Routing()
 			web.Include(c)
 		}
-		for _, f := range fs {
-			web.InsertFilter(f.Pattern(), f.Pos(), f.Func(), f.Opts()...)
-		}
+
 		web.Run()
 	})
 }

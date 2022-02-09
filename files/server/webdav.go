@@ -1,0 +1,74 @@
+package server
+
+import (
+	"genuine/core/authenticator"
+	"genuine/core/log"
+	"github.com/mattn/davfs"
+	_ "github.com/mattn/davfs/plugin/file"
+	"golang.org/x/net/webdav"
+	"net/http"
+	"net/url"
+	"os"
+	"strings"
+)
+
+func Webdav(auth authenticator.Authenticator, log log.Log) any {
+	addr := "0.0.0.0:8081"
+	driver := "file"
+	path := "./data"
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := davfs.CreateFS(driver, path)
+		if err != nil {
+			log.Critical(err.Error())
+		}
+	}
+
+	fs, err := davfs.NewFS(driver, path)
+	if err != nil {
+		log.Critical(err.Error())
+	}
+
+	dav := &webdav.Handler{
+		FileSystem: fs,
+		LockSystem: webdav.NewMemLS(),
+		Logger: func(r *http.Request, err error) {
+			switch r.Method {
+			case "COPY", "MOVE":
+				dst := ""
+				if u, err := url.Parse(r.Header.Get("Destination")); err == nil {
+					dst = u.Path
+				}
+				log.Debug("WEBDAV %s %s -> %s", r.Method, r.URL.Path, dst)
+			default:
+				log.Debug("WEBDAV %s %s", r.Method, r.URL.Path)
+			}
+			if err != nil {
+				log.Error(err.Error())
+			}
+		},
+	}
+
+	var handler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		username, password, ok := r.BasicAuth()
+		if !ok || !auth.Authenticate(username, password) || !strings.HasPrefix(r.URL.Path, "/"+username) {
+			w.Header().Set("WWW-Authenticate", `Basic realm="davfs"`)
+			http.Error(w, "authorization failed", http.StatusUnauthorized)
+			return
+		}
+
+		err := fs.Mkdir(r.Context(), username, 0777)
+		if err != nil && os.IsNotExist(err) {
+			http.Error(w, "Error creating user directory", http.StatusInternalServerError)
+			return
+		}
+		dav.ServeHTTP(w, r)
+	})
+
+	log.Info("webdav server started %v", addr)
+	http.Handle("/", handler)
+	go func() {
+		log.Critical(http.ListenAndServe(addr, nil).Error())
+	}()
+	return nil
+}

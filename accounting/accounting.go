@@ -3,7 +3,7 @@ package accounting
 import (
 	"genuine/accounting/controllers"
 	"genuine/accounting/repositories"
-	"genuine/core"
+	"genuine/core/injector"
 	"genuine/core/template"
 )
 
@@ -18,7 +18,7 @@ func init() {
 		WithChild("expenses/by_category", "pie-chart").
 		Path = "/accounting/payments"
 
-	core.Implementations(
+	injector.Implementations(
 		repositories.Categories,
 		repositories.Payments,
 		controllers.Payments,

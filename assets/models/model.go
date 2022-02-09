@@ -1,9 +1,9 @@
 package models
 
 import (
-	"genuine/core"
 	"genuine/core/controllers"
 	"genuine/core/database"
+	"genuine/core/injector"
 	model2 "genuine/core/models"
 	"genuine/core/repositories"
 )
@@ -15,13 +15,13 @@ func AddModel[T any](model T, icon string) {
 	Models = append(Models, model)
 	Icons = append(Icons, icon)
 
-	core.Implementations(
+	injector.Implementations(
 		func(database database.Database) repositories.Repository[T] {
 			return repositories.Generic(database, model)
 		},
 	)
 
-	core.Implementations(
+	injector.Implementations(
 		func(repository repositories.Repository[T]) controllers.Controller {
 			return controllers.Generic(repository, model, "/assets/"+model2.Plural(model))
 		},
