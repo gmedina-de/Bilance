@@ -13,7 +13,7 @@ import (
 )
 
 func Webdav(auth authenticator.Authenticator, log log.Log) any {
-	addr := "0.0.0.0:8081"
+	addr := ":8081"
 	driver := "file"
 	path := "./data"
 

@@ -8,7 +8,9 @@ import (
 )
 
 func init() {
-	template.AddNavigation("files", "file")
+	template.AddNavigation("files", "file").
+		WithChild("all", "folder").
+		WithChild("trash", "trash")
 
 	injector.Implementations(
 		controllers.Files,
