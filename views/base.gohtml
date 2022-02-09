@@ -8,7 +8,6 @@
     <meta name="generator" content="Hugo 0.88.1">
     <link rel="icon" type="image/x-icon" href="/prototype/staticype/static/favicon.ico">
     <title>{{i18n .Lang .Title}}</title>
-    {{/*        <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">*/}}
     {{assets_css "/static/bootstrap.min.css"}}
     {{assets_css "/static/bootstrap-table.min.css"}}
     {{assets_css "/static/custom.css"}}
@@ -17,19 +16,12 @@
 {{if .Navigation1}}
     {{template "navigation1.gohtml" .}}
 {{end}}
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        {{if .Navigation2}}
-            <div class="col-lg-3 col-xl-2">
-                {{template "navigation2.gohtml" .}}
-            </div>
-        {{end}}
+        {{if .Navigation2}}{{template "navigation2.gohtml" .}}{{end}}
         <main class="ms-sm-auto{{if .Navigation2}} col-lg-9 col-xl-10{{end}} mb-2">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
-                <h1 class="h2">{{i18n .Lang .Title}}</h1>
-                <div class="btn-toolbar mb-2 mb-md-0">
-                    {{block "options" .}}{{end}}
-                </div>
+                {{block "options" .}}{{end}}
             </div>
 
             {{block "content" .}}{{end}}

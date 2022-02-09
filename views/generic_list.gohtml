@@ -4,7 +4,7 @@
     {{if .Model}}
         <div class="table-responsive">
             <table class="table table-hover" data-toggle="table">
-                <thead class="table-dark">
+                <thead class="bg-white">
                 <tr>
                     {{$Lang := .Lang}}
                     {{range th (index .Model 0)}}
@@ -16,7 +16,8 @@
                 <tbody class="bg-white">
                 {{$Path:=.Path}}
                 {{range .Model}}
-                    <tr>
+                    <tr data-link="{{$Path}}/edit?Id={{.Id}}">
+
                         {{td .}}
                         <td style="width: 10px!important;">
                             <a href="{{$Path}}/{{.Id}}">
@@ -35,14 +36,17 @@
 {{end}}
 
 {{define "options"}}
-    <div class="btn-group me-2">
-        <a class="btn btn-sm btn-outline-warning">
-            <span data-feather="download"></span> {{i18n .Lang "export"}}
-        </a>
-    </div>
-    <div class="btn-group">
-        <a class="btn btn-sm btn-success" href="{{.Path}}/new">
-            <span data-feather="plus-square"></span> {{i18n .Lang "new"}}
-        </a>
+    <h1 class="h2">{{i18n .Lang .Title}}</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a class="btn btn-sm btn-outline-secondary">
+                <span data-feather="download"></span> {{i18n .Lang "export"}}
+            </a>
+        </div>
+        <div class="btn-group">
+            <a class="btn btn-sm btn-success" href="{{.Path}}/new">
+                <span data-feather="plus-square"></span> {{i18n .Lang "new"}}
+            </a>
+        </div>
     </div>
 {{end}}

@@ -1,14 +1,14 @@
 <nav class="pt-3">
     <ul class="pagination justify-content-center">
         {{if .Paginator.HasPrev}}
-            <li class="page-item">
+            <li class="page-item d-none d-lg-block">
                 <a class="page-link" href="{{.Paginator.PageLinkFirst}}">&lt;&lt;</a>
             </li>
             <li class="page-item d-none d-md-block">
                 <a class="page-link" href="{{.Paginator.PageLinkPrev}}">&lt;</a>
             </li>
         {{else}}
-            <li class="page-item disabled">
+            <li class="page-item disabled d-none d-lg-block">
                 <a class="page-link">&lt;&lt;</a>
             </li>
             <li class="page-item disabled d-none d-md-block">
@@ -32,14 +32,14 @@
             <li class="page-item d-none d-md-block">
                 <a class="page-link" href="{{.Paginator.PageLinkNext}}">&gt;</a>
             </li>
-            <li class="page-item">
+            <li class="page-item d-none d-lg-block">
                 <a class="page-link" href="{{.Paginator.PageLinkLast}}">&gt;&gt;</a>
             </li>
         {{else}}
             <li class="page-item disabled d-none d-md-block">
                 <a class="page-link">&gt;</a>
             </li>
-            <li class="page-item disabled">
+            <li class="page-item disabled d-none d-lg-block">
                 <a class="page-link">&gt;&gt;</a>
             </li>
         {{end}}

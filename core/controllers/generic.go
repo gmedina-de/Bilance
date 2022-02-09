@@ -27,7 +27,7 @@ func (this *generic[T]) Routing() {
 	router.Add(this, this.Route+"/:id", "get:Edit(id path);post:Save(id path)")
 }
 
-const PageSize = 5
+const PageSize = 10
 const PageSizeAll = 9223372036854775807
 
 func (this *generic[T]) List(p string) {
@@ -35,6 +35,9 @@ func (this *generic[T]) List(p string) {
 	if p == "all" {
 		pageSize = PageSizeAll
 	}
+
+	this.Repository.Insert(&this.Model)
+
 	paginator := pagination.SetPaginator(this.Ctx, pageSize, this.Repository.Count())
 	this.Data["Model"] = this.Repository.Limit(pageSize, paginator.Offset())
 	this.Data["Paginator"] = paginator

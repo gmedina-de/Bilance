@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top py-lg-0 bg-dark shadow">
-    <div class="container">
+    <div class="container-fluid">
         <div class="btn-group d-block">
             {{if .CurrentNavigation1}}
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -20,13 +20,14 @@
             <span data-feather="cloud"></span>
         </a>
         <div class="collapse navbar-collapse" id="navbarMenu">
-            <ul class="navbar-nav mx-auto mb-2 mb-sm-0 mt-md-1">
+            <ul class="navbar-nav mx-auto mb-2 mb-sm-0 mt-md-1" style="overflow: auto;">
                 {{$Path := .Path}}
                 {{$Lang := .Lang}}
                 {{$CurrentNavigation1Index := .CurrentNavigation1Index}}
                 {{range $i, $a := .Navigation1}}
                     <li>
-                        <a href="{{.Path}}" class="nav-link{{if eq $i $CurrentNavigation1Index}} text-primary{{end}}">
+                        <a href="{{.Path}}"
+                           class="nav-link{{if eq $i $CurrentNavigation1Index}} text-primary{{end}}">
                             <span data-feather="{{$a.Icon}}" class="bi d-lg-block mx-auto"></span>
                             {{i18n $Lang $a.Name}}
                         </a>

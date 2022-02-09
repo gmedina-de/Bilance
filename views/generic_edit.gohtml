@@ -12,32 +12,35 @@
 {{end}}
 
 {{define "options"}}
-    <div class="btn-group" role="group">
-        {{if .Model.Id}}
-            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                    data-bs-target="#deleteConfirmationModal">
-                <span data-feather="trash-2"></span> {{i18n .Lang "delete"}}
-            </button>
-        {{end}}
-        <a class="btn btn-sm btn-secondary" onclick="history.back()">
-            <span data-feather="x-square"></span> {{i18n .Lang "cancel"}}
-        </a>
-    </div>
-    <div class="modal fade" id="deleteConfirmationModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{i18n .Lang "delete_confirmation"}}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    {{i18n .Lang "delete_confirmation_description"}}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">{{i18n .Lang "cancel"}}</button>
-                    <a type="button" class="btn btn-danger"
-                       href="{{.Path}}/delete?Id={{.Model.Id}}">{{i18n .Lang "delete"}}</a>
+    <h1 class="h2">{{i18n .Lang .Title}}</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group" role="group">
+            {{if .Form.Id}}
+                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#deleteConfirmationModal">
+                    <span data-feather="trash-2"></span> {{i18n .Lang "delete"}}
+                </button>
+            {{end}}
+            <a class="btn btn-sm btn-secondary" onclick="history.back()">
+                <span data-feather="x-square"></span> {{i18n .Lang "cancel"}}
+            </a>
+        </div>
+        <div class="modal fade" id="deleteConfirmationModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{i18n .Lang "delete_confirmation"}}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{i18n .Lang "delete_confirmation_description"}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">{{i18n .Lang "cancel"}}</button>
+                        <a type="button" class="btn btn-danger"
+                           href="{{.Path}}/delete?Id={{.Model.Id}}">{{i18n .Lang "delete"}}</a>
+                    </div>
                 </div>
             </div>
         </div>

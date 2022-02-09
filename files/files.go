@@ -8,8 +8,17 @@ import (
 )
 
 func init() {
+
+	template.AddNavigation("e-mail", "mail")
+	template.AddNavigation("contacts", "users")
+	template.AddNavigation("calendar", "calendar")
+	template.AddNavigation("passwords", "key")
+	template.AddNavigation("tasks", "check-circle")
+
 	template.AddNavigation("files", "file").
 		WithChild("all", "folder").
+		WithChild("favorites", "star").
+		WithChild("last", "clock").
 		WithChild("trash", "trash")
 
 	injector.Implementations(
