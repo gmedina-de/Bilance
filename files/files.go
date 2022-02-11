@@ -9,8 +9,7 @@ import (
 
 func init() {
 
-	template.AddNavigation("e-mail", "mail")
-	template.AddNavigation("contacts", "users")
+	template.AddNavigation("mail", "mail")
 	template.AddNavigation("calendar", "calendar")
 	template.AddNavigation("passwords", "key")
 	template.AddNavigation("tasks", "check-circle")

@@ -3,8 +3,6 @@ package server
 import (
 	"genuine/core/authenticator"
 	"genuine/core/log"
-	"github.com/mattn/davfs"
-	_ "github.com/mattn/davfs/plugin/file"
 	"golang.org/x/net/webdav"
 	"net/http"
 	"net/url"
@@ -13,22 +11,17 @@ import (
 )
 
 func Webdav(auth authenticator.Authenticator, log log.Log) any {
-	addr := ":8081"
-	driver := "file"
+	addr := "0.0.0.0:8081"
 	path := "./data"
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := davfs.CreateFS(driver, path)
+		err := os.Mkdir(path, 0755)
 		if err != nil {
 			log.Critical(err.Error())
 		}
 	}
 
-	fs, err := davfs.NewFS(driver, path)
-	if err != nil {
-		log.Critical(err.Error())
-	}
-
+	fs := webdav.Dir(path)
 	dav := &webdav.Handler{
 		FileSystem: fs,
 		LockSystem: webdav.NewMemLS(),
@@ -65,10 +58,10 @@ func Webdav(auth authenticator.Authenticator, log log.Log) any {
 		dav.ServeHTTP(w, r)
 	})
 
-	log.Info("webdav server started %v", addr)
-	http.Handle("/", handler)
+	log.Info("webdav server started http://%v", addr)
+	//http.Handle("/webdav", handler)
 	go func() {
-		log.Critical(http.ListenAndServe(addr, nil).Error())
+		log.Critical(http.ListenAndServe(addr, handler).Error())
 	}()
 	return nil
 }
