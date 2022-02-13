@@ -17,7 +17,10 @@ func AddModel[T any](model T, icon string) {
 
 	injector.Implementations(
 		func(database database.Database) repositories.Repository[T] {
-			return repositories.Generic(database, model)
+			return &repositories.Generic[T]{
+				Database: database,
+				Model:    model,
+			}
 		},
 	)
 

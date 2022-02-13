@@ -11,7 +11,13 @@ type payments struct {
 }
 
 func Payments(database database.Database) repositories.Repository[models.Payment] {
-	return &payments{repositories.Generic(database, models.Payment{})}
+	return &payments{
+		repositories.Generic[models.Payment]{
+			Database: database,
+			Model:    models.Payment{},
+			Ordering: "Date DESC",
+		}.Init(),
+	}
 }
 
 //func (p *payments) FromRequest(request *http.Request, id int64) *models.Payment {

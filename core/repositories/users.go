@@ -6,5 +6,5 @@ import (
 )
 
 func Users(database database.Database) Repository[models.User] {
-	return Generic(database, models.User{})
+	return Generic[models.User]{Database: database, Model: models.User{}}.Init()
 }
