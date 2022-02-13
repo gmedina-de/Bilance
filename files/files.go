@@ -9,12 +9,10 @@ import (
 
 func init() {
 
-	template.AddNavigation("mail", "mail")
-	template.AddNavigation("calendar", "calendar")
-	template.AddNavigation("passwords", "key")
+	template.AddNavigation("sites", "layout")
 	template.AddNavigation("tasks", "check-circle")
 
-	template.AddNavigation("files", "file").
+	template.AddNavigation("files", "folder").
 		WithChild("all", "folder").
 		WithChild("favorites", "star").
 		WithChild("last", "clock").
