@@ -15,7 +15,7 @@ func Payments(database database.Database) repositories.Repository[models.Payment
 		repositories.Generic[models.Payment]{
 			Database: database,
 			Model:    models.Payment{},
-			Ordering: "Date DESC",
+			Ordering: "Date, Id DESC",
 		}.Init(),
 	}
 }

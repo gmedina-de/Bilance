@@ -3,7 +3,6 @@ package repositories
 import (
 	"genuine/core/database"
 	"genuine/core/models"
-	"github.com/beego/beego/v2/client/orm"
 	"reflect"
 )
 
@@ -17,7 +16,6 @@ func (r Generic[T]) Init() Repository[T] {
 	if r.Ordering == "" {
 		r.Ordering = "Id DESC"
 	}
-	orm.RegisterModel(&r.Model)
 	return &r
 }
 

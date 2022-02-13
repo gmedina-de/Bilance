@@ -36,10 +36,8 @@
                         {{i18n .Lang "delete_confirmation_description"}}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                                data-bs-dismiss="modal">{{i18n .Lang "cancel"}}</button>
-                        <a type="button" class="btn btn-danger"
-                           href="{{.Path}}/delete?Id={{.Model.Id}}">{{i18n .Lang "delete"}}</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{i18n .Lang "cancel"}}</button>
+                        <a type="button" class="btn btn-danger" href="{{.Path}}/delete">{{i18n .Lang "delete"}}</a>
                     </div>
                 </div>
             </div>

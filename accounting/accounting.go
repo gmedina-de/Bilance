@@ -2,12 +2,20 @@ package accounting
 
 import (
 	"genuine/accounting/controllers"
+	"genuine/accounting/models"
 	"genuine/accounting/repositories"
 	"genuine/core/injector"
 	"genuine/core/template"
+	"github.com/beego/beego/v2/client/orm"
 )
 
 func init() {
+
+	orm.RegisterModel(
+		&models.Category{},
+		&models.Payment{},
+	)
+
 	template.AddNavigation("accounting", "book").
 		WithChild("payments", "layers").
 		WithChild("categories", "tag").
@@ -19,8 +27,8 @@ func init() {
 		Path = "/accounting/payments"
 
 	injector.Implementations(
-		repositories.Categories,
 		repositories.Payments,
+		repositories.Categories,
 		controllers.Payments,
 		controllers.Categories,
 		controllers.Balances,
