@@ -10,20 +10,13 @@
                     {{range th (index .Model 0)}}
                         <th data-field="{{.}}" data-sortable="true">{{i18n $Lang .}}</th>
                     {{end}}
-                    <th></th>
                 </tr>
                 </thead>
                 <tbody class="bg-white">
                 {{$Path:=.Path}}
                 {{range .Model}}
                     <tr data-link="{{$Path}}/edit?Id={{.Id}}">
-
                         {{td .}}
-                        <td style="width: 10px!important;">
-                            <a href="{{$Path}}/{{.Id}}">
-                                <span data-feather="edit"></span>
-                            </a>
-                        </td>
                     </tr>
                 {{end}}
                 </tbody>

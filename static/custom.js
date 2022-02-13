@@ -7,3 +7,9 @@ alertList.forEach(function (alert) {
     alert1.close();
   },3000)
 });
+
+$('table').bootstrapTable({
+  onClickRow: function (row, $element, field) {
+    window.location.href = window.location.href.split('?')[0] + "/" + row.Id
+  }
+})
