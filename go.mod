@@ -5,7 +5,6 @@ go 1.18
 require (
 	github.com/beego/beego/v2 v2.0.2
 	github.com/beego/i18n v0.0.0-20161101132742-e9308947f407
-	github.com/emersion/go-ical v0.0.0-20200224201310-cd514449c39e
 	github.com/emersion/go-vcard v0.0.0-20191221110513-5f81fa0d3cc7
 	github.com/emersion/go-webdav v0.3.1
 	github.com/jinzhu/inflection v1.0.0

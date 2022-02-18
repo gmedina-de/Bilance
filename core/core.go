@@ -6,6 +6,7 @@ import (
 	"genuine/core/database"
 	"genuine/core/injector"
 	"genuine/core/log"
+	"genuine/core/models"
 	"genuine/core/repositories"
 	"genuine/core/template"
 	"github.com/beego/beego/v2/client/orm"
@@ -33,13 +34,17 @@ func init() {
 		authenticator.Basic,
 	)
 
+	orm.RegisterModel(
+		&models.User{},
+	)
+
 	web.BConfig.AppName = "HomeCloud"
 	web.BConfig.Listen.HTTPAddr = "0.0.0.0"
 	web.BConfig.Listen.HTTPPort = 8080
 	web.BConfig.RunMode = web.DEV
 	web.BConfig.WebConfig.AutoRender = true
 	web.BConfig.RecoverPanic = false
-	web.BConfig.Listen.EnableAdmin = true
+	web.BConfig.Listen.EnableAdmin = false
 
 	web.AddFuncMap("td", template.Td)
 	web.AddFuncMap("th", template.Th)
@@ -47,7 +52,6 @@ func init() {
 	web.AddFuncMap("sum", func(a int, b int) int { return a + b })
 	web.AddFuncMap("contains", func(a string, b int64) bool { return strings.Contains(a, strconv.FormatInt(b, 10)) })
 
-	web.AddViewPath("core/views")
 	web.ExceptMethodAppend("Routing")
 
 	languages := []string{"en-US", "de-DE"}
@@ -60,7 +64,7 @@ func init() {
 
 func Init() {
 	injector.Injector(func(cs []controllers.Controller, auth authenticator.Authenticator, other []any) {
-		err := orm.RunSyncdb(database.Name, false, true)
+		err := orm.RunSyncdb(database.Name, false, false)
 		if err != nil {
 			panic(err)
 		}

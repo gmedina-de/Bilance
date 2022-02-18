@@ -3,15 +3,10 @@ package controllers
 import (
 	models3 "genuine/accounting/models"
 	"genuine/core/controllers"
-	"genuine/core/models"
 	"genuine/core/repositories"
 )
 
-func Payments(
-	repository repositories.Repository[models3.Payment],
-	categories repositories.Repository[models3.Category],
-	users repositories.Repository[models.User],
-) controllers.Controller {
+func Payments(repository repositories.Repository[models3.Payment]) controllers.Controller {
 	return controllers.Generic(repository, models3.Payment{}, "/accounting/payments")
 }
 

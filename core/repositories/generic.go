@@ -12,13 +12,6 @@ type Generic[T models.Model] struct {
 	Ordering string
 }
 
-func (r Generic[T]) Init() Repository[T] {
-	if r.Ordering == "" {
-		r.Ordering = "Id DESC"
-	}
-	return &r
-}
-
 func (r *Generic[T]) All() []T {
 	var result []T
 	r.Database.Raw("SELECT * FROM " + r.modelName() + " ORDER BY " + r.Ordering).QueryRows(&result)

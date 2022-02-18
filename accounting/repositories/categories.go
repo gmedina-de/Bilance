@@ -12,9 +12,9 @@ type categories struct {
 
 func Categories(database database.Database) repositories.Repository[models.Category] {
 	return &categories{
-		repositories.Generic[models.Category]{
+		&repositories.Generic[models.Category]{
 			Database: database,
 			Model:    models.Category{},
-		}.Init(),
+		},
 	}
 }

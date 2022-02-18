@@ -12,11 +12,11 @@ type payments struct {
 
 func Payments(database database.Database) repositories.Repository[models.Payment] {
 	return &payments{
-		repositories.Generic[models.Payment]{
+		&repositories.Generic[models.Payment]{
 			Database: database,
 			Model:    models.Payment{},
 			Ordering: "Date, Id DESC",
-		}.Init(),
+		},
 	}
 }
 

@@ -1,7 +1,7 @@
 package injector
 
 import (
-	"genuine/core/log"
+	. "genuine/core/log"
 	"github.com/beego/beego/v2/server/web"
 	. "reflect"
 	"strings"
@@ -19,7 +19,7 @@ func Implementations(constructors ...interface{}) {
 type injector struct {
 	instanceMap map[Type]Value
 	level       int
-	log         log.Log
+	log         Log
 }
 
 func Injector(constructor interface{}) *injector {
@@ -29,7 +29,7 @@ func Injector(constructor interface{}) *injector {
 	}
 
 	// log must be instantiated at first place, because injector depends on it
-	i.log = i.instances(TypeOf((*log.Log)(nil)).Elem()).Interface().([]log.Log)[0].(log.Log)
+	i.log = i.instances(TypeOf((*Log)(nil)).Elem()).Interface().([]Log)[0].(Log)
 	i.construct(constructor)
 	return i
 }
