@@ -3,6 +3,7 @@ package controllers
 import (
 	models3 "genuine/accounting/models"
 	"genuine/core/controllers"
+	"genuine/core/injector"
 	"genuine/core/models"
 	"genuine/core/repositories"
 	"github.com/beego/beego/v2/server/web"
@@ -14,12 +15,12 @@ import (
 
 type expenses struct {
 	controllers.BaseController
-	payments   repositories.Repository[models3.Payment]
-	categories repositories.Repository[models3.Category]
+	Payments   repositories.Repository[models3.Payment]
+	Categories repositories.Repository[models3.Category]
 }
 
-func Expenses(payments repositories.Repository[models3.Payment], categories repositories.Repository[models3.Category]) controllers.Controller {
-	return &expenses{payments: payments, categories: categories}
+func Expenses() controllers.Controller {
+	return injector.Inject(&expenses{})
 }
 
 func (c *expenses) Routing() {
@@ -64,7 +65,7 @@ func (c *expenses) prepareGraphData(request *http.Request) *GraphData {
 		c.fillExpensesByPeriodGraphData(start, end, step, &graphData)
 	case "/expenses/by_category/":
 		graphData.Type = "doughnut"
-		categories := c.categories.All()
+		categories := c.Categories.All()
 		categories = append(categories, models3.Category{0, "uncategorized", neutralColor})
 		c.fillExpensesByCategoryGraphData(start, end, categories, &graphData)
 	}
@@ -111,7 +112,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 		for i := start.Month(); i <= end.Month(); i++ {
 			t := start.AddDate(0, int(i)-1, 0)
 			data.X = append(data.X, t.Month().String())
-			y := models3.SumAmounts(c.payments.List(
+			y := models3.SumAmounts(c.Payments.List(
 				"PayeeId = 0",
 				"AND Date LIKE '"+t.Format("2006-01")+"%'",
 			))
@@ -123,7 +124,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 		for i := start.Day(); i <= end.Day(); i++ {
 			t := start.AddDate(0, 0, i-1)
 			data.X = append(data.X, t.Format(models.DateLayoutDE))
-			y := models3.SumAmounts(c.payments.List(
+			y := models3.SumAmounts(c.Payments.List(
 				"PayeeId = 0",
 				"AND Date = '"+t.Format(models.DateLayoutISO)+"'",
 			))
@@ -135,7 +136,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 		for i := models.NormalWeekday(start.Weekday()); i <= models.NormalWeekday(end.Weekday()); i++ {
 			t := start.AddDate(0, 0, i)
 			data.X = append(data.X, t.Weekday().String())
-			y := models3.SumAmounts(c.payments.List(
+			y := models3.SumAmounts(c.Payments.List(
 				"PayeeId = 0",
 				"AND Date = '"+t.Format(models.DateLayoutISO)+"'",
 			))
@@ -153,13 +154,13 @@ func (c *expenses) fillExpensesByCategoryGraphData(start time.Time, end time.Tim
 		data.X = append(data.X, category.Name)
 		var y models3.EUR
 		if category.Id == 0 {
-			y = models3.SumAmounts(c.payments.List(
+			y = models3.SumAmounts(c.Payments.List(
 				"PayeeId = 0",
 				"AND CategoryId NOT IN ("+ExtractCategoryIds(categories)+")",
 				"AND Date BETWEEN '"+startDate+"' AND '"+endDate+"'",
 			))
 		} else {
-			y = models3.SumAmounts(c.payments.List(
+			y = models3.SumAmounts(c.Payments.List(
 				"PayeeId = 0",
 				"AND CategoryId = '"+strconv.FormatInt(category.Id, 10)+"'",
 				"AND Date BETWEEN '"+startDate+"' AND '"+endDate+"'",

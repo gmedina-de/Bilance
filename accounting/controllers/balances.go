@@ -3,6 +3,7 @@ package controllers
 import (
 	model2 "genuine/accounting/models"
 	"genuine/core/controllers"
+	"genuine/core/injector"
 	"genuine/core/models"
 	"genuine/core/repositories"
 	"github.com/beego/beego/v2/server/web"
@@ -10,12 +11,12 @@ import (
 
 type balances struct {
 	controllers.BaseController
-	payments repositories.Repository[model2.Payment]
-	users    repositories.Repository[models.User]
+	Payments repositories.Repository[model2.Payment]
+	Users    repositories.Repository[models.User]
 }
 
-func Balances(payments repositories.Repository[model2.Payment], users repositories.Repository[models.User]) controllers.Controller {
-	return &balances{payments: payments, users: users}
+func Balances() controllers.Controller {
+	return injector.Inject(&balances{})
 }
 
 func (b *balances) Routing() {

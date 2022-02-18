@@ -25,14 +25,14 @@ func init() {
 		WithChild("users", "users").
 		Path = "/settings/users"
 
-	injector.Implementations(
-		log.Console,
-		database.Orm,
-		repositories.Users,
-		controllers.Index,
-		controllers.Users,
-		authenticator.Basic,
-	)
+	injector.Implementations(func() controllers.BaseController {
+		return controllers.BaseController{}
+	})
+	injector.Implementations(log.Console)
+	injector.Implementations(database.Orm)
+	injector.Implementations(controllers.Index, controllers.Users)
+	injector.Implementations(repositories.Users)
+	injector.Implementations(authenticator.Basic)
 
 	orm.RegisterModel(
 		&models.User{},
@@ -63,17 +63,25 @@ func init() {
 }
 
 func Init() {
-	injector.Injector(func(cs []controllers.Controller, auth authenticator.Authenticator, other []any) {
-		err := orm.RunSyncdb(database.Name, false, false)
-		if err != nil {
-			panic(err)
-		}
+	injector.Inject(&app{}).Run()
+}
 
-		for _, c := range cs {
-			c.Routing()
-			web.Include(c)
-		}
+type app struct {
+	Cs    []controllers.Controller
+	Auth  authenticator.Authenticator
+	Other []any
+}
 
-		web.Run()
-	})
+func (a *app) Run() {
+	err := orm.RunSyncdb(database.Name, false, false)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, c := range a.Cs {
+		c.Routing()
+		web.Include(c)
+	}
+
+	web.Run()
 }

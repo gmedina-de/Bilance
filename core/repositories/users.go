@@ -1,10 +1,10 @@
 package repositories
 
 import (
-	"genuine/core/database"
+	"genuine/core/injector"
 	"genuine/core/models"
 )
 
-func Users(database database.Database) Repository[models.User] {
-	return &Generic[models.User]{Database: database, Model: models.User{}}
+func Users() Repository[models.User] {
+	return injector.Inject(&Generic[models.User]{Model: models.User{}})
 }

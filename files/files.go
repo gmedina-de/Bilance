@@ -4,7 +4,6 @@ import (
 	"genuine/core/injector"
 	"genuine/core/template"
 	controllers "genuine/files/controller"
-	"genuine/files/server"
 )
 
 func init() {
@@ -18,8 +17,6 @@ func init() {
 		WithChild("last", "clock").
 		WithChild("trash", "trash")
 
-	injector.Implementations(
-		controllers.Files,
-		server.Webdav,
-	)
+	injector.Implementations(controllers.Files)
+
 }

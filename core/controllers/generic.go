@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"genuine/core/injector"
 	"genuine/core/models"
 	"genuine/core/repositories"
 	"genuine/core/router"
@@ -16,8 +17,8 @@ type generic[T any] struct {
 	Route      string
 }
 
-func Generic[T any](repository repositories.Repository[T], model T, route string) *generic[T] {
-	return &generic[T]{Repository: repository, Model: model, Route: route}
+func Generic[T any](model T, route string) *generic[T] {
+	return injector.Inject(&generic[T]{Model: model, Route: route})
 }
 
 func (this *generic[T]) Routing() {

@@ -26,12 +26,7 @@ func init() {
 		WithChild("expenses/by_category", "pie-chart").
 		Path = "/accounting/payments"
 
-	injector.Implementations(
-		repositories.Payments,
-		repositories.Categories,
-		controllers.Payments,
-		controllers.Categories,
-		controllers.Balances,
-		controllers.Expenses,
-	)
+	injector.Implementations(repositories.Payments)
+	injector.Implementations(repositories.Categories)
+	injector.Implementations(controllers.Payments, controllers.Categories, controllers.Balances, controllers.Expenses)
 }
