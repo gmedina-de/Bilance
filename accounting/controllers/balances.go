@@ -3,7 +3,6 @@ package controllers
 import (
 	model2 "genuine/accounting/models"
 	"genuine/core/controllers"
-	"genuine/core/inject"
 	"genuine/core/models"
 	"genuine/core/repositories"
 )
@@ -15,7 +14,7 @@ type balances struct {
 }
 
 func Balances() controllers.Controller {
-	return inject.Inject(&balances{})
+	return &balances{}
 }
 
 func (b *balances) Routes() map[string]string {

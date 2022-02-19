@@ -5,7 +5,7 @@ import (
 	"genuine/core/controllers"
 	"genuine/core/database"
 	"genuine/core/inject"
-	"genuine/core/loggers"
+	"genuine/core/log"
 	"genuine/core/models"
 	"genuine/core/repositories"
 	"genuine/core/router"
@@ -27,10 +27,7 @@ func init() {
 		WithChild("users", "users").
 		Path = "/settings/users"
 
-	inject.Implementations(func() controllers.Base {
-		return controllers.Base{}
-	})
-	inject.Implementations(loggers.Console)
+	inject.Implementations(log.Console)
 	inject.Implementations(database.Orm)
 	inject.Implementations(server.Standard)
 	inject.Implementations(router.Standard)
@@ -67,5 +64,15 @@ func init() {
 }
 
 func Init() {
-	inject.Inject(&struct{ Server server.Server }{}).Server.Start()
+	inject.Call(App)
+}
+
+type app struct{ Server server.Server }
+
+func App() inject.Initiable {
+	return &app{}
+}
+
+func (a *app) Init() {
+	a.Server.Start()
 }

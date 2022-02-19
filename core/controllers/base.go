@@ -58,6 +58,7 @@ func (this *Base) Before(request *http.Request, writer http.ResponseWriter, name
 }
 
 func (this *Base) After() {
+	template.Render(this.Writer, this.Template, this.Data)
 }
 
 func (this *Base) Redirect(url string, status int) {

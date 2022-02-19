@@ -3,7 +3,6 @@ package authenticator
 import (
 	"crypto/sha256"
 	"crypto/subtle"
-	"genuine/core/inject"
 	"genuine/core/models"
 	"genuine/core/repositories"
 	"net/http"
@@ -14,7 +13,7 @@ type basic struct {
 }
 
 func Basic() Authenticator {
-	return inject.Inject(&basic{})
+	return &basic{}
 }
 
 func (b *basic) Authenticate(writer http.ResponseWriter, request *http.Request) bool {

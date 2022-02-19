@@ -3,7 +3,6 @@ package controllers
 import (
 	models3 "genuine/accounting/models"
 	"genuine/core/controllers"
-	"genuine/core/inject"
 	"genuine/core/models"
 	"genuine/core/repositories"
 	"net/http"
@@ -19,7 +18,7 @@ type expenses struct {
 }
 
 func Expenses() controllers.Controller {
-	return inject.Inject(&expenses{})
+	return &expenses{}
 }
 
 func (c *expenses) Routes() map[string]string {

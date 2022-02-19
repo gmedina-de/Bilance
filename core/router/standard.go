@@ -2,7 +2,6 @@ package router
 
 import (
 	"genuine/core/controllers"
-	"genuine/core/inject"
 	"net/http"
 	"reflect"
 	"strings"
@@ -20,13 +19,15 @@ type action struct {
 }
 
 func Standard() Router {
-	t := inject.Inject(&standard{routes: make(map[string]action)})
-	for _, c := range t.Controllers {
+	return &standard{routes: make(map[string]action)}
+}
+
+func (s *standard) Init() {
+	for _, c := range s.Controllers {
 		for k, v := range c.Routes() {
-			t.addRoute(c, k, v)
+			s.addRoute(c, k, v)
 		}
 	}
-	return t
 }
 
 func (s *standard) Handle(writer http.ResponseWriter, request *http.Request) {

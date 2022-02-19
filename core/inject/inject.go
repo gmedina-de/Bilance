@@ -1,15 +1,16 @@
 package inject
 
 import (
-	"genuine/core/loggers"
+	"genuine/core/log"
 	"reflect"
 	"strings"
 )
 
-var implementations = make(map[reflect.Type][]interface{})
+var implementations = make(map[reflect.Type][]any)
 var instanceMap = make(map[reflect.Type]reflect.Value)
 var level = 0
-var l = loggers.Console()
+var l = log.Console()
+var initiableType = reflect.TypeOf((*Initiable)(nil)).Elem()
 
 func Implementations[T any](constructors ...func() T) {
 	for _, constructor := range constructors {
@@ -18,13 +19,18 @@ func Implementations[T any](constructors ...func() T) {
 	}
 }
 
-func Inject[T any](pointer T) T {
-	pointerValue := reflect.ValueOf(pointer)
-	object := pointerValue.Elem()
-	l.Debug(strings.Repeat("-", level)+"Injecting %s", pointer)
+func Call(constructor any) reflect.Value {
+	elem := reflect.ValueOf(constructor).Call(nil)[0].Elem()
+	var value reflect.Value
+	if elem.Kind() == reflect.Ptr {
+		value = elem.Elem()
+	} else {
+		value = elem
+	}
+	l.Debug(strings.Repeat("-", level)+"Injecting %s", value)
 
-	for i := 0; i < object.NumField(); i++ {
-		field := object.Field(i)
+	for i := 0; i < value.NumField(); i++ {
+		field := value.Field(i)
 		//
 		//lookup, o := object.Type().Field(i).Tag.Lookup("inject")
 		//
@@ -42,7 +48,10 @@ func Inject[T any](pointer T) T {
 		}
 		level--
 	}
-	return pointerValue.Interface().(T)
+	if elem.Type().Implements(initiableType) {
+		elem.Interface().(Initiable).Init()
+	}
+	return elem
 }
 
 func instances(parameterType reflect.Type) (result reflect.Value, ok bool) {
@@ -57,9 +66,7 @@ func instances(parameterType reflect.Type) (result reflect.Value, ok bool) {
 		}
 		instances = reflect.MakeSlice(reflect.SliceOf(parameterType), 0, 0)
 		for _, c := range constructors {
-			value := reflect.ValueOf(c).Call(nil)[0]
-			Inject(value)
-			instances = reflect.Append(instances, value)
+			instances = reflect.Append(instances, Call(c))
 		}
 		instanceMap[parameterType] = instances
 	}

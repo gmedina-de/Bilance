@@ -3,7 +3,6 @@ package server
 import (
 	"fmt"
 	"genuine/core/authenticator"
-	"genuine/core/inject"
 	"genuine/core/log"
 	"genuine/core/router"
 	"net/http"
@@ -17,7 +16,7 @@ type standard struct {
 }
 
 func Standard() Server {
-	return inject.Inject(&standard{port: 8080})
+	return &standard{port: 8080}
 }
 
 func (r *standard) Start() {

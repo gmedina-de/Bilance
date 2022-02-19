@@ -8,9 +8,9 @@
     <meta name="generator" content="Hugo 0.88.1">
     <link rel="icon" type="image/x-icon" href="/prototype/staticype/static/favicon.ico">
     <title>{{i18n .Lang .Title}}</title>
-    {{assets_css "/static/bootstrap.min.css"}}
-    {{assets_css "/static/bootstrap-table.min.css"}}
-    {{assets_css "/static/custom.css"}}
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap-table.min.css">
+    <link rel="stylesheet" href="/static/custom.css">
 </head>
 <body class="bg-light">
 {{if .Navigation1}}
@@ -28,10 +28,10 @@
         </main>
     </div>
 </div>
-{{assets_js "/static/jquery.min.js"}}
-{{assets_js "/static/bootstrap.bundle.min.js"}}
-{{assets_js "/static/bootstrap-table.min.js"}}
-{{assets_js "/static/feather.min.js"}}
-{{assets_js "/static/custom.js"}}
+<script src="/static/jquery.min.js"></script>
+<script src="/static/bootstrap.bundle.min.js"></script>
+<script src="/static/bootstrap-table.min.js"></script>
+<script src="/static/feather.min.js"></script>
+<script src="/static/custom.js"></script>
 </body>
 </html>
