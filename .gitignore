@@ -21,3 +21,4 @@ build.sh
 /.idea/*
 /data/
 database.db
+vendor
