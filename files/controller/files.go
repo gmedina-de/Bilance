@@ -2,20 +2,20 @@ package controllers
 
 import (
 	"genuine/core/controllers"
-	"genuine/core/router"
 )
 
 type files struct {
-	controllers.BaseController
+	controllers.Base
 }
 
 func Files() controllers.Controller {
-
 	return &files{}
 }
 
-func (f *files) Routing() {
-	router.Add(f, "/files", "get:Index()")
+func (f *files) Routes() map[string]string {
+	return map[string]string{
+		"/files": "get:Index()",
+	}
 }
 
 func (f *files) Index() {

@@ -1,7 +1,7 @@
 package files
 
 import (
-	"genuine/core/injector"
+	"genuine/core/inject"
 	"genuine/core/template"
 	controllers "genuine/files/controller"
 )
@@ -17,6 +17,6 @@ func init() {
 		WithChild("last", "clock").
 		WithChild("trash", "trash")
 
-	injector.Implementations(controllers.Files)
+	inject.Implementations(controllers.Files)
 
 }

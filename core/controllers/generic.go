@@ -1,30 +1,30 @@
 package controllers
 
 import (
-	"genuine/core/injector"
+	"genuine/core/inject"
 	"genuine/core/models"
 	"genuine/core/repositories"
-	"genuine/core/router"
-	"github.com/beego/beego/v2/server/web/pagination"
+	"genuine/core/template"
 	"net/http"
 	"reflect"
 )
 
 type generic[T any] struct {
-	BaseController
+	Base
 	Repository repositories.Repository[T]
 	Model      T
 	Route      string
 }
 
 func Generic[T any](model T, route string) *generic[T] {
-	return injector.Inject(&generic[T]{Model: model, Route: route})
+	return inject.Inject(&generic[T]{Model: model, Route: route})
 }
 
-func (this *generic[T]) Routing() {
-	router.Add(this, this.Route, "get,post:List(p)")
-	router.Add(this, this.Route+"/:id", "get:Edit(id path);post:Save(id path)")
-	router.Add(this, this.Route+"/:id/delete", "get:Remove(id path)")
+func (this *generic[T]) Routes() map[string]string {
+	return map[string]string{
+		this.Route + "/":       "get,post:List(p);get:Edit(id);post:Save(id)",
+		this.Route + "/delete": "get:Remove(id)",
+	}
 }
 
 const PageSize = 10
@@ -36,11 +36,11 @@ func (this *generic[T]) List(p string) {
 		pageSize = PageSizeAll
 	}
 
-	paginator := pagination.SetPaginator(this.Ctx, pageSize, this.Repository.Count())
+	paginator := template.NewPaginator(this.Request, pageSize, this.Repository.Count())
 	this.Data["Model"] = this.Repository.Limit(pageSize, paginator.Offset())
 	this.Data["Paginator"] = paginator
 	this.Data["Title"] = models.Plural(this.Model)
-	this.TplName = "generic_list.gohtml"
+	this.Template = "generic_list.gohtml"
 }
 
 func (this *generic[T]) Edit(id int64) {
@@ -51,14 +51,12 @@ func (this *generic[T]) Edit(id int64) {
 		this.Data["Form"] = this.Repository.Find(id)
 		this.Data["Title"] = "edit"
 	}
-	this.TplName = "generic_edit.gohtml"
+	this.Template = "generic_edit.gohtml"
 }
 
 func (this *generic[T]) Save(id int64) {
 	record := &this.Model
-	if err := this.ParseForm(record); err != nil {
-		panic(err)
-	}
+	this.ParseForm(record)
 	if id == 0 {
 		this.Repository.Insert(record)
 	} else {

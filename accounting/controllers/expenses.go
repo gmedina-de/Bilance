@@ -3,10 +3,9 @@ package controllers
 import (
 	models3 "genuine/accounting/models"
 	"genuine/core/controllers"
-	"genuine/core/injector"
+	"genuine/core/inject"
 	"genuine/core/models"
 	"genuine/core/repositories"
-	"github.com/beego/beego/v2/server/web"
 	"net/http"
 	"strconv"
 	"strings"
@@ -14,17 +13,17 @@ import (
 )
 
 type expenses struct {
-	controllers.BaseController
+	controllers.Base
 	Payments   repositories.Repository[models3.Payment]
 	Categories repositories.Repository[models3.Category]
 }
 
 func Expenses() controllers.Controller {
-	return injector.Inject(&expenses{})
+	return inject.Inject(&expenses{})
 }
 
-func (c *expenses) Routing() {
-	web.AutoPrefix("/accounting", c)
+func (c *expenses) Routes() map[string]string {
+	return map[string]string{}
 }
 
 func (c *expenses) Expenses() {

@@ -3,25 +3,27 @@ package controllers
 import (
 	model2 "genuine/accounting/models"
 	"genuine/core/controllers"
-	"genuine/core/injector"
+	"genuine/core/inject"
 	"genuine/core/models"
 	"genuine/core/repositories"
-	"github.com/beego/beego/v2/server/web"
 )
 
 type balances struct {
-	controllers.BaseController
+	controllers.Base
 	Payments repositories.Repository[model2.Payment]
 	Users    repositories.Repository[models.User]
 }
 
 func Balances() controllers.Controller {
-	return injector.Inject(&balances{})
+	return inject.Inject(&balances{})
 }
 
-func (b *balances) Routing() {
-	web.AutoPrefix("/accounting", b)
+func (b *balances) Routes() map[string]string {
+	return map[string]string{
+		"/accounting": "get:Balances()",
+	}
 }
+
 func (b *balances) Balances() {
 	//balanceData := b.prepareBalanceData()
 	//template.Render(writer, request, "balances", &template.Parameters{models: &balanceData}, "accounting/template/balances.gohtml")

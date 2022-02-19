@@ -7,9 +7,9 @@ require (
 	github.com/beego/i18n v0.0.0-20161101132742-e9308947f407
 	github.com/emersion/go-vcard v0.0.0-20191221110513-5f81fa0d3cc7
 	github.com/emersion/go-webdav v0.3.1
+	github.com/gorilla/schema v1.2.0
 	github.com/jinzhu/inflection v1.0.0
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
 )
 
 require (
@@ -29,6 +29,7 @@ require (
 	github.com/prometheus/procfs v0.6.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	golang.org/x/crypto v0.0.0-20211108221036-ceb1ce70b4fa // indirect
+	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/sys v0.0.0-20220204135822-1c1b9b1eba6a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect

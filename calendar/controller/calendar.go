@@ -6,7 +6,7 @@ import (
 )
 
 type calendar struct {
-	controllers.BaseController
+	controllers.Base
 }
 
 func Calendar() controllers.Controller {

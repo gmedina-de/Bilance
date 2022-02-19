@@ -4,10 +4,12 @@ import (
 	"genuine/core/authenticator"
 	"genuine/core/controllers"
 	"genuine/core/database"
-	"genuine/core/injector"
-	"genuine/core/log"
+	"genuine/core/inject"
+	"genuine/core/loggers"
 	"genuine/core/models"
 	"genuine/core/repositories"
+	"genuine/core/router"
+	"genuine/core/server"
 	"genuine/core/template"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/server/web"
@@ -25,14 +27,16 @@ func init() {
 		WithChild("users", "users").
 		Path = "/settings/users"
 
-	injector.Implementations(func() controllers.BaseController {
-		return controllers.BaseController{}
+	inject.Implementations(func() controllers.Base {
+		return controllers.Base{}
 	})
-	injector.Implementations(log.Console)
-	injector.Implementations(database.Orm)
-	injector.Implementations(controllers.Index, controllers.Users)
-	injector.Implementations(repositories.Users)
-	injector.Implementations(authenticator.Basic)
+	inject.Implementations(loggers.Console)
+	inject.Implementations(database.Orm)
+	inject.Implementations(server.Standard)
+	inject.Implementations(router.Standard)
+	inject.Implementations(controllers.Index, controllers.Users)
+	inject.Implementations(repositories.Users)
+	inject.Implementations(authenticator.Basic)
 
 	orm.RegisterModel(
 		&models.User{},
@@ -52,7 +56,7 @@ func init() {
 	web.AddFuncMap("sum", func(a int, b int) int { return a + b })
 	web.AddFuncMap("contains", func(a string, b int64) bool { return strings.Contains(a, strconv.FormatInt(b, 10)) })
 
-	web.ExceptMethodAppend("Routing")
+	web.ExceptMethodAppend("Routes")
 
 	languages := []string{"en-US", "de-DE"}
 	for _, lang := range languages {
@@ -63,25 +67,5 @@ func init() {
 }
 
 func Init() {
-	injector.Inject(&app{}).Run()
-}
-
-type app struct {
-	Cs    []controllers.Controller
-	Auth  authenticator.Authenticator
-	Other []any
-}
-
-func (a *app) Run() {
-	err := orm.RunSyncdb(database.Name, false, false)
-	if err != nil {
-		panic(err)
-	}
-
-	for _, c := range a.Cs {
-		c.Routing()
-		web.Include(c)
-	}
-
-	web.Run()
+	inject.Inject(&struct{ Server server.Server }{}).Server.Start()
 }

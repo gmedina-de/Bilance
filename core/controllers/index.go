@@ -1,21 +1,23 @@
 package controllers
 
-import (
-	"genuine/core/router"
-)
-
 type index struct {
-	BaseController
+	Base
 }
 
 func Index() Controller {
 	return &index{}
 }
 
-func (this *index) Routing() {
-	router.Add(this, "/", "get:Index(id)")
+func (this *index) Routes() map[string]string {
+	return map[string]string{
+		"/":          "get:Index()",
+		"/parameter": "get:Parameter(parameter)",
+	}
 }
 
-func (this *index) Index(id string) {
-	this.Data["Title"] = "Parameter id: " + id
+func (this *index) Index() {
+}
+
+func (this *index) Parameter(parameter string) {
+	this.Data["Title"] = "Parameter id: " + parameter
 }

@@ -6,7 +6,7 @@ import (
 )
 
 type contacts struct {
-	controllers.BaseController
+	controllers.Base
 }
 
 func Contacts() controllers.Controller {

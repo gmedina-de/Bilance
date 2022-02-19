@@ -1,29 +1,51 @@
 package authenticator
 
 import (
-	"genuine/core/injector"
+	"crypto/sha256"
+	"crypto/subtle"
+	"genuine/core/inject"
 	"genuine/core/models"
 	"genuine/core/repositories"
-	"github.com/beego/beego/v2/server/web"
-	auth2 "github.com/beego/beego/v2/server/web/filter/auth"
+	"net/http"
 )
 
 type basic struct {
-	Repository repositories.Repository[models.User]
+	Users repositories.Repository[models.User]
 }
 
 func Basic() Authenticator {
-	b := injector.Inject(&basic{})
-	web.InsertFilter("*", web.BeforeRouter, auth2.NewBasicAuthenticator(b.Authenticate, "Authorization Required"))
-	return b
+	return inject.Inject(&basic{})
 }
 
-func (b *basic) Authenticate(username, password string) bool {
-	u := b.Repository.List("WHERE name = ?", username)
-	if len(u) > 0 {
-		if u[0].Password == password {
-			return true
+func (b *basic) Authenticate(writer http.ResponseWriter, request *http.Request) bool {
+	username, password, ok := request.BasicAuth()
+	if ok {
+		usernameHash := sha256.Sum256([]byte(username))
+		passwordHash := sha256.Sum256([]byte(password))
+
+		user, found := b.retrieveUser(username)
+		if found {
+			expectedUsernameHash := sha256.Sum256([]byte(user.Name))
+			expectedPasswordHash := sha256.Sum256([]byte(user.Password))
+
+			usernameMatch := subtle.ConstantTimeCompare(usernameHash[:], expectedUsernameHash[:]) == 1
+			passwordMatch := subtle.ConstantTimeCompare(passwordHash[:], expectedPasswordHash[:]) == 1
+
+			if usernameMatch && passwordMatch {
+				return true
+			}
 		}
 	}
+	writer.Header().Set("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
+	http.Error(writer, "Unauthorized", http.StatusUnauthorized)
 	return false
+}
+
+func (b *basic) retrieveUser(username string) (*models.User, bool) {
+	users := b.Users.List("WHERE Name = '" + username + "'")
+	if len(users) > 0 {
+		return &users[0], true
+	} else {
+		return nil, false
+	}
 }
