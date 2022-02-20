@@ -51,7 +51,7 @@ func Carddav(auth authenticator.Authenticator, log log.Log) any {
 	//
 	//log.Info("carddav server started http://%v", addr)
 	//go func() {
-	//	log.Critical(http.ListenAndServe(addr, handler).Error())
+	//	log.Fatal(http.ListenAndServe(addr, handler).Error())
 	//}()
 	return nil
 }

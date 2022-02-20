@@ -20,7 +20,7 @@ all: help
 ## Build:
 build: ## Build your project and put the output binary in out/bin/
 	mkdir -p out/bin
-	GO111MODULE=on $(GOCMD) build -mod vendor -o $(BINARY_NAME) .
+	GO111MODULE=on $(GOCMD) build -mod vendor -tags dev -o $(BINARY_NAME) .
 
 clean: ## Remove build related file
 	rm -fr ./bin

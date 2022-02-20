@@ -1,8 +1,6 @@
 package config
 
-import "genuine/core/log"
-
-var (
-	Port     = 8080
-	LogLevel = log.Debug
+const (
+	ServerPort = 8080
+	LogLevel   = 4 //log.Debug
 )

@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const tag = "INJECT"
+
 var implementations = make(map[reflect.Type][]any)
 var instanceMap = make(map[reflect.Type]reflect.Value)
 var level = 0
@@ -27,12 +29,13 @@ func Call(constructor any) reflect.Value {
 	} else {
 		value = elem
 	}
-	l.Debug(strings.Repeat("-", level)+"Injecting %s", value)
+
+	l.Debug(tag, strings.Repeat("-", level)+"Injecting %s", value)
 
 	for i := 0; i < value.NumField(); i++ {
 		field := value.Field(i)
 		//
-		//lookup, o := object.Type().Field(i).Tag.Lookup("inject")
+		//lookup, o := object.Type().Field(i).tag.Lookup("inject")
 		//
 		//fmt.Println(lookup)
 		//fmt.Println(o)

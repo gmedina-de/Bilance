@@ -9,7 +9,7 @@ package server
 //	if _, err := os.Stat(path); os.IsNotExist(err) {
 //		err := os.Mkdir(path, 0755)
 //		if err != nil {
-//			log.Critical(err.Error())
+//			log.Fatal(err.Error())
 //		}
 //	}
 //
@@ -53,7 +53,7 @@ package server
 //	log.Info("webdav server started http://%v", addr)
 //	//http.Handle("/webdav", handler)
 //	go func() {
-//		log.Critical(http.ListenAndServe(addr, handler).Error())
+//		log.Fatal(http.ListenAndServe(addr, handler).Error())
 //	}()
 //	return nil
 //}
