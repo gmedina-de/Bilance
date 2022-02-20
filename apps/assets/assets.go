@@ -1,7 +1,7 @@
 package assets
 
 import (
-	"genuine/assets/models"
+	"genuine/apps/assets/models"
 	model2 "genuine/core/models"
 	"genuine/core/template"
 )

@@ -3,7 +3,8 @@ package authenticator
 import (
 	"crypto/sha256"
 	"crypto/subtle"
-	"genuine/core/models"
+	"genuine/apps/users/models"
+	"genuine/core/authenticator"
 	"genuine/core/repositories"
 	"net/http"
 )
@@ -12,7 +13,7 @@ type basic struct {
 	Users repositories.Repository[models.User]
 }
 
-func Basic() Authenticator {
+func Basic() authenticator.Authenticator {
 	return &basic{}
 }
 

@@ -18,9 +18,7 @@ func AddNavigation(name string, icon string) *MenuItem {
 	menuItem := &MenuItem{name, icon, "/" + name, nil}
 	Navigation = append(Navigation, menuItem)
 	sort.Slice(Navigation, func(i, j int) bool {
-		iPath := Navigation[i].Path
-		jPath := Navigation[j].Path
-		return iPath < jPath || strings.HasPrefix(jPath, "/settings/users")
+		return Navigation[i].Path < Navigation[j].Path
 	})
 	return menuItem
 }

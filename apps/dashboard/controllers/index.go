@@ -1,10 +1,12 @@
 package controllers
 
+import "genuine/core/controllers"
+
 type index struct {
-	Base
+	controllers.Base
 }
 
-func Index() Controller {
+func Index() controllers.Controller {
 	return &index{}
 }
 

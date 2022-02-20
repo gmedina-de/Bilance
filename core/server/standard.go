@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"genuine/config"
 	"genuine/core/authenticator"
 	"genuine/core/log"
 	"genuine/core/router"
@@ -23,8 +24,8 @@ func Standard() Server {
 func (r *standard) Start() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", r.ServeHTTP)
-	r.Log.Info(tag, "Starting server http://localhost:%d", Port)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", Port), nil)
+	r.Log.Info(tag, "Starting server http://localhost:%d", config.ServerPort)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", config.ServerPort), nil)
 	if err != nil {
 		r.Log.Fatal(tag, err.Error())
 	}
@@ -32,7 +33,7 @@ func (r *standard) Start() {
 
 func (r *standard) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	w := &statusWriter{ResponseWriter: writer, status: 200}
-	if r.Authenticator.Authenticate(w, request) {
+	if r.Authenticator == nil || r.Authenticator.Authenticate(w, request) {
 		r.Router.Handle(w, request)
 	}
 	r.Log.Debug(tag, "%s %s -> %d", request.Method, request.URL, w.status)

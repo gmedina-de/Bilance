@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"genuine/accounting/models"
+	"genuine/apps/accounting/models"
 	"genuine/core/controllers"
 )
 

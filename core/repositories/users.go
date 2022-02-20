@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"genuine/core/models"
+	"genuine/apps/users/models"
 )
 
 func Users() Repository[models.User] {

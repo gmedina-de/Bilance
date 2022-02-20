@@ -18,9 +18,17 @@ var templates = []string{
 
 var tmpl = template.New(path.Base(templates[0]))
 
+type test struct {
+	i int
+}
+
+func (t *test) name() int {
+	return t.i
+}
+
 func init() {
 	tmpl.Funcs(template.FuncMap{
-		"i18n":     i18n.Tr,
+		"l10n":     i18n.Tr,
 		"td":       Td,
 		"th":       Th,
 		"sum":      func(a int, b int) int { return a + b },

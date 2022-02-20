@@ -29,7 +29,7 @@
                         <a href="{{.Path}}"
                            class="nav-link{{if eq $i $CurrentNavigation1Index}} text-primary{{end}}">
                             <span data-feather="{{$a.Icon}}" class="bi d-lg-block mx-auto"></span>
-                            {{i18n $Lang $a.Name}}
+                            {{l10n $Lang $a.Name}}
                         </a>
                     </li>
                 {{end}}

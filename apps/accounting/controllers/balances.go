@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	model2 "genuine/accounting/models"
+	model2 "genuine/apps/accounting/models"
+	"genuine/apps/users/models"
 	"genuine/core/controllers"
-	"genuine/core/models"
 	"genuine/core/repositories"
 )
 

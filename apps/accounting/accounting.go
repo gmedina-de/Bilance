@@ -1,10 +1,10 @@
 package accounting
 
 import (
-	"genuine/accounting/controllers"
-	"genuine/accounting/models"
-	"genuine/accounting/repositories"
-	"genuine/core/inject"
+	controllers2 "genuine/apps/accounting/controllers"
+	models2 "genuine/apps/accounting/models"
+	repositories2 "genuine/apps/accounting/repositories"
+	"genuine/core/injector"
 	"genuine/core/template"
 	"github.com/beego/beego/v2/client/orm"
 )
@@ -12,8 +12,8 @@ import (
 func init() {
 
 	orm.RegisterModel(
-		&models.Category{},
-		&models.Payment{},
+		&models2.Category{},
+		&models2.Payment{},
 	)
 
 	template.AddNavigation("accounting", "book").
@@ -26,7 +26,7 @@ func init() {
 		WithChild("expenses/by_category", "pie-chart").
 		Path = "/accounting/payments"
 
-	inject.Implementations(repositories.Payments)
-	inject.Implementations(repositories.Categories)
-	inject.Implementations(controllers.Payments, controllers.Categories, controllers.Balances, controllers.Expenses)
+	injector.Implementations(repositories2.Payments)
+	injector.Implementations(repositories2.Categories)
+	injector.Implementations(controllers2.Payments, controllers2.Categories, controllers2.Balances, controllers2.Expenses)
 }

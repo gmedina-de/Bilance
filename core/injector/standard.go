@@ -1,4 +1,4 @@
-package inject
+package injector
 
 import (
 	"genuine/core/log"
@@ -10,9 +10,8 @@ const tag = "INJECT"
 
 var implementations = make(map[reflect.Type][]any)
 var instanceMap = make(map[reflect.Type]reflect.Value)
-var level = 0
-var l = log.Console()
-var initiableType = reflect.TypeOf((*Initiable)(nil)).Elem()
+var lvl = 0
+var l = log.Console() // todo generalize
 
 func Implementations[T any](constructors ...func() T) {
 	for _, constructor := range constructors {
@@ -21,8 +20,10 @@ func Implementations[T any](constructors ...func() T) {
 	}
 }
 
-func Call(constructor any) reflect.Value {
-	elem := reflect.ValueOf(constructor).Call(nil)[0].Elem()
+func Inject(constructor any) reflect.Value {
+	ret := reflect.ValueOf(constructor).Call(nil)[0]
+	l.Debug(tag, level()+"Inject %s", ret.Type())
+	elem := ret.Elem()
 	var value reflect.Value
 	if elem.Kind() == reflect.Ptr {
 		value = elem.Elem()
@@ -30,17 +31,9 @@ func Call(constructor any) reflect.Value {
 		value = elem
 	}
 
-	l.Debug(tag, strings.Repeat("-", level)+"Injecting %s", value)
-
 	for i := 0; i < value.NumField(); i++ {
+		lvl++
 		field := value.Field(i)
-		//
-		//lookup, o := object.Type().Field(i).tag.Lookup("inject")
-		//
-		//fmt.Println(lookup)
-		//fmt.Println(o)
-
-		level++
 		instances, ok := instances(field.Type())
 		if ok && field.CanSet() {
 			if field.Kind() == reflect.Slice {
@@ -49,12 +42,16 @@ func Call(constructor any) reflect.Value {
 				field.Set(instances.Index(0))
 			}
 		}
-		level--
+		lvl--
 	}
 	if elem.Type().Implements(initiableType) {
 		elem.Interface().(Initiable).Init()
 	}
 	return elem
+}
+
+func level() string {
+	return strings.Repeat("  ", lvl)
 }
 
 func instances(parameterType reflect.Type) (result reflect.Value, ok bool) {
@@ -69,7 +66,7 @@ func instances(parameterType reflect.Type) (result reflect.Value, ok bool) {
 		}
 		instances = reflect.MakeSlice(reflect.SliceOf(parameterType), 0, 0)
 		for _, c := range constructors {
-			instances = reflect.Append(instances, Call(c))
+			instances = reflect.Append(instances, Inject(c))
 		}
 		instanceMap[parameterType] = instances
 	}

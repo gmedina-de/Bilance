@@ -45,7 +45,7 @@
         {{end}}
         <li class="ms-2 page-item{{if eq $.Paginator.PerPageNums 9223372036854775807}} active{{end}}">
             <a class="page-link" href="{{.Path}}{{if lt $.Paginator.PerPageNums 9223372036854775807}}?p=all{{end}}">
-                {{i18n .Lang "all"}}
+                {{l10n .Lang "all"}}
             </a>
         </li>
     </ul>

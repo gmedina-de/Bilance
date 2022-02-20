@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	models3 "genuine/accounting/models"
+	models2 "genuine/apps/accounting/models"
 	"genuine/core/controllers"
 	"genuine/core/models"
 	"genuine/core/repositories"
@@ -13,8 +13,8 @@ import (
 
 type expenses struct {
 	controllers.Base
-	Payments   repositories.Repository[models3.Payment]
-	Categories repositories.Repository[models3.Category]
+	Payments   repositories.Repository[models2.Payment]
+	Categories repositories.Repository[models2.Category]
 }
 
 func Expenses() controllers.Controller {
@@ -29,9 +29,9 @@ func (c *expenses) Expenses() {
 	//var title string
 	//switch request.URL.Path {
 	//case "/expenses/by_period/":
-	//	title = localization.Translate("expenses") + " " + localization.Translate("by_period")
+	//	title = translator.Translate("expenses") + " " + translator.Translate("by_period")
 	//case "/expenses/by_category/":
-	//	title = localization.Translate("expenses") + " " + localization.Translate("by_category")
+	//	title = translator.Translate("expenses") + " " + translator.Translate("by_category")
 	//}
 	//template.Render(
 	//	writer,
@@ -46,9 +46,9 @@ type GraphData struct {
 	Filter string
 	Type   string
 	X      []string
-	Y      []models3.EUR
+	Y      []models2.EUR
 	Z      []string
-	Total  models3.EUR
+	Total  models2.EUR
 }
 
 const primaryColor = "#007bff"
@@ -64,7 +64,7 @@ func (c *expenses) prepareGraphData(request *http.Request) *GraphData {
 	case "/expenses/by_category/":
 		graphData.Type = "doughnut"
 		categories := c.Categories.All()
-		categories = append(categories, models3.Category{0, "uncategorized", neutralColor})
+		categories = append(categories, models2.Category{0, "uncategorized", neutralColor})
 		c.fillExpensesByCategoryGraphData(start, end, categories, &graphData)
 	}
 	return &graphData
@@ -110,7 +110,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 		for i := start.Month(); i <= end.Month(); i++ {
 			t := start.AddDate(0, int(i)-1, 0)
 			data.X = append(data.X, t.Month().String())
-			y := models3.SumAmounts(c.Payments.List(
+			y := models2.SumAmounts(c.Payments.List(
 				"PayeeId = 0",
 				"AND Date LIKE '"+t.Format("2006-01")+"%'",
 			))
@@ -122,7 +122,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 		for i := start.Day(); i <= end.Day(); i++ {
 			t := start.AddDate(0, 0, i-1)
 			data.X = append(data.X, t.Format(models.DateLayoutDE))
-			y := models3.SumAmounts(c.Payments.List(
+			y := models2.SumAmounts(c.Payments.List(
 				"PayeeId = 0",
 				"AND Date = '"+t.Format(models.DateLayoutISO)+"'",
 			))
@@ -134,7 +134,7 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 		for i := models.NormalWeekday(start.Weekday()); i <= models.NormalWeekday(end.Weekday()); i++ {
 			t := start.AddDate(0, 0, i)
 			data.X = append(data.X, t.Weekday().String())
-			y := models3.SumAmounts(c.Payments.List(
+			y := models2.SumAmounts(c.Payments.List(
 				"PayeeId = 0",
 				"AND Date = '"+t.Format(models.DateLayoutISO)+"'",
 			))
@@ -145,20 +145,20 @@ func (c *expenses) fillExpensesByPeriodGraphData(start time.Time, end time.Time,
 	}
 }
 
-func (c *expenses) fillExpensesByCategoryGraphData(start time.Time, end time.Time, categories []models3.Category, data *GraphData) {
+func (c *expenses) fillExpensesByCategoryGraphData(start time.Time, end time.Time, categories []models2.Category, data *GraphData) {
 	startDate := start.Format(models.DateLayoutISO)
 	endDate := end.Format(models.DateLayoutISO)
 	for _, category := range categories {
 		data.X = append(data.X, category.Name)
-		var y models3.EUR
+		var y models2.EUR
 		if category.Id == 0 {
-			y = models3.SumAmounts(c.Payments.List(
+			y = models2.SumAmounts(c.Payments.List(
 				"PayeeId = 0",
 				"AND CategoryId NOT IN ("+ExtractCategoryIds(categories)+")",
 				"AND Date BETWEEN '"+startDate+"' AND '"+endDate+"'",
 			))
 		} else {
-			y = models3.SumAmounts(c.Payments.List(
+			y = models2.SumAmounts(c.Payments.List(
 				"PayeeId = 0",
 				"AND CategoryId = '"+strconv.FormatInt(category.Id, 10)+"'",
 				"AND Date BETWEEN '"+startDate+"' AND '"+endDate+"'",
@@ -179,7 +179,7 @@ func (c *expenses) prepareYears() []int {
 	return result
 }
 
-func ExtractCategoryIds(categories []models3.Category) string {
+func ExtractCategoryIds(categories []models2.Category) string {
 	var result []string
 	for _, category := range categories {
 		result = append(result, strconv.FormatInt(category.Id, 10))

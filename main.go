@@ -1,11 +1,14 @@
 package main
 
 import (
-	_ "genuine/accounting"
-	_ "genuine/assets"
-	_ "genuine/contacts"
+	_ "genuine/apps/accounting"
+	_ "genuine/apps/assets"
+	_ "genuine/apps/calendar"
+	_ "genuine/apps/contacts"
+	_ "genuine/apps/dashboard"
+	_ "genuine/apps/files"
+	_ "genuine/apps/users"
 	"genuine/core"
-	_ "genuine/files"
 )
 
 func main() {

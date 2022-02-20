@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	models3 "genuine/accounting/models"
+	models3 "genuine/apps/accounting/models"
 	"genuine/core/controllers"
 )
 
@@ -21,7 +21,7 @@ func Payments() controllers.Controller {
 //		)
 //		template.Render(writer, request, "search_results", &template.Parameters{
 //			models: list,
-//			Toast: strconv.Itoa(len(list)) + " " + localization.Translate("records_found"),
+//			Toast: strconv.Itoa(len(list)) + " " + translator.Translate("records_found"),
 //		}, "crud_table", "payments")
 //	} else {
 //		c.GenericOld.Get(writer, request)

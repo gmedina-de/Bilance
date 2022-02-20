@@ -8,7 +8,7 @@
                 <tr>
                     {{$Lang := .Lang}}
                     {{range th (index .Model 0)}}
-                        <th data-field="{{.}}" data-sortable="true">{{i18n $Lang .}}</th>
+                        <th data-field="{{.}}" data-sortable="true">{{l10n $Lang .}}</th>
                     {{end}}
                 </tr>
                 </thead>
@@ -23,22 +23,22 @@
             </table>
         </div>
     {{else}}
-        {{i18n .Lang "no_records_found"}}
+        {{l10n .Lang "no_records_found"}}
     {{end}}
     {{template "pagination.gohtml" .}}
 {{end}}
 
 {{define "options"}}
-    <h1 class="h2">{{i18n .Lang .Title}}</h1>
+    <h1 class="h2">{{l10n .Lang .Title}}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group me-2">
             <a class="btn btn-sm btn-outline-secondary">
-                <span data-feather="download"></span> {{i18n .Lang "export"}}
+                <span data-feather="download"></span> {{l10n .Lang "export"}}
             </a>
         </div>
         <div class="btn-group">
             <a class="btn btn-sm btn-success" href="{{.Path}}/new">
-                <span data-feather="plus-square"></span> {{i18n .Lang "new"}}
+                <span data-feather="plus-square"></span> {{l10n .Lang "new"}}
             </a>
         </div>
     </div>

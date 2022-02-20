@@ -2,7 +2,7 @@ package log
 
 import (
 	"fmt"
-	"genuine/core/config"
+	"genuine/config"
 	"log"
 	"os"
 	"strconv"

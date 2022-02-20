@@ -18,8 +18,7 @@ RESET  := $(shell tput -Txterm sgr0)
 all: help
 
 ## Build:
-build: ## Build your project and put the output binary in out/bin/
-	mkdir -p out/bin
+build: ## Build your project
 	GO111MODULE=on $(GOCMD) build -mod vendor -tags dev -o $(BINARY_NAME) .
 
 clean: ## Remove build related file
