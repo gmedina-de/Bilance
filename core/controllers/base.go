@@ -13,8 +13,10 @@ type Base struct {
 	Writer  http.ResponseWriter
 	Name    string
 
-	Data     map[string]any
-	Template string
+	Data         map[string]any
+	TemplateName string
+	Template     template.Template
+
 	i18n.Locale
 }
 
@@ -53,12 +55,12 @@ func (this *Base) Before(request *http.Request, writer http.ResponseWriter, name
 		this.Data["CurrentNavigation2Index"] = template.GetCurrentNavigationIndex(path, currentNavigation1.SubMenu)
 	}
 
-	this.Template = this.Name + ".gohtml"
+	this.TemplateName = this.Name + ".gohtml"
 
 }
 
 func (this *Base) After() {
-	template.Render(this.Writer, this.Template, this.Data)
+	this.Template.Render(this.Writer, this.TemplateName, this.Data)
 }
 
 func (this *Base) Redirect(url string, status int) {

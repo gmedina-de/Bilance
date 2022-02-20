@@ -39,7 +39,7 @@ func (this *generic[T]) List(p string) {
 	this.Data["Model"] = this.Repository.Limit(pageSize, paginator.Offset())
 	this.Data["Paginator"] = paginator
 	this.Data["Title"] = models.Plural(this.Model)
-	this.Template = "generic_list.gohtml"
+	this.TemplateName = "generic_list.gohtml"
 }
 
 func (this *generic[T]) Edit(id int64) {
@@ -50,7 +50,7 @@ func (this *generic[T]) Edit(id int64) {
 		this.Data["Form"] = this.Repository.Find(id)
 		this.Data["Title"] = "edit"
 	}
-	this.Template = "generic_edit.gohtml"
+	this.TemplateName = "generic_edit.gohtml"
 }
 
 func (this *generic[T]) Save(id int64) {

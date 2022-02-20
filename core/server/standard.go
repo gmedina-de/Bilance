@@ -9,8 +9,6 @@ import (
 	"net/http"
 )
 
-const tag = "SERVER"
-
 type standard struct {
 	Log           log.Log
 	Authenticator authenticator.Authenticator
@@ -24,10 +22,10 @@ func Standard() Server {
 func (r *standard) Start() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", r.ServeHTTP)
-	r.Log.Info(tag, "Starting server http://localhost:%d", config.ServerPort)
+	r.Log.Info("Starting server http://localhost:%d", config.ServerPort)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", config.ServerPort), nil)
 	if err != nil {
-		r.Log.Fatal(tag, err.Error())
+		r.Log.Fatal(err.Error())
 	}
 }
 
@@ -36,7 +34,7 @@ func (r *standard) ServeHTTP(writer http.ResponseWriter, request *http.Request) 
 	if r.Authenticator == nil || r.Authenticator.Authenticate(w, request) {
 		r.Router.Handle(w, request)
 	}
-	r.Log.Debug(tag, "%s %s -> %d", request.Method, request.URL, w.status)
+	r.Log.Debug("%s %s -> %d", request.Method, request.URL, w.status)
 }
 
 type statusWriter struct {

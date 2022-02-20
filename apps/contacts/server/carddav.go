@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-const tag = "CARDDAV"
-
 func Carddav(auth authenticator.Authenticator, log log.Log) any {
 	addr := "0.0.0.0:8082"
 
@@ -53,9 +51,9 @@ func Carddav(auth authenticator.Authenticator, log log.Log) any {
 		dav.ServeHTTP(w, r)
 	})
 
-	log.Info(tag, "carddav server started http://%v", addr)
+	log.Info("carddav server started http://%v", addr)
 	go func() {
-		log.Fatal(tag, http.ListenAndServe(addr, handler).Error())
+		log.Fatal(http.ListenAndServe(addr, handler).Error())
 	}()
 	return nil
 }

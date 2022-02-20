@@ -1,9 +1,12 @@
 package injector
 
-import "reflect"
+import (
+	"reflect"
+)
 
 type Injector interface {
-	Implementation(constructor any)
+	Constructor(constructor any)
 	Inject(constructor any) reflect.Value
 	Instances(parameterType reflect.Type) (reflect.Value, bool)
+	Instance(instance any)
 }

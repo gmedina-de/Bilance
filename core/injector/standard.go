@@ -6,32 +6,30 @@ import (
 	"strings"
 )
 
-const tag = "INJECT"
-
 type standard struct {
-	implementations map[reflect.Type][]any
-	instances       map[reflect.Type]reflect.Value
-	level           int
-	log             log.Log
+	constructors map[reflect.Type][]any
+	instances    map[reflect.Type]reflect.Value
+	level        int
+	log          log.Log
 }
 
 func Standard() Injector {
 	return &standard{
-		implementations: make(map[reflect.Type][]any),
-		instances:       make(map[reflect.Type]reflect.Value),
-		level:           0,
-		log:             log.Standard(),
+		constructors: make(map[reflect.Type][]any),
+		instances:    make(map[reflect.Type]reflect.Value),
+		level:        0,
+		log:          log.Standard(),
 	}
 }
 
-func (s *standard) Implementation(constructor any) {
+func (s *standard) Constructor(constructor any) {
 	returnType := reflect.ValueOf(constructor).Type().Out(0)
-	s.implementations[returnType] = append(s.implementations[returnType], constructor)
+	s.constructors[returnType] = append(s.constructors[returnType], constructor)
 }
 
 func (s *standard) Inject(constructor any) reflect.Value {
 	ret := reflect.ValueOf(constructor).Call(nil)[0]
-	s.log.Debug(tag, strings.Repeat("  ", s.level)+"Inject %s", ret.Type())
+	s.log.Debug(strings.Repeat("  ", s.level)+"Inject %s", ret.Type())
 
 	elem := ret.Elem()
 	var value reflect.Value
@@ -68,16 +66,22 @@ func (s *standard) Instances(parameterType reflect.Type) (reflect.Value, bool) {
 
 	instances, found := s.instances[parameterType]
 	if !found {
-		constructors, found := s.implementations[parameterType]
+		constructors, found := s.constructors[parameterType]
 		if !found {
+			s.log.Warning(strings.Repeat("  ", s.level)+"No constructor found for %s", parameterType.Name())
 			return reflect.Value{}, false
 		}
 
 		instances = reflect.MakeSlice(reflect.SliceOf(parameterType), 0, 0)
 		for _, c := range constructors {
+
 			instances = reflect.Append(instances, s.Inject(c))
 		}
 		s.instances[parameterType] = instances
 	}
 	return instances, true
+}
+
+func (s *standard) Instance(instance any) {
+
 }
