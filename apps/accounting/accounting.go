@@ -4,7 +4,7 @@ import (
 	controllers2 "genuine/apps/accounting/controllers"
 	models2 "genuine/apps/accounting/models"
 	repositories2 "genuine/apps/accounting/repositories"
-	"genuine/core/injector"
+	"genuine/core"
 	"genuine/core/template"
 	"github.com/beego/beego/v2/client/orm"
 )
@@ -26,7 +26,7 @@ func init() {
 		WithChild("expenses/by_category", "pie-chart").
 		Path = "/accounting/payments"
 
-	injector.Implementations(repositories2.Payments)
-	injector.Implementations(repositories2.Categories)
-	injector.Implementations(controllers2.Payments, controllers2.Categories, controllers2.Balances, controllers2.Expenses)
+	core.Implementations(repositories2.Payments)
+	core.Implementations(repositories2.Categories)
+	core.Implementations(controllers2.Payments, controllers2.Categories, controllers2.Balances, controllers2.Expenses)
 }

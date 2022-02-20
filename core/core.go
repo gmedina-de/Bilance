@@ -6,31 +6,25 @@ import (
 	"genuine/core/log"
 	"genuine/core/router"
 	"genuine/core/server"
-	"genuine/core/template"
-	"reflect"
 )
 
 func init() {
-
-	template.AddNavigation("settings", "settings").
-		WithChild("users", "users").
-		Path = "/settings/users"
-
 	Implementations(log.Console)
 	Implementations(database.Orm)
 	Implementations(server.Standard)
 	Implementations(router.Standard)
 }
 
+var inj = injector.Standard()
+
 func Implementations[T any](constructors ...func() T) {
 	for _, constructor := range constructors {
-		returnType := reflect.ValueOf(constructor).Type().Out(0)
-		implementations[returnType] = append(implementations[returnType], constructor)
+		inj.Implementation(constructor)
 	}
 }
 
 func Init() {
-	injector.Inject(App)
+	inj.Inject(App)
 }
 
 type app struct{ Server server.Server }

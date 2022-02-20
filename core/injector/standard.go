@@ -8,21 +8,31 @@ import (
 
 const tag = "INJECT"
 
-var implementations = make(map[reflect.Type][]any)
-var instanceMap = make(map[reflect.Type]reflect.Value)
-var lvl = 0
-var l = log.Console() // todo generalize
+type standard struct {
+	implementations map[reflect.Type][]any
+	instances       map[reflect.Type]reflect.Value
+	level           int
+	log             log.Log
+}
 
-func Implementations[T any](constructors ...func() T) {
-	for _, constructor := range constructors {
-		returnType := reflect.ValueOf(constructor).Type().Out(0)
-		implementations[returnType] = append(implementations[returnType], constructor)
+func Standard() Injector {
+	return &standard{
+		implementations: make(map[reflect.Type][]any),
+		instances:       make(map[reflect.Type]reflect.Value),
+		level:           0,
+		log:             log.Console(),
 	}
 }
 
-func Inject(constructor any) reflect.Value {
+func (s *standard) Implementation(constructor any) {
+	returnType := reflect.ValueOf(constructor).Type().Out(0)
+	s.implementations[returnType] = append(s.implementations[returnType], constructor)
+}
+
+func (s *standard) Inject(constructor any) reflect.Value {
 	ret := reflect.ValueOf(constructor).Call(nil)[0]
-	l.Debug(tag, level()+"Inject %s", ret.Type())
+	s.log.Debug(tag, strings.Repeat("  ", s.level)+"Inject %s", ret.Type())
+
 	elem := ret.Elem()
 	var value reflect.Value
 	if elem.Kind() == reflect.Ptr {
@@ -32,9 +42,9 @@ func Inject(constructor any) reflect.Value {
 	}
 
 	for i := 0; i < value.NumField(); i++ {
-		lvl++
+		s.level++
 		field := value.Field(i)
-		instances, ok := instances(field.Type())
+		instances, ok := s.Instances(field.Type())
 		if ok && field.CanSet() {
 			if field.Kind() == reflect.Slice {
 				field.Set(instances)
@@ -42,33 +52,32 @@ func Inject(constructor any) reflect.Value {
 				field.Set(instances.Index(0))
 			}
 		}
-		lvl--
+		s.level--
 	}
+
 	if elem.Type().Implements(initiableType) {
 		elem.Interface().(Initiable).Init()
 	}
 	return elem
 }
 
-func level() string {
-	return strings.Repeat("  ", lvl)
-}
-
-func instances(parameterType reflect.Type) (result reflect.Value, ok bool) {
+func (s *standard) Instances(parameterType reflect.Type) (reflect.Value, bool) {
 	if parameterType.Kind() == reflect.Slice {
 		parameterType = parameterType.Elem()
 	}
-	instances, found := instanceMap[parameterType]
+
+	instances, found := s.instances[parameterType]
 	if !found {
-		constructors, found := implementations[parameterType]
+		constructors, found := s.implementations[parameterType]
 		if !found {
 			return reflect.Value{}, false
 		}
+
 		instances = reflect.MakeSlice(reflect.SliceOf(parameterType), 0, 0)
 		for _, c := range constructors {
-			instances = reflect.Append(instances, Inject(c))
+			instances = reflect.Append(instances, s.Inject(c))
 		}
-		instanceMap[parameterType] = instances
+		s.instances[parameterType] = instances
 	}
 	return instances, true
 }

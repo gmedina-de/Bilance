@@ -3,12 +3,17 @@ package users
 import (
 	"genuine/apps/users/authenticator"
 	"genuine/apps/users/controllers"
-	"genuine/core/injector"
+	"genuine/core"
 	"genuine/core/repositories"
+	"genuine/core/template"
 )
 
 func init() {
-	injector.Implementations(controllers.Users)
-	injector.Implementations(repositories.Users)
-	injector.Implementations(authenticator.Basic)
+	template.AddNavigation("settings", "settings").
+		WithChild("users", "users").
+		Path = "/settings/users"
+
+	core.Implementations(controllers.Users)
+	core.Implementations(repositories.Users)
+	core.Implementations(authenticator.Basic)
 }

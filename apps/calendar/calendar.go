@@ -8,7 +8,7 @@ func init() {
 	//	WithChild("last", "clock").
 	//	WithChild("trash", "trash")
 	//
-	//injector.Implementations(
+	//core.Implementation(
 	//	controllers.Calendar,
 	//	server.Carddav,
 	//)
