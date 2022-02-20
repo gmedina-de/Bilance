@@ -2,13 +2,15 @@ package router
 
 import (
 	"genuine/core/controllers"
+	"genuine/core/log"
 	"net/http"
 	"reflect"
 	"strings"
 )
 
 type standard struct {
-	Controllers []controllers.Controller
+	controllers []controllers.Controller
+	log         log.Log
 	routes      map[string]action
 }
 
@@ -23,7 +25,7 @@ func Standard() Router {
 }
 
 func (s *standard) Init() {
-	for _, c := range s.Controllers {
+	for _, c := range s.controllers {
 		for k, v := range c.Routes() {
 			s.addRoute(c, k, v)
 		}
@@ -56,7 +58,9 @@ func (s *standard) addRoute(controller controllers.Controller, route string, map
 		for _, m := range strings.Split(k, ",") {
 			name := v[:strings.Index(v, "(")]
 			method, _ := reflect.TypeOf(controller).MethodByName(name)
-			s.routes[strings.ToUpper(m)+" "+route] = action{method, controller, s.parameters(v)}
+			key := strings.ToUpper(m) + " " + route
+			s.routes[key] = action{method, controller, s.parameters(v)}
+			s.log.Debug("Add route %s", key)
 		}
 	}
 }

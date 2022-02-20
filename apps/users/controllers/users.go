@@ -6,5 +6,5 @@ import (
 )
 
 func Users() controllers.Controller {
-	return controllers.Generic(models.User{}, "/settings/users")
+	return controllers.Generic[models.User]("/settings/users")
 }

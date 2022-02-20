@@ -8,7 +8,7 @@ import (
 
 type Generic[T models.Model] struct {
 	Database database.Database
-	Model    T
+	T        T
 	Ordering string
 }
 
@@ -63,6 +63,10 @@ func (r *Generic[T]) Delete(entity any) {
 	r.Database.Delete(entity)
 }
 
+func (r *Generic[T]) Model() T {
+	return r.T
+}
+
 func (r *Generic[T]) modelName() string {
-	return models.Name(r.Model)
+	return models.Name(r.T)
 }

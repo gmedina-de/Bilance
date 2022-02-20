@@ -6,6 +6,7 @@ import (
 )
 
 type standard struct {
+	translation  any
 	translations map[string]any
 }
 
@@ -15,6 +16,7 @@ func Standard() Translator {
 
 func (s *standard) Translation(language string, translation any) {
 	s.translations[language] = translation
+	s.translation = translation
 }
 
 func (s *standard) Translate(language string, key string, params ...any) string {
@@ -24,11 +26,11 @@ func (s *standard) Translate(language string, key string, params ...any) string 
 		if fieldValue.IsValid() {
 			return fmt.Sprintf(fieldValue.String(), params...)
 		}
-		fieldType, _ := reflect.TypeOf(translation).FieldByName(key)
-		lookup, ok := fieldType.Tag.Lookup("default")
-		if ok {
-			return fmt.Sprintf(lookup, params...)
-		}
+	}
+	fieldType, _ := reflect.TypeOf(s.translation).FieldByName(key)
+	lookup, ok := fieldType.Tag.Lookup("default")
+	if ok {
+		return fmt.Sprintf(lookup, params...)
 	}
 	return key
 }

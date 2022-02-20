@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	models3 "genuine/apps/accounting/models"
+	"genuine/apps/accounting/models"
 	"genuine/core/controllers"
 )
 
 func Payments() controllers.Controller {
-	return controllers.Generic(models3.Payment{}, "/accounting/payments")
+	return controllers.Generic[models.Payment]("/accounting/payments")
 }
 
 //

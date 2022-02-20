@@ -5,5 +5,5 @@ import (
 )
 
 func Users() Repository[models.User] {
-	return &Generic[models.User]{Model: models.User{}}
+	return &Generic[models.User]{T: models.User{}}
 }

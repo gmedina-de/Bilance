@@ -15,4 +15,6 @@ type Repository[T models.Model] interface {
 	Insert(entity any)
 	Update(entity any)
 	Delete(entity any)
+
+	Model() T
 }

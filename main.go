@@ -9,7 +9,6 @@ import (
 	_ "genuine/apps/files"
 	_ "genuine/apps/users"
 	"genuine/core"
-	"genuine/core/injector"
 	"genuine/core/server"
 	"genuine/core/template"
 	"genuine/core/translator"
@@ -17,20 +16,20 @@ import (
 )
 
 func main() {
-	core.Init(App)
+	core.Init(App).Run()
 }
 
 type app struct {
-	Server     server.Server
+	server     server.Server
 	Translator translator.Translator
 	Template   template.Template
 }
 
-func App() injector.Initiable {
+func App() *app {
 	return &app{}
 }
 
-func (a *app) Init() {
+func (a *app) Run() {
 	a.Template.Templates(
 		"views/base.gohtml",
 		"views/navigation1.gohtml",
@@ -38,5 +37,5 @@ func (a *app) Init() {
 		"views/pagination.gohtml",
 	)
 	a.Translator.Translation("de", l10n.De)
-	a.Server.Start()
+	a.server.Start()
 }

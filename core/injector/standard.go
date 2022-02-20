@@ -4,6 +4,7 @@ import (
 	"genuine/core/log"
 	"reflect"
 	"strings"
+	"unsafe"
 )
 
 type standard struct {
@@ -27,6 +28,7 @@ func (s *standard) Implementation(constructor any) {
 	s.constructors[returnType] = append(s.constructors[returnType], constructor)
 	s.log.Debug("Added constructor for type %s", returnType)
 }
+
 func (s *standard) Inject(constructor any) reflect.Value {
 	value := reflect.ValueOf(constructor).Call(nil)[0]
 	s.log.Debug(strings.Repeat("  ", s.level)+"Inject %s", value.Type())
@@ -43,8 +45,12 @@ func (s *standard) Inject(constructor any) reflect.Value {
 		s.level++
 		field := elem.Field(i)
 		instances, ok := s.Instances(field.Type())
-		if ok && field.CanSet() {
+		if ok {
 			s.log.Debug(strings.Repeat("  ", s.level)+"Set %s", field.Type())
+
+			// access unexported fields using unsafe Pointer
+			field = reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem()
+
 			if field.Kind() == reflect.Slice {
 				field.Set(instances)
 			} else {
@@ -54,9 +60,6 @@ func (s *standard) Inject(constructor any) reflect.Value {
 		s.level--
 	}
 
-	if value.Type().Implements(initiableType) {
-		value.Interface().(Initiable).Init()
-	}
 	return value
 }
 

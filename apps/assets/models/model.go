@@ -16,15 +16,13 @@ func AddModel[T any](model T, icon string) {
 
 	core.Implementations(
 		func() repositories.Repository[T] {
-			return &repositories.Generic[T]{
-				Model: model,
-			}
+			return &repositories.Generic[T]{T: model}
 		},
 	)
 
 	core.Implementations(
 		func() controllers.Controller {
-			return controllers.Generic(model, "/assets/"+model2.Plural(model))
+			return controllers.Generic[T]("/assets/" + model2.Plural(model))
 		},
 	)
 

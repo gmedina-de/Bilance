@@ -11,11 +11,10 @@ import (
 )
 
 type standard struct {
-	Translator translator.Translator
-	Log        log.Log
-
-	template  *template.Template
-	templates []string
+	translator translator.Translator
+	log        log.Log
+	template   *template.Template
+	templates  []string
 }
 
 func Standard() Template {
@@ -23,10 +22,10 @@ func Standard() Template {
 }
 
 func (s *standard) Templates(base string, templates ...string) {
-	s.templates = templates
-	s.template = template.New(path.Base(templates[0]))
+	s.templates = append(templates, base)
+	s.template = template.New(path.Base(base))
 	s.template.Funcs(template.FuncMap{
-		"l10n":     s.Translator.Translate,
+		"l10n":     s.translator.Translate,
 		"td":       Td,
 		"th":       Th,
 		"sum":      func(a int, b int) int { return a + b },
@@ -38,6 +37,6 @@ func (s *standard) Render(writer http.ResponseWriter, template string, data map[
 	s.template.ParseFiles(append(s.templates, template)...)
 	err := s.template.Execute(writer, data)
 	if err != nil {
-		s.Log.Error(err.Error())
+		s.log.Error(err.Error())
 	}
 }

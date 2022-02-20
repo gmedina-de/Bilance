@@ -29,6 +29,6 @@ func Implementations[T any](constructors ...func() T) {
 	}
 }
 
-func Init[T injector.Initiable](constructor func() T) {
-	inj.Inject(constructor)
+func Init[T any](constructor func() T) T {
+	return inj.Inject(constructor).Interface().(T)
 }

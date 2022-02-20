@@ -7,6 +7,6 @@ import (
 
 func Categories() repositories.Repository[models.Category] {
 	return &repositories.Generic[models.Category]{
-		Model: models.Category{},
+		T: models.Category{},
 	}
 }

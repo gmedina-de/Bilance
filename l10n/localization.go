@@ -1,6 +1,7 @@
 package l10n
 
 type l10n struct {
+
 	// navigation
 	payments        string `default:"Payments"`
 	categories      string `default:"Categories"`

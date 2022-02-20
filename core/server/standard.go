@@ -10,9 +10,9 @@ import (
 )
 
 type standard struct {
-	Log           log.Log
-	Authenticator authenticator.Authenticator
-	Router        router.Router
+	log           log.Log
+	authenticator authenticator.Authenticator
+	router        router.Router
 }
 
 func Standard() Server {
@@ -20,21 +20,22 @@ func Standard() Server {
 }
 
 func (r *standard) Start() {
+	r.router.Init()
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", r.ServeHTTP)
-	r.Log.Info("Starting server http://localhost:%d", config.ServerPort)
+	r.log.Info("Starting server http://localhost:%d", config.ServerPort)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", config.ServerPort), nil)
 	if err != nil {
-		r.Log.Critical(err.Error())
+		r.log.Critical(err.Error())
 	}
 }
 
 func (r *standard) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	w := &statusWriter{ResponseWriter: writer, status: 200}
-	if r.Authenticator == nil || r.Authenticator.Authenticate(w, request) {
-		r.Router.Handle(w, request)
+	if r.authenticator == nil || r.authenticator.Authenticate(w, request) {
+		r.router.Handle(w, request)
 	}
-	r.Log.Debug("%s %s -> %d", request.Method, request.URL, w.status)
+	r.log.Debug("%s %s -> %d", request.Method, request.URL, w.status)
 }
 
 type statusWriter struct {

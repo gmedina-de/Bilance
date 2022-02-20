@@ -6,5 +6,5 @@ import (
 )
 
 func Categories() controllers.Controller {
-	return controllers.Generic(models.Category{}, "/accounting/categories")
+	return controllers.Generic[models.Category]("/accounting/categories")
 }

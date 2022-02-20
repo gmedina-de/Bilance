@@ -9,8 +9,8 @@ import (
 
 type balances struct {
 	*controllers.Base
-	Payments repositories.Repository[model2.Payment]
-	Users    repositories.Repository[models.User]
+	payments repositories.Repository[model2.Payment]
+	users    repositories.Repository[models.User]
 }
 
 func Balances() controllers.Controller {
