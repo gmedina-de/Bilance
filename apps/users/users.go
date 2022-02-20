@@ -3,8 +3,8 @@ package users
 import (
 	"genuine/apps/users/authenticator"
 	"genuine/apps/users/controllers"
+	"genuine/apps/users/repositories"
 	"genuine/core"
-	"genuine/core/repositories"
 	"genuine/core/template"
 )
 

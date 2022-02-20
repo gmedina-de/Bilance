@@ -1,19 +1,35 @@
 package database
 
 import (
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/server/web"
-	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-const Name = "default"
-const Path = "./database.db"
+type standard struct {
+	db *gorm.DB
+}
 
 func Standard() Database {
+	path := "./database.db"
+	db, err := gorm.Open(sqlite.Open(path), nil)
+	if err != nil {
+		panic("failed to connect database")
+	}
+	return &standard{db}
+}
 
-	orm.Debug = web.BConfig.RunMode == web.DEV
-	//log := injector.Inject[log.Log]((log.Log)(nil))
-	//log.Debug("Opening %s database from %s", Name, Path)
-	orm.RegisterDataBase(Name, "sqlite3", Path)
-	return orm.NewOrm()
+func (s *standard) Select(result any, query string, params ...any) {
+	s.db.Raw("SELECT "+query, params...).Scan(result)
+}
+
+func (s *standard) Insert(model any) {
+	s.db.Create(model)
+}
+
+func (s *standard) Update(model any) {
+	s.db.Save(model)
+}
+
+func (s *standard) Delete(model any) {
+	s.db.Delete(model)
 }

@@ -6,8 +6,6 @@ import (
 )
 
 func Payments() repositories.Repository[models.Payment] {
-	return &repositories.Generic[models.Payment]{
-		T:        models.Payment{},
-		Ordering: "Date, Id DESC",
-	}
+	return repositories.NewGeneric(models.Payment{})
+
 }

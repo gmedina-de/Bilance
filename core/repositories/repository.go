@@ -10,11 +10,10 @@ type Repository[T models.Model] interface {
 	Find(id int64) *T
 	Limit(limit int, offset int) []T
 	List(query string, args ...any) []T
-	Map(query string, args ...any) map[int64]*T
 
 	Insert(entity any)
 	Update(entity any)
 	Delete(entity any)
 
-	Model() T
+	T() T
 }

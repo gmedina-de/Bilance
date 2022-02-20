@@ -3,70 +3,64 @@ package repositories
 import (
 	"genuine/core/database"
 	"genuine/core/models"
-	"reflect"
 )
 
 type Generic[T models.Model] struct {
-	Database database.Database
-	T        T
-	Ordering string
+	database database.Database
+	model    T
+	ordering string
 }
 
-func (r *Generic[T]) All() []T {
+func NewGeneric[T models.Model](model T) Repository[T] {
+	return &Generic[T]{model: model, ordering: "Id DESC"}
+}
+
+func (g *Generic[T]) All() []T {
 	var result []T
-	r.Database.Raw("SELECT * FROM " + r.modelName() + " ORDER BY " + r.Ordering).QueryRows(&result)
+	g.database.Select(&result, "* FROM "+g.modelName()+" ORDER BY "+g.ordering)
 	return result
 }
 
-func (r *Generic[T]) Count() int64 {
-	var count int64
-	r.Database.Raw("SELECT COUNT(*) FROM " + r.modelName()).QueryRow(&count)
-	return count
-}
-
-func (r *Generic[T]) Limit(limit int, offset int) []T {
-	var result []T
-	r.Database.Raw("SELECT * FROM "+r.modelName()+" ORDER BY "+r.Ordering+" LIMIT ? OFFSET ?", limit, offset).QueryRows(&result)
+func (g *Generic[T]) Count() int64 {
+	var result int64
+	g.database.Select(&result, "COUNT(*) FROM "+g.modelName())
 	return result
 }
 
-func (r *Generic[T]) Find(id int64) *T {
+func (g *Generic[T]) Limit(limit int, offset int) []T {
+	var result []T
+	g.database.Select(&result, "* FROM "+g.modelName()+" ORDER BY "+g.ordering+" LIMIT ? OFFSET ?", limit, offset)
+	return result
+}
+
+func (g *Generic[T]) Find(id int64) *T {
 	var result T
-	r.Database.Raw("SELECT * FROM "+r.modelName()+" WHERE Id = ?", id).QueryRow(&result)
+	g.database.Select(&result, "* FROM "+g.modelName()+" WHERE Id = ?", id)
 	return &result
 }
 
-func (r *Generic[T]) List(query string, args ...any) []T {
+func (g *Generic[T]) List(query string, args ...any) []T {
 	var result []T
-	r.Database.Raw("SELECT * FROM "+r.modelName()+" "+query, args...).QueryRows(&result)
+	g.database.Select(&result, "* FROM "+g.modelName()+" "+query, args...)
 	return result
 }
 
-func (r *Generic[T]) Map(query string, args ...any) map[int64]*T {
-	var result = make(map[int64]*T)
-	list := r.List(query, args...)
-	for _, elem := range list {
-		result[reflect.ValueOf(elem).FieldByName("Id").Interface().(int64)] = &elem
-	}
-	return result
+func (g *Generic[T]) Insert(entity any) {
+	g.database.Insert(entity)
 }
 
-func (r *Generic[T]) Insert(entity any) {
-	r.Database.Insert(entity)
+func (g *Generic[T]) Update(entity any) {
+	g.database.Update(entity)
 }
 
-func (r *Generic[T]) Update(entity any) {
-	r.Database.Update(entity)
+func (g *Generic[T]) Delete(entity any) {
+	g.database.Delete(entity)
 }
 
-func (r *Generic[T]) Delete(entity any) {
-	r.Database.Delete(entity)
+func (g *Generic[T]) T() T {
+	return g.model
 }
 
-func (r *Generic[T]) Model() T {
-	return r.T
-}
-
-func (r *Generic[T]) modelName() string {
-	return models.Name(r.T)
+func (g *Generic[T]) modelName() string {
+	return models.Name(g.model)
 }

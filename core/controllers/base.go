@@ -1,10 +1,8 @@
 package controllers
 
 import (
+	"genuine/config"
 	"genuine/core/template"
-	"github.com/beego/beego/v2/server/web"
-	"github.com/beego/i18n"
-	"github.com/gorilla/schema"
 	"net/http"
 )
 
@@ -16,8 +14,6 @@ type Base struct {
 	Data         map[string]any
 	TemplateName string
 	Template     template.Template
-
-	i18n.Locale
 }
 
 func (b *Base) Before(request *http.Request, writer http.ResponseWriter, name string) {
@@ -28,18 +24,14 @@ func (b *Base) Before(request *http.Request, writer http.ResponseWriter, name st
 
 	b.Data = make(map[string]any)
 
-	b.Lang = "en-US"
+	lang := "en-US"
 	al := b.Request.Header.Get("Accept-Language")
 	if len(al) > 4 {
-		al = al[:5]
-		if i18n.IsExist(al) {
-			b.Lang = al
-		}
+		lang = al[:5]
 	}
-	b.Data["Lang"] = b.Lang
-
+	b.Data["Lang"] = lang
 	if b.Data["Title"] == nil || b.Data["Title"] == "" {
-		b.Data["Title"] = web.BConfig.AppName
+		b.Data["Title"] = config.AppName
 	}
 
 	path := b.Request.URL.Path
@@ -67,14 +59,12 @@ func (b *Base) Redirect(url string, status int) {
 	http.Redirect(b.Writer, b.Request, url, status)
 }
 
-var decoder = schema.NewDecoder()
-
 func (b *Base) ParseForm(model any) {
 	b.Request.ParseForm()
-	err := decoder.Decode(model, b.Request.PostForm)
-	if err != nil {
-		err.Error()
-		println(err.Error())
-		// Handle error
-	}
+	//err := decoder.Decode(model, b.Request.PostForm)
+	//if err != nil {
+	//	err.Error()
+	//	println(err.Error())
+	//	// Handle error
+	//}
 }

@@ -30,12 +30,7 @@ func App() *app {
 }
 
 func (a *app) Run() {
-	a.Template.Templates(
-		"views/base.gohtml",
-		"views/navigation1.gohtml",
-		"views/navigation2.gohtml",
-		"views/pagination.gohtml",
-	)
+	a.Template.Parse("views")
 	a.Translator.Translation("de", l10n.De)
 	a.server.Start()
 }

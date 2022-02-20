@@ -16,7 +16,7 @@ func AddModel[T any](model T, icon string) {
 
 	core.Implementations(
 		func() repositories.Repository[T] {
-			return &repositories.Generic[T]{T: model}
+			return repositories.NewGeneric(model)
 		},
 	)
 

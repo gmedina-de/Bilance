@@ -1,7 +1,8 @@
 package database
 
-import (
-	"github.com/beego/beego/v2/client/orm"
-)
-
-type Database = orm.Ormer
+type Database interface {
+	Select(result any, query string, params ...any)
+	Insert(model any)
+	Update(model any)
+	Delete(model any)
+}

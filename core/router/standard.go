@@ -5,6 +5,7 @@ import (
 	"genuine/core/log"
 	"net/http"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -37,8 +38,19 @@ func (s *standard) Handle(writer http.ResponseWriter, request *http.Request) {
 	if found {
 		action.controller.Before(request, writer, reflect.TypeOf(action.controller).Elem().Name())
 		args := []reflect.Value{reflect.ValueOf(action.controller)}
-		for i := 0; i < action.method.Func.Type().NumIn()-1; i++ {
-			args = append(args, reflect.ValueOf(request.URL.Query().Get(action.parameters[i])))
+		fun := action.method.Func.Type()
+		for i := 0; i < fun.NumIn()-1; i++ {
+			queryParam := request.URL.Query().Get(action.parameters[i])
+			var value any
+			switch fun.In(i).Kind() {
+			case reflect.Int:
+				value, _ = strconv.Atoi(queryParam)
+			case reflect.Bool:
+				value, _ = strconv.ParseBool(queryParam)
+			default:
+				value = queryParam
+			}
+			args = append(args, reflect.ValueOf(value))
 		}
 		action.method.Func.Call(args)
 		action.controller.After()

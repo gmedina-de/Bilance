@@ -18,54 +18,57 @@ func Generic[T any](route string) *generic[T] {
 	return &generic[T]{route: route}
 }
 
-func (this *generic[T]) Routes() map[string]string {
+func (g *generic[T]) Routes() map[string]string {
 	return map[string]string{
-		this.route + "/":       "get,post:List(p);get:Edit(id);post:Save(id)",
-		this.route + "/delete": "get:Remove(id)",
+		g.route:             "get,post:List(p)",
+		g.route + "/new":    "get:New()",
+		g.route + "/edit":   "get:Edit(id);post:Save(id)",
+		g.route + "/delete": "get:Remove(id)",
 	}
 }
 
 const PageSize = 10
 const PageSizeAll = 9223372036854775807
 
-func (this *generic[T]) List(p string) {
+func (g *generic[T]) List(p string) {
 	pageSize := PageSize
 	if p == "all" {
 		pageSize = PageSizeAll
 	}
 
-	paginator := template.NewPaginator(this.Request, pageSize, this.repository.Count())
-	this.Data["Model"] = this.repository.Limit(pageSize, paginator.Offset())
-	this.Data["Paginator"] = paginator
-	this.Data["Title"] = models.Plural(this.repository.Model())
-	this.TemplateName = "generic_list.gohtml"
+	paginator := template.NewPaginator(g.Request, pageSize, g.repository.Count())
+	g.Data["Model"] = g.repository.Limit(pageSize, paginator.Offset())
+	g.Data["Paginator"] = paginator
+	g.Data["Title"] = models.Name(g.repository.T())
+	g.TemplateName = "generic_list.gohtml"
 }
 
-func (this *generic[T]) Edit(id int64) {
-	if id == 0 {
-		this.Data["Form"] = this.repository.Model()
-		this.Data["Title"] = "new"
-	} else {
-		this.Data["Form"] = this.repository.Find(id)
-		this.Data["Title"] = "edit"
-	}
-	this.TemplateName = "generic_edit.gohtml"
+func (g *generic[T]) New() {
+	g.Data["Form"] = g.repository.T()
+	g.Data["Title"] = "new"
+	g.TemplateName = "generic_edit.gohtml"
 }
 
-func (this *generic[T]) Save(id int64) {
-	record := this.repository.Model()
-	this.ParseForm(record)
+func (g *generic[T]) Edit(id int64) {
+	g.Data["Form"] = g.repository.Find(id)
+	g.Data["Title"] = "edit"
+	g.TemplateName = "generic_edit.gohtml"
+}
+
+func (g *generic[T]) Save(id int64) {
+	record := g.repository.T()
+	g.ParseForm(record)
 	if id == 0 {
-		this.repository.Insert(record)
+		g.repository.Insert(record)
 	} else {
 		reflect.ValueOf(record).Elem().FieldByName("Id").SetInt(id)
-		this.repository.Update(record)
+		g.repository.Update(record)
 	}
-	this.Redirect(this.route, http.StatusTemporaryRedirect)
+	g.Redirect(g.route, http.StatusTemporaryRedirect)
 }
 
-func (this *generic[T]) Remove(id int64) {
-	item := this.repository.Find(id)
-	this.repository.Delete(item)
-	this.Redirect(this.route, http.StatusTemporaryRedirect)
+func (g *generic[T]) Remove(id int64) {
+	item := g.repository.Find(id)
+	g.repository.Delete(item)
+	g.Redirect(g.route, http.StatusTemporaryRedirect)
 }

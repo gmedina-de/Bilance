@@ -2,19 +2,12 @@ package accounting
 
 import (
 	controllers2 "genuine/apps/accounting/controllers"
-	models2 "genuine/apps/accounting/models"
 	repositories2 "genuine/apps/accounting/repositories"
 	"genuine/core"
 	"genuine/core/template"
-	"github.com/beego/beego/v2/client/orm"
 )
 
 func init() {
-
-	orm.RegisterModel(
-		&models2.Category{},
-		&models2.Payment{},
-	)
 
 	template.AddNavigation("accounting", "book").
 		WithChild("payments", "layers").
