@@ -20,7 +20,7 @@ func Standard() Injector {
 		implementations: make(map[reflect.Type][]any),
 		instances:       make(map[reflect.Type]reflect.Value),
 		level:           0,
-		log:             log.Console(),
+		log:             log.Standard(),
 	}
 }
 

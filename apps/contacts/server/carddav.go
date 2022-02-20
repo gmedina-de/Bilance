@@ -46,7 +46,7 @@ func Carddav(auth authenticator.Authenticator, log log.Log) any {
 	var handler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		username, password, ok := r.BasicAuth()
 		if !ok || !auth.Authenticate(username, password) || !strings.HasPrefix(r.URL.Path, "/"+username) {
-			w.Header().Set("WWW-Authenticate", `Basic realm="davfs"`)
+			w.Header().Set("WWW-Basic", `Basic realm="davfs"`)
 			http.Error(w, "authorization failed", http.StatusUnauthorized)
 			return
 		}

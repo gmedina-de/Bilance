@@ -8,4 +8,4 @@ type Log interface {
 	Debug(tag Tag, format string, v ...interface{})
 }
 
-type Tag string
+type Tag = string

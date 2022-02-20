@@ -13,7 +13,7 @@ type standard struct {
 	level Level
 }
 
-func Console() Log {
+func Standard() Log {
 	return &standard{level: config.LogLevel}
 }
 

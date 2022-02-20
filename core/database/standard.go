@@ -9,7 +9,7 @@ import (
 const Name = "default"
 const Path = "./database.db"
 
-func Orm() Database {
+func Standard() Database {
 
 	orm.Debug = web.BConfig.RunMode == web.DEV
 	//log := injector.Inject[log.Log]((log.Log)(nil))

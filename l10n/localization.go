@@ -1,4 +1,4 @@
-package translator
+package l10n
 
 type l10n struct {
 	// navigation

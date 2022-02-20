@@ -6,13 +6,15 @@ import (
 	"genuine/core/log"
 	"genuine/core/router"
 	"genuine/core/server"
+	"genuine/core/translator"
 )
 
 func init() {
-	Implementations(log.Console)
-	Implementations(database.Orm)
+	Implementations(log.Standard)
+	Implementations(database.Standard)
 	Implementations(server.Standard)
 	Implementations(router.Standard)
+	Implementations(translator.Standard)
 }
 
 var inj = injector.Standard()
@@ -23,16 +25,6 @@ func Implementations[T any](constructors ...func() T) {
 	}
 }
 
-func Init() {
-	inj.Inject(App)
-}
-
-type app struct{ Server server.Server }
-
-func App() injector.Initiable {
-	return &app{}
-}
-
-func (a *app) Init() {
-	a.Server.Start()
+func Init[T injector.Initiable](constructor func() T) {
+	inj.Inject(constructor)
 }

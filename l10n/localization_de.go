@@ -1,6 +1,6 @@
-package translator
+package l10n
 
-var l10nDe = l10n{
+var De = l10n{
 
 	payments:        "Zahlungen",
 	categories:      "Kategorien",
