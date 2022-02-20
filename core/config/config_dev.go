@@ -1,6 +1,8 @@
+//go:build dev
+
 package config
 
 const (
 	ServerPort = 8080
-	LogLevel   = 4 //log.Debug
+	LogLevel   = 4 // log.Debug
 )
