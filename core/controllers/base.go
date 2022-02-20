@@ -20,58 +20,58 @@ type Base struct {
 	i18n.Locale
 }
 
-func (this *Base) Before(request *http.Request, writer http.ResponseWriter, name string) {
+func (b *Base) Before(request *http.Request, writer http.ResponseWriter, name string) {
 
-	this.Request = request
-	this.Writer = writer
-	this.Name = name
+	b.Request = request
+	b.Writer = writer
+	b.Name = name
 
-	this.Data = make(map[string]any)
+	b.Data = make(map[string]any)
 
-	this.Lang = "en-US"
-	al := this.Request.Header.Get("Accept-Language")
+	b.Lang = "en-US"
+	al := b.Request.Header.Get("Accept-Language")
 	if len(al) > 4 {
 		al = al[:5]
 		if i18n.IsExist(al) {
-			this.Lang = al
+			b.Lang = al
 		}
 	}
-	this.Data["Lang"] = this.Lang
+	b.Data["Lang"] = b.Lang
 
-	if this.Data["Title"] == nil || this.Data["Title"] == "" {
-		this.Data["Title"] = web.BConfig.AppName
+	if b.Data["Title"] == nil || b.Data["Title"] == "" {
+		b.Data["Title"] = web.BConfig.AppName
 	}
 
-	path := this.Request.URL.Path
-	this.Data["Path"] = path
+	path := b.Request.URL.Path
+	b.Data["Path"] = path
 
 	currentNavigation1 := template.GetCurrentNavigation(path, template.Navigation)
-	this.Data["Navigation1"] = template.Navigation
-	this.Data["CurrentNavigation1"] = currentNavigation1
-	this.Data["CurrentNavigation1Index"] = template.GetCurrentNavigationIndex(path, template.Navigation)
+	b.Data["Navigation1"] = template.Navigation
+	b.Data["CurrentNavigation1"] = currentNavigation1
+	b.Data["CurrentNavigation1Index"] = template.GetCurrentNavigationIndex(path, template.Navigation)
 	if currentNavigation1 != nil {
-		this.Data["Navigation2"] = currentNavigation1.SubMenu
-		this.Data["CurrentNavigation2"] = template.GetCurrentNavigation(path, currentNavigation1.SubMenu)
-		this.Data["CurrentNavigation2Index"] = template.GetCurrentNavigationIndex(path, currentNavigation1.SubMenu)
+		b.Data["Navigation2"] = currentNavigation1.SubMenu
+		b.Data["CurrentNavigation2"] = template.GetCurrentNavigation(path, currentNavigation1.SubMenu)
+		b.Data["CurrentNavigation2Index"] = template.GetCurrentNavigationIndex(path, currentNavigation1.SubMenu)
 	}
 
-	this.TemplateName = this.Name + ".gohtml"
+	b.TemplateName = b.Name + ".gohtml"
 
 }
 
-func (this *Base) After() {
-	this.Template.Render(this.Writer, this.TemplateName, this.Data)
+func (b *Base) After() {
+	b.Template.Render(b.Writer, b.TemplateName, b.Data)
 }
 
-func (this *Base) Redirect(url string, status int) {
-	http.Redirect(this.Writer, this.Request, url, status)
+func (b *Base) Redirect(url string, status int) {
+	http.Redirect(b.Writer, b.Request, url, status)
 }
 
 var decoder = schema.NewDecoder()
 
-func (this *Base) ParseForm(model any) {
-	this.Request.ParseForm()
-	err := decoder.Decode(model, this.Request.PostForm)
+func (b *Base) ParseForm(model any) {
+	b.Request.ParseForm()
+	err := decoder.Decode(model, b.Request.PostForm)
 	if err != nil {
 		err.Error()
 		println(err.Error())

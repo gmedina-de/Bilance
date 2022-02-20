@@ -1,4 +1,4 @@
-package assets
+package dashboard
 
 import (
 	"genuine/apps/dashboard/controllers"

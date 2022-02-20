@@ -9,7 +9,7 @@ import (
 )
 
 type generic[T any] struct {
-	Base
+	*Base
 	Repository repositories.Repository[T]
 	Model      T
 	Route      string

@@ -3,25 +3,25 @@ package log
 type Level int
 
 const (
-	Fatal   Level = iota
-	Error   Level = iota
-	Warning Level = iota
-	Info    Level = iota
-	Debug   Level = iota
+	Critical Level = iota
+	Error    Level = iota
+	Warning  Level = iota
+	Info     Level = iota
+	Debug    Level = iota
 )
 
 func (l Level) String() string {
 	switch l {
 	case Debug:
-		return "DEBUG"
+		return "DBUG"
 	case Info:
-		return "INFOM"
+		return "INFO"
 	case Warning:
-		return "WARNG"
+		return "WARN"
 	case Error:
-		return "ERROR"
+		return "ERRO"
 	default:
-		return "FATAL"
+		return "CRIT"
 	}
 }
 

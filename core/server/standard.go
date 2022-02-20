@@ -25,7 +25,7 @@ func (r *standard) Start() {
 	r.Log.Info("Starting server http://localhost:%d", config.ServerPort)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", config.ServerPort), nil)
 	if err != nil {
-		r.Log.Fatal(err.Error())
+		r.Log.Critical(err.Error())
 	}
 }
 

@@ -3,7 +3,7 @@ package controllers
 import "genuine/core/controllers"
 
 type index struct {
-	controllers.Base
+	*controllers.Base
 }
 
 func Index() controllers.Controller {

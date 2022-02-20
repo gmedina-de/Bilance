@@ -22,28 +22,29 @@ func Standard() Injector {
 	}
 }
 
-func (s *standard) Constructor(constructor any) {
+func (s *standard) Implementation(constructor any) {
 	returnType := reflect.ValueOf(constructor).Type().Out(0)
 	s.constructors[returnType] = append(s.constructors[returnType], constructor)
+	s.log.Debug("Added constructor for type %s", returnType)
 }
-
 func (s *standard) Inject(constructor any) reflect.Value {
-	ret := reflect.ValueOf(constructor).Call(nil)[0]
-	s.log.Debug(strings.Repeat("  ", s.level)+"Inject %s", ret.Type())
+	value := reflect.ValueOf(constructor).Call(nil)[0]
+	s.log.Debug(strings.Repeat("  ", s.level)+"Inject %s", value.Type())
 
-	elem := ret.Elem()
-	var value reflect.Value
+	elem := value
+	if elem.Kind() == reflect.Interface {
+		elem = elem.Elem()
+	}
 	if elem.Kind() == reflect.Ptr {
-		value = elem.Elem()
-	} else {
-		value = elem
+		elem = elem.Elem()
 	}
 
-	for i := 0; i < value.NumField(); i++ {
+	for i := 0; i < elem.NumField(); i++ {
 		s.level++
-		field := value.Field(i)
+		field := elem.Field(i)
 		instances, ok := s.Instances(field.Type())
 		if ok && field.CanSet() {
+			s.log.Debug(strings.Repeat("  ", s.level)+"Set %s", field.Type())
 			if field.Kind() == reflect.Slice {
 				field.Set(instances)
 			} else {
@@ -53,10 +54,10 @@ func (s *standard) Inject(constructor any) reflect.Value {
 		s.level--
 	}
 
-	if elem.Type().Implements(initiableType) {
-		elem.Interface().(Initiable).Init()
+	if value.Type().Implements(initiableType) {
+		value.Interface().(Initiable).Init()
 	}
-	return elem
+	return value
 }
 
 func (s *standard) Instances(parameterType reflect.Type) (reflect.Value, bool) {
@@ -68,20 +69,14 @@ func (s *standard) Instances(parameterType reflect.Type) (reflect.Value, bool) {
 	if !found {
 		constructors, found := s.constructors[parameterType]
 		if !found {
-			s.log.Warning(strings.Repeat("  ", s.level)+"No constructor found for %s", parameterType.Name())
+			s.log.Debug(strings.Repeat("  ", s.level)+"No constructor found for %s, ignoring", parameterType.Name())
 			return reflect.Value{}, false
 		}
-
 		instances = reflect.MakeSlice(reflect.SliceOf(parameterType), 0, 0)
 		for _, c := range constructors {
-
 			instances = reflect.Append(instances, s.Inject(c))
 		}
 		s.instances[parameterType] = instances
 	}
 	return instances, true
-}
-
-func (s *standard) Instance(instance any) {
-
 }

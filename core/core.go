@@ -1,6 +1,7 @@
 package core
 
 import (
+	"genuine/core/controllers"
 	"genuine/core/database"
 	"genuine/core/injector"
 	"genuine/core/log"
@@ -11,6 +12,7 @@ import (
 )
 
 func init() {
+	Implementations(func() *controllers.Base { return &controllers.Base{} })
 	Implementations(log.Standard)
 	Implementations(database.Standard)
 	Implementations(server.Standard)
@@ -23,7 +25,7 @@ var inj = injector.Standard()
 
 func Implementations[T any](constructors ...func() T) {
 	for _, constructor := range constructors {
-		inj.Constructor(constructor)
+		inj.Implementation(constructor)
 	}
 }
 

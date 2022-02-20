@@ -15,8 +15,8 @@ func Standard() Log {
 	return &standard{level: config.LogLevel}
 }
 
-func (s *standard) Fatal(format string, v ...interface{}) {
-	s.log(Fatal, format, v)
+func (s *standard) Critical(format string, v ...interface{}) {
+	s.log(Critical, format, v)
 	os.Exit(-1)
 }
 

@@ -5,7 +5,7 @@ import (
 )
 
 type files struct {
-	controllers.Base
+	*controllers.Base
 }
 
 func Files() controllers.Controller {

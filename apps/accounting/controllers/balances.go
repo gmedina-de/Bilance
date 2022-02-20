@@ -8,7 +8,7 @@ import (
 )
 
 type balances struct {
-	controllers.Base
+	*controllers.Base
 	Payments repositories.Repository[model2.Payment]
 	Users    repositories.Repository[models.User]
 }

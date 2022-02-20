@@ -12,7 +12,7 @@ import (
 )
 
 type expenses struct {
-	controllers.Base
+	*controllers.Base
 	Payments   repositories.Repository[models2.Payment]
 	Categories repositories.Repository[models2.Category]
 }
