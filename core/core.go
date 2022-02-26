@@ -3,11 +3,12 @@ package core
 import (
 	"genuine/core/config"
 	"genuine/core/database"
+	"genuine/core/localization"
 	"genuine/core/log"
+	"genuine/core/navigation"
 	"genuine/core/router"
 	"genuine/core/server"
 	"genuine/core/template"
-	"genuine/core/translator"
 	log2 "log"
 	"reflect"
 	"strings"
@@ -18,7 +19,8 @@ func init() {
 	Provide(database.Standard)
 	Provide(server.Standard)
 	Provide(router.Standard)
-	Provide(translator.Standard)
+	Provide(localization.Standard)
+	Provide(navigation.Standard)
 	Provide(template.Standard)
 }
 
@@ -45,7 +47,7 @@ func Invoke(constructor any) reflect.Value {
 	constructorType := constructorValue.Type()
 	parameters := make([]reflect.Value, constructorType.NumIn())
 
-	debug("Invoking %s", constructorType)
+	debug("Resolving dependencies for %s", constructorType)
 	for i := 0; i < len(parameters); i++ {
 		level++
 		parameterType := constructorType.In(i)
@@ -59,16 +61,16 @@ func Invoke(constructor any) reflect.Value {
 		if !instancesFound {
 			debug("%s wasn't instantiated", parameterName)
 			constructors, constructorsFound := constructorMap[parameterType]
+
 			if !constructorsFound {
-				debug("No constructor found for %s, setting zero", parameterName)
-				instanceMap[parameterType] = reflect.Zero(parameterType)
-			} else {
-				instances = reflect.MakeSlice(reflect.SliceOf(parameterType), 0, 0)
-				for _, c := range constructors {
-					instances = reflect.Append(instances, Invoke(c))
-				}
-				instanceMap[parameterType] = instances
+				panic("No constructor found for " + parameterName)
 			}
+			instances = reflect.MakeSlice(reflect.SliceOf(parameterType), 0, 0)
+			for _, c := range constructors {
+				instances = reflect.Append(instances, Invoke(c))
+			}
+
+			instanceMap[parameterType] = instances
 		} else {
 			debug("%s was already instantiated. ", parameterName)
 		}
@@ -80,6 +82,7 @@ func Invoke(constructor any) reflect.Value {
 		}
 		level--
 	}
+	debug("Invoking %s", constructorType)
 	return constructorValue.Call(parameters)[0]
 }
 

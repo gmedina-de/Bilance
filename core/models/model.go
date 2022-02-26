@@ -30,6 +30,7 @@ func RealValueOf(v interface{}) reflect.Value {
 	}
 	return rv
 }
+
 func Serialize(T any) string {
 	b := bytes.Buffer{}
 	e := gob.NewEncoder(&b)

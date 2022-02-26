@@ -2,8 +2,9 @@ package template
 
 import (
 	"genuine/core/config"
+	"genuine/core/localization"
 	"genuine/core/log"
-	"genuine/core/translator"
+	"genuine/core/navigation"
 	"html/template"
 	"net/http"
 	"path/filepath"
@@ -12,19 +13,20 @@ import (
 )
 
 type standard struct {
-	translator translator.Translator
-	log        log.Log
-	templates  map[string]*template.Template
+	localization localization.Localization
+	navigation   navigation.Navigation
+	log          log.Log
+	templates    map[string]*template.Template
 }
 
 const extension = ".gohtml"
 
-func Standard(translator translator.Translator, log log.Log) Template {
-	s := &standard{translator, log, make(map[string]*template.Template)}
+func Standard(localization localization.Localization, navigation navigation.Navigation, log log.Log) Template {
+	s := &standard{localization, navigation, log, make(map[string]*template.Template)}
 
 	main := template.New("base.gohtml")
 	main.Funcs(template.FuncMap{
-		"l10n":     s.translator.Translate,
+		"l10n":     s.localization.Translate,
 		"inputs":   inputs,
 		"td":       Td,
 		"th":       Th,
@@ -49,27 +51,9 @@ func Standard(translator translator.Translator, log log.Log) Template {
 }
 
 func (s *standard) Render(request *http.Request, writer http.ResponseWriter, template string, data map[string]any) {
-
-	lang := "en-US"
-	al := request.Header.Get("Accept-Language")
-	if len(al) > 4 {
-		lang = al[:5]
-	}
-	data["Lang"] = lang
-
-	path := request.URL.Path
-	data["Path"] = path
-
-	currentNavigation1 := GetCurrentNavigation(path, Navigation)
-	data["Navigation1"] = Navigation
-	data["CurrentNavigation1"] = currentNavigation1
-	data["CurrentNavigation1Index"] = GetCurrentNavigationIndex(path, Navigation)
-	if currentNavigation1 != nil {
-		data["Navigation2"] = currentNavigation1.SubMenu
-		data["CurrentNavigation2"] = GetCurrentNavigation(path, currentNavigation1.SubMenu)
-		data["CurrentNavigation2Index"] = GetCurrentNavigationIndex(path, currentNavigation1.SubMenu)
-	}
-
+	data["Lang"] = s.localization.Lang(request)
+	data["Path"] = request.URL.Path
+	s.navigation.Handle(data)
 	if err := s.templates[template+extension].Execute(writer, data); err != nil {
 		s.log.Error(err.Error())
 	}
