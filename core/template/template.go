@@ -5,6 +5,6 @@ import (
 )
 
 type Template interface {
-	Parse(directory string)
+	Parse(viewsDirectory string)
 	Render(writer http.ResponseWriter, template string, data map[string]any)
 }
