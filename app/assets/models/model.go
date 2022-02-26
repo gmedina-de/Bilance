@@ -1,6 +1,7 @@
 package models
 
 import (
+	controllers2 "genuine/app/settings/controllers"
 	"genuine/core"
 	"genuine/core/controllers"
 	"genuine/core/database"
@@ -20,6 +21,6 @@ func AddModel[T any](model T, icon string) {
 	})
 
 	core.Provide(func(repository repositories.Repository[T]) controllers.Controller {
-		return controllers.Generic[T](repository, "/assets/"+models.Plural(model))
+		return controllers2.Generic[T](repository, "/assets/"+models.Plural(model))
 	})
 }

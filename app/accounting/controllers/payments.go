@@ -2,12 +2,13 @@ package controllers
 
 import (
 	"genuine/app/accounting/models"
+	controllers2 "genuine/app/settings/controllers"
 	"genuine/core/controllers"
 	"genuine/core/repositories"
 )
 
 func Payments(repository repositories.Repository[models.Payment]) controllers.Controller {
-	return controllers.Generic[models.Payment](repository, "/accounting/payments")
+	return controllers2.Generic[models.Payment](repository, "/accounting/payments")
 }
 
 //

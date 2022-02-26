@@ -45,7 +45,7 @@ func (g *generic[T]) List(r http.Request) http.Response {
 	}
 	return http.Response{
 		"Model":    model,
-		"Title":    models.Plural(g.repository.T()),
+		"Title":    models.Plural(g.repository.Model()),
 		"Pages":    pages,
 		"Page":     page,
 		"Template": "generic_list",
@@ -54,7 +54,7 @@ func (g *generic[T]) List(r http.Request) http.Response {
 
 func (g *generic[T]) New(http.Request) http.Response {
 	return http.Response{
-		"Form":     g.repository.T(),
+		"Form":     g.repository.Model(),
 		"Title":    "new",
 		"Template": "generic_edit",
 	}
@@ -71,7 +71,7 @@ func (g *generic[T]) Edit(r http.Request) http.Response {
 
 func (g *generic[T]) Save(r http.Request) http.Response {
 	id, _ := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
-	record := g.repository.T()
+	record := g.repository.Model()
 	//g.parseForm(record)
 	if id == 0 {
 		g.repository.Insert(record)

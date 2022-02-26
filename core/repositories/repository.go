@@ -1,10 +1,6 @@
 package repositories
 
-import (
-	"genuine/core/models"
-)
-
-type Repository[T models.Model] interface {
+type Repository[T any] interface {
 	All() []T
 	Count() int64
 	Find(id int64) *T
@@ -15,5 +11,5 @@ type Repository[T models.Model] interface {
 	Update(entity any)
 	Delete(entity any)
 
-	T() T
+	Model() T
 }

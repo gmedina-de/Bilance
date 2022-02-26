@@ -7,5 +7,5 @@ import (
 )
 
 func Users(repository repositories.Repository[models.User]) controllers.Controller {
-	return controllers.Generic[models.User](repository, "/settings/users")
+	return Generic[models.User](repository, "/settings/users")
 }

@@ -19,3 +19,7 @@ func LogLevel() int {
 func ViewDirectory() string {
 	return *viewDirectory
 }
+
+func init() {
+	flag.Parse()
+}

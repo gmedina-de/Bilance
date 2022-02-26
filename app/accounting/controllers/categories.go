@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"genuine/app/accounting/models"
+	controllers2 "genuine/app/settings/controllers"
 	"genuine/core/controllers"
 	"genuine/core/repositories"
 )
 
 func Categories(repository repositories.Repository[models.Category]) controllers.Controller {
-	return controllers.Generic[models.Category](repository, "/accounting/categories")
+	return controllers2.Generic[models.Category](repository, "/accounting/categories")
 }

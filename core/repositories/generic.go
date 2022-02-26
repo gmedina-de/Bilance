@@ -5,13 +5,13 @@ import (
 	"genuine/core/models"
 )
 
-type generic[T models.Model] struct {
+type generic[T any] struct {
 	database database.Database
 	model    T
 	ordering string
 }
 
-func Generic[T models.Model](database database.Database, model T, ordering string) Repository[T] {
+func Generic[T any](database database.Database, model T, ordering string) Repository[T] {
 	database.Migrate(model)
 	if ordering == "" {
 		ordering = "Id DESC"
@@ -61,7 +61,7 @@ func (g *generic[T]) Delete(entity any) {
 	g.database.Delete(entity)
 }
 
-func (g *generic[T]) T() T {
+func (g *generic[T]) Model() T {
 	return g.model
 }
 

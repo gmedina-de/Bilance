@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-type Model any
-
 func Name(model any) string {
 	return strings.ToLower(RealValueOf(model).Type().Name())
 }

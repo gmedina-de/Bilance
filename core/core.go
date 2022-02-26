@@ -24,6 +24,7 @@ func init() {
 	Provide(template.Standard)
 }
 
+// DEPENDENCY INJECTION
 var (
 	constructorMap = make(map[reflect.Type][]any)
 	instanceMap    = make(map[reflect.Type]reflect.Value)

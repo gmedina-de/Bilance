@@ -20,16 +20,15 @@ type standard struct {
 const extension = ".gohtml"
 
 func Standard(localization localization.Localization, navigation navigation.Navigation, log log.Log) Template {
-	s := &standard{localization, navigation, log, make(map[string]*template.Template)}
-
+	s := &standard{
+		localization,
+		navigation,
+		log,
+		make(map[string]*template.Template),
+	}
 	main := template.New("base.gohtml")
-	main.Funcs(template.FuncMap{
-		"l10n":     localization.Translate,
-		"td":       td,
-		"th":       th,
-		"paginate": paginate,
-		"inputs":   inputs,
-	})
+	AddFunc("l10n", s.localization.Translate)
+	main.Funcs(funcMap)
 
 	baseFiles, err := filepath.Glob(config.ViewDirectory() + "/base/*" + extension)
 	if err != nil {
