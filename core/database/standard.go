@@ -21,7 +21,7 @@ func Standard(log log.Log) Database {
 }
 
 func (s *standard) Migrate(model any) {
-	err := s.db.AutoMigrate(model)
+	err := s.db.AutoMigrate(&model)
 	if err != nil {
 		s.log.Error(err.Error())
 	}

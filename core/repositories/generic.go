@@ -66,5 +66,5 @@ func (g *generic[T]) T() T {
 }
 
 func (g *generic[T]) modelName() string {
-	return models.Name(g.model)
+	return models.Plural(g.model)
 }
