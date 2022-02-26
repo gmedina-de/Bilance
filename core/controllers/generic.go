@@ -4,7 +4,6 @@ import (
 	"genuine/core/http"
 	"genuine/core/models"
 	"genuine/core/repositories"
-	"genuine/core/template"
 	"reflect"
 	"strconv"
 )
@@ -29,24 +28,27 @@ func (g *generic[T]) Routes() map[string]http.Handler {
 	}
 }
 
-const PageSize = 10
-const PageSizeAll = 9223372036854775807
-
 func (g *generic[T]) List(r http.Request) http.Response {
-	p := r.URL.Query().Get("p")
-
-	pageSize := PageSize
-	if p == "all" {
-		pageSize = PageSizeAll
+	page, err := strconv.ParseInt(r.URL.Query().Get("page"), 10, 64)
+	if err != nil {
+		page = 1
 	}
-
-	paginator := template.NewPaginator(r, pageSize, g.repository.Count())
-
+	var pageSize int64 = 10
+	var model []T
+	var pages = g.repository.Count() / pageSize
+	var offset = pageSize * (page - 1)
+	if page == 0 {
+		model = g.repository.All()
+	} else {
+		pages++
+		model = g.repository.Limit(pageSize, offset)
+	}
 	return http.Response{
-		"Model":     g.repository.Limit(pageSize, paginator.Offset()),
-		"Paginator": paginator,
-		"Title":     models.Name(g.repository.T()),
-		"Template":  "generic_list",
+		"Model":    model,
+		"Title":    models.Plural(g.repository.T()),
+		"Pages":    pages,
+		"Page":     page,
+		"Template": "generic_list",
 	}
 }
 
@@ -70,7 +72,7 @@ func (g *generic[T]) Edit(r http.Request) http.Response {
 func (g *generic[T]) Save(r http.Request) http.Response {
 	id, _ := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
 	record := g.repository.T()
-	//g.ParseForm(record)
+	//g.parseForm(record)
 	if id == 0 {
 		g.repository.Insert(record)
 	} else {
@@ -87,8 +89,8 @@ func (g *generic[T]) Remove(r http.Request) http.Response {
 	return http.Response{"Redirect": g.route}
 }
 
-func (g *generic[T]) ParseForm(model any) {
-	//b.Request.ParseForm()
+func (g *generic[T]) parseForm(model any) {
+	//b.Request.parseForm()
 	//err := decoder.Decode(model, b.Request.PostForm)
 	//if err != nil {
 	//	err.Error()

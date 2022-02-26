@@ -21,31 +21,31 @@ func Generic[T models.Model](database database.Database, model T, ordering strin
 
 func (g *generic[T]) All() []T {
 	var result []T
-	g.database.Select(&result, "* FROM "+g.modelName()+" ORDER BY "+g.ordering)
+	g.database.Select(&result, "* FROM "+g.tableName()+" ORDER BY "+g.ordering)
 	return result
 }
 
 func (g *generic[T]) Count() int64 {
 	var result int64
-	g.database.Select(&result, "COUNT(*) FROM "+g.modelName())
+	g.database.Select(&result, "COUNT(*) FROM "+g.tableName())
 	return result
 }
 
-func (g *generic[T]) Limit(limit int, offset int) []T {
+func (g *generic[T]) Limit(limit int64, offset int64) []T {
 	var result []T
-	g.database.Select(&result, "* FROM "+g.modelName()+" ORDER BY "+g.ordering+" LIMIT ? OFFSET ?", limit, offset)
+	g.database.Select(&result, "* FROM "+g.tableName()+" ORDER BY "+g.ordering+" LIMIT ? OFFSET ?", limit, offset)
 	return result
 }
 
 func (g *generic[T]) Find(id int64) *T {
 	var result T
-	g.database.Select(&result, "* FROM "+g.modelName()+" WHERE Id = ?", id)
+	g.database.Select(&result, "* FROM "+g.tableName()+" WHERE Id = ?", id)
 	return &result
 }
 
 func (g *generic[T]) List(query string, args ...any) []T {
 	var result []T
-	g.database.Select(&result, "* FROM "+g.modelName()+" "+query, args...)
+	g.database.Select(&result, "* FROM "+g.tableName()+" "+query, args...)
 	return result
 }
 
@@ -65,6 +65,6 @@ func (g *generic[T]) T() T {
 	return g.model
 }
 
-func (g *generic[T]) modelName() string {
+func (g *generic[T]) tableName() string {
 	return models.Plural(g.model)
 }

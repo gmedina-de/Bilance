@@ -8,8 +8,6 @@ import (
 	"html/template"
 	"net/http"
 	"path/filepath"
-	"strconv"
-	"strings"
 )
 
 type standard struct {
@@ -26,12 +24,11 @@ func Standard(localization localization.Localization, navigation navigation.Navi
 
 	main := template.New("base.gohtml")
 	main.Funcs(template.FuncMap{
-		"l10n":     s.localization.Translate,
-		"inputs":   inputs,
+		"l10n":     localization.Translate,
 		"td":       td,
 		"th":       th,
-		"sum":      func(a int, b int) int { return a + b },
-		"contains": func(a string, b int64) bool { return strings.Contains(a, strconv.FormatInt(b, 10)) },
+		"paginate": paginate,
+		"inputs":   inputs,
 	})
 
 	baseFiles, err := filepath.Glob(config.ViewDirectory() + "/base/*" + extension)
