@@ -7,7 +7,7 @@ import (
 )
 
 func Payments(repository repositories.Repository[models.Payment]) controllers.Controller {
-	return controllers.Generic[models.Payment](repository, "/accounting/categories")
+	return controllers.Generic[models.Payment](repository, "/accounting/payments")
 }
 
 //

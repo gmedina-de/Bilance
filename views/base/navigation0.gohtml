@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top py-lg-0 bg-dark shadow">
+    <div class="container">
+        <div class="btn-group d-block">
+            {{if .CurrentNavigation0}}
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarMenu">
+                    <span data-feather="{{.CurrentNavigation0.Icon}}"></span>
+                </button>
+            {{end}}
+            {{if .CurrentNavigation1}}
+                <span data-feather="chevron-right" class="text-light d-lg-none"></span>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#sidebarMenu">
+                    <span data-feather="{{.CurrentNavigation1.Icon}}"></span>
+                </button>
+            {{end}}
+        </div>
+        <a class="navbar-brand" href="/">
+            gCloud
+            <span data-feather="cloud"></span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav mx-auto mb-2 mb-sm-0 mt-md-1" style="overflow: auto;">
+                {{range $i, $a := .Navigation0}}
+                    <li>
+                        <a href="{{.Path}}"
+                           class="nav-link{{if eq $.CurrentNavigation0.Path $a.Path}} text-primary{{end}}">
+                            <span data-feather="{{$a.Icon}}" class="bi d-lg-block mx-auto"></span>
+                            {{l10n $.Lang $a.Name}}
+                        </a>
+                    </li>
+                {{end}}
+            </ul>
+            <form>
+                <input class="form-control" type="text" placeholder="Search">
+            </form>
+        </div>
+    </div>
+</nav>

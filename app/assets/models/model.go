@@ -4,7 +4,7 @@ import (
 	"genuine/core"
 	"genuine/core/controllers"
 	"genuine/core/database"
-	model2 "genuine/core/models"
+	"genuine/core/models"
 	"genuine/core/repositories"
 )
 
@@ -20,6 +20,6 @@ func AddModel[T any](model T, icon string) {
 	})
 
 	core.Provide(func(repository repositories.Repository[T]) controllers.Controller {
-		return controllers.Generic[T](repository, "/assets/"+model2.Plural(model))
+		return controllers.Generic[T](repository, "/assets/"+models.Plural(model))
 	})
 }

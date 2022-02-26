@@ -18,7 +18,6 @@ import (
 )
 
 func main() {
-
 	core.Invoke(func(server server.Server, nav navigation.Navigation, translator localization.Localization) {
 		fill(nav)
 		translator.Add("de", l10n.De)

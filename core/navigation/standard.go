@@ -2,6 +2,7 @@ package navigation
 
 import (
 	"genuine/core/http"
+	"strconv"
 	"strings"
 )
 
@@ -21,47 +22,31 @@ func (s *standard) Add(name string, icon string) *Item {
 
 func (s *standard) Handle(response http.Response) {
 	path := response["Path"].(string)
+	traverse(response, path, s.tree, 0)
+}
 
-	currentNavigation1 := s.getCurrentNavigation(path, s.tree)
-	response["Navigation1"] = s.tree
-	response["CurrentNavigation1"] = currentNavigation1
-	response["CurrentNavigation1Index"] = s.getCurrentNavigationIndex(path, s.tree)
-	if currentNavigation1 != nil {
-		response["Navigation2"] = currentNavigation1.SubMenu
-		response["CurrentNavigation2"] = s.getCurrentNavigation(path, currentNavigation1.SubMenu)
-		response["CurrentNavigation2Index"] = s.getCurrentNavigationIndex(path, currentNavigation1.SubMenu)
+func traverse(response http.Response, path string, tree []*Item, level int) {
+	currentNavigation := currentNavigation(path, tree)
+	levelString := strconv.Itoa(level)
+	response["Navigation"+levelString] = tree
+	response["CurrentNavigation"+levelString] = currentNavigation
+	if currentNavigation != nil && currentNavigation.SubMenu != nil {
+		level++
+		traverse(response, path, currentNavigation.SubMenu, level)
 	}
 }
 
-func (s *standard) getCurrentNavigation(path string, navigation []*Item) *Item {
+func currentNavigation(path string, navigation []*Item) *Item {
 	pathParts := strings.Split(path, "/")
 
 	var result *Item
 	max := 0
-
 	for _, n := range navigation {
 		nParts := strings.Split(n.Path, "/")
-		for i, p := range pathParts {
-			if i < len(nParts) && p == nParts[i] && max < i {
+		for j, p := range pathParts {
+			if j < len(nParts) && p == nParts[j] && max < j {
 				max++
 				result = n
-			}
-		}
-	}
-	return result
-}
-
-func (s *standard) getCurrentNavigationIndex(path string, navigation []*Item) int {
-	pathParts := strings.Split(path, "/")
-
-	var result int
-	max := 0
-	for j, n := range navigation {
-		nParts := strings.Split(n.Path, "/")
-		for i, p := range pathParts {
-			if i < len(nParts) && p == nParts[i] && max < i {
-				max++
-				result = j
 			}
 		}
 	}

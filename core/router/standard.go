@@ -21,6 +21,7 @@ func Standard(cs []controllers.Controller, log log.Log, template template.Templa
 	for _, c := range s.controllers {
 		for k, v := range c.Routes() {
 			s.routes[k] = v
+			log.Debug("Add route %s", k)
 		}
 	}
 	return s

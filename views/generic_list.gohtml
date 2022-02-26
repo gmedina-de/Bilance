@@ -6,9 +6,8 @@
             <table class="table table-hover" data-toggle="table">
                 <thead class="bg-white">
                 <tr>
-                    {{$Lang := .Lang}}
                     {{range th (index .Model 0)}}
-                        <th data-field="{{.}}" data-sortable="true">{{l10n $Lang .}}</th>
+                        <th data-field="{{.}}" data-sortable="true">{{l10n $.Lang .}}</th>
                     {{end}}
                 </tr>
                 </thead>

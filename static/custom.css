@@ -41,19 +41,6 @@
     animation-direction: reverse;
 }
 
-.navbar-brand {
-    margin-left: 1rem;
-    /*text-underline: white;*/
-    /*text-underline-offset: 2px;*/
-    /*text-decoration: underline;*/
-}
-
-/*#navbarMenu ul li {*/
-/*    min-width: 90px;*/
-/*    text-align: center;*/
-/*}*/
-
-
 .sidebar-heading {
     font-size: .75rem;
     text-transform: uppercase;
@@ -68,11 +55,11 @@
     margin-top: -5px !important;
 }
 
-@media (min-width: 992px) {
-    #sidebarMenu{
-        position: fixed;
-    }
-}
+/*@media (min-width: 992px) {*/
+/*    #sidebarMenu{*/
+/*        position: fixed;*/
+/*    }*/
+/*}*/
 
 .sidebar .nav-link .feather {
     margin-right: 4px;

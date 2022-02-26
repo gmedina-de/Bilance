@@ -13,13 +13,13 @@
     <link rel="stylesheet" href="/static/custom.css">
 </head>
 <body class="bg-light">
-{{if .Navigation1}}
-    {{template "navigation1.gohtml" .}}
+{{if .Navigation0}}
+    {{template "navigation0.gohtml" .}}
 {{end}}
-<div class="container-fluid">
+<div class="container">
     <div class="row">
-        {{if .Navigation2}}{{template "navigation2.gohtml" .}}{{end}}
-        <main class="ms-sm-auto{{if .Navigation2}} col-lg-9 col-xl-10{{end}} mb-2">
+        {{template "navigation1.gohtml" .}}
+        <main class="ms-sm-auto{{if .Navigation1}} col-lg-9 col-xl-10{{end}} mb-2">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
                 {{block "options" .}}{{end}}
             </div>
