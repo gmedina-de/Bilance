@@ -79,7 +79,7 @@ func Invoke(constructor any) reflect.Value {
 		if constructorType.In(i).Kind() == reflect.Slice {
 			parameters[i] = instances
 		} else {
-			parameters[i] = instances.Index(0)
+			parameters[i] = instances.Index(instances.Len() - 1)
 		}
 		level--
 	}
