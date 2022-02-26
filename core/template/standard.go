@@ -28,8 +28,8 @@ func Standard(localization localization.Localization, navigation navigation.Navi
 	main.Funcs(template.FuncMap{
 		"l10n":     s.localization.Translate,
 		"inputs":   inputs,
-		"td":       Td,
-		"th":       Th,
+		"td":       td,
+		"th":       th,
 		"sum":      func(a int, b int) int { return a + b },
 		"contains": func(a string, b int64) bool { return strings.Contains(a, strconv.FormatInt(b, 10)) },
 	})
