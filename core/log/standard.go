@@ -2,7 +2,7 @@ package log
 
 import (
 	"fmt"
-	"genuine/config"
+	"genuine/core/config"
 	"log"
 	"os"
 )
@@ -12,7 +12,7 @@ type standard struct {
 }
 
 func Standard() Log {
-	return &standard{level: config.LogLevel}
+	return &standard{level: Level(config.LogLevel())}
 }
 
 func (s *standard) Critical(format string, v ...interface{}) {

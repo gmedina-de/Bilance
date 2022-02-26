@@ -1,7 +1,7 @@
 package core
 
 import (
-	"genuine/config"
+	"genuine/core/config"
 	"genuine/core/database"
 	"genuine/core/log"
 	"genuine/core/router"
@@ -37,7 +37,6 @@ func Provide(constructors ...any) {
 
 		returnType := value.Type().Out(0)
 		constructorMap[returnType] = append(constructorMap[returnType], constructor)
-		debug("Added constructor for type %s", returnType)
 	}
 }
 
@@ -85,7 +84,7 @@ func Invoke(constructor any) reflect.Value {
 }
 
 func debug(format string, v ...any) {
-	if config.LogLevel == log.Debug {
+	if log.Level(config.LogLevel()) == log.Debug {
 		log2.Printf(strings.Repeat("  ", level)+format, v...)
 	}
 }

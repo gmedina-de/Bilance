@@ -15,6 +15,7 @@ import (
 )
 
 func main() {
+
 	core.Invoke(func(server server.Server, translator translator.Translator) {
 		translator.Translation("de", l10n.De)
 		server.Serve()

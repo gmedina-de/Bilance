@@ -1,7 +1,7 @@
 package template
 
 import (
-	"genuine/config"
+	"genuine/core/config"
 	"genuine/core/log"
 	"genuine/core/translator"
 	"html/template"
@@ -17,6 +17,8 @@ type standard struct {
 	templates  map[string]*template.Template
 }
 
+const extension = ".gohtml"
+
 func Standard(translator translator.Translator, log log.Log) Template {
 	s := &standard{translator, log, make(map[string]*template.Template)}
 
@@ -30,11 +32,11 @@ func Standard(translator translator.Translator, log log.Log) Template {
 		"contains": func(a string, b int64) bool { return strings.Contains(a, strconv.FormatInt(b, 10)) },
 	})
 
-	baseFiles, err := filepath.Glob(config.ViewDirectory + "/base/*" + config.ViewExtension)
+	baseFiles, err := filepath.Glob(config.ViewDirectory() + "/base/*" + extension)
 	if err != nil {
 		s.log.Error(err.Error())
 	}
-	files, err := filepath.Glob(config.ViewDirectory + "/*" + config.ViewExtension)
+	files, err := filepath.Glob(config.ViewDirectory() + "/*" + extension)
 	if err != nil {
 		s.log.Error(err.Error())
 	}
@@ -54,9 +56,6 @@ func (s *standard) Render(request *http.Request, writer http.ResponseWriter, tem
 		lang = al[:5]
 	}
 	data["Lang"] = lang
-	if data["Title"] == nil || data["Title"] == "" {
-		data["Title"] = config.AppName
-	}
 
 	path := request.URL.Path
 	data["Path"] = path
@@ -71,7 +70,7 @@ func (s *standard) Render(request *http.Request, writer http.ResponseWriter, tem
 		data["CurrentNavigation2Index"] = GetCurrentNavigationIndex(path, currentNavigation1.SubMenu)
 	}
 
-	if err := s.templates[template+config.ViewExtension].Execute(writer, data); err != nil {
+	if err := s.templates[template+extension].Execute(writer, data); err != nil {
 		s.log.Error(err.Error())
 	}
 }

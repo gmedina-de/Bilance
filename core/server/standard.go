@@ -2,8 +2,8 @@ package server
 
 import (
 	"fmt"
-	"genuine/config"
 	"genuine/core/authenticator"
+	"genuine/core/config"
 	"genuine/core/log"
 	"genuine/core/router"
 	"net/http"
@@ -22,8 +22,8 @@ func Standard(log log.Log, authenticator authenticator.Authenticator, router rou
 func (r *standard) Serve() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", r.ServeHTTP)
-	r.log.Info("Starting server http://localhost:%d", config.ServerPort)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", config.ServerPort), nil)
+	r.log.Info("Starting server http://localhost:%d", config.ServerPort())
+	err := http.ListenAndServe(fmt.Sprintf(":%d", config.ServerPort()), nil)
 	if err != nil {
 		r.log.Critical(err.Error())
 	}

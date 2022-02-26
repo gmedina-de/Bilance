@@ -11,8 +11,6 @@ import (
 type generic[T any] struct {
 	repository repositories.Repository[T]
 	route      string
-	listView   string
-	editView   string
 }
 
 func Generic[T any](repository repositories.Repository[T], route string) *generic[T] {
@@ -47,7 +45,7 @@ func (g *generic[T]) List(r Request) Response {
 		"Model":     g.repository.Limit(pageSize, paginator.Offset()),
 		"Paginator": paginator,
 		"Title":     models.Name(g.repository.T()),
-		"Template":  g.listView,
+		"Template":  "generic_list",
 	}
 }
 
@@ -55,7 +53,7 @@ func (g *generic[T]) New(Request) Response {
 	return Response{
 		"Form":     g.repository.T(),
 		"Title":    "new",
-		"Template": g.editView,
+		"Template": "generic_edit",
 	}
 }
 
@@ -64,7 +62,7 @@ func (g *generic[T]) Edit(r Request) Response {
 	return Response{
 		"Form":     g.repository.Find(id),
 		"Title":    "edit",
-		"Template": g.editView,
+		"Template": "generic_edit",
 	}
 }
 
