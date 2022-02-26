@@ -1,21 +1,30 @@
 package database
 
 import (
+	"genuine/core/log"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type standard struct {
-	db *gorm.DB
+	log log.Log
+	db  *gorm.DB
 }
 
-func Standard() Database {
+func Standard(log log.Log) Database {
 	path := "./database.db"
 	db, err := gorm.Open(sqlite.Open(path), nil)
 	if err != nil {
-		panic("failed to connect database")
+		log.Critical("Failed to connect database")
 	}
-	return &standard{db}
+	return &standard{log, db}
+}
+
+func (s *standard) Migrate(model any) {
+	err := s.db.AutoMigrate(model)
+	if err != nil {
+		s.log.Error(err.Error())
+	}
 }
 
 func (s *standard) Select(result any, query string, params ...any) {

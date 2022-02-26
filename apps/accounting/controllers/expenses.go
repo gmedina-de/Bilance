@@ -12,7 +12,6 @@ import (
 )
 
 type expenses struct {
-	*controllers.Base
 	payments   repositories.Repository[models2.Payment]
 	categories repositories.Repository[models2.Category]
 }
@@ -21,8 +20,8 @@ func Expenses() controllers.Controller {
 	return &expenses{}
 }
 
-func (c *expenses) Routes() map[string]string {
-	return map[string]string{}
+func (c *expenses) Routes() map[string]controllers.Handler {
+	return map[string]controllers.Handler{}
 }
 
 func (c *expenses) Expenses() {
@@ -37,7 +36,7 @@ func (c *expenses) Expenses() {
 	//	writer,
 	//	request,
 	//	title,
-	//	&template.Parameters{models: c.prepareGraphData(request), Data: c.prepareYears()},
+	//	&template.Parameters{models: c.prepareGraphData(request), Response: c.prepareYears()},
 	//	"accounting/template/expenses.gohtml",
 	//)
 }

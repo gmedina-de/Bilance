@@ -3,6 +3,7 @@ package models
 import (
 	"genuine/core"
 	"genuine/core/controllers"
+	"genuine/core/database"
 	model2 "genuine/core/models"
 	"genuine/core/repositories"
 )
@@ -14,16 +15,11 @@ func AddModel[T any](model T, icon string) {
 	Models = append(Models, model)
 	Icons = append(Icons, icon)
 
-	core.Implementations(
-		func() repositories.Repository[T] {
-			return repositories.NewGeneric(model)
-		},
-	)
+	core.Provide(func(database database.Database) repositories.Repository[T] {
+		return repositories.Generic(database, model, "Id DESC")
+	})
 
-	core.Implementations(
-		func() controllers.Controller {
-			return controllers.Generic[T]("/assets/" + model2.Plural(model))
-		},
-	)
-
+	core.Provide(func(repository repositories.Repository[T]) controllers.Controller {
+		return controllers.Generic[T](repository, "/assets/"+model2.Plural(model))
+	})
 }

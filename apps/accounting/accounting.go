@@ -19,7 +19,6 @@ func init() {
 		WithChild("expenses/by_category", "pie-chart").
 		Path = "/accounting/payments"
 
-	core.Implementations(repositories2.Payments)
-	core.Implementations(repositories2.Categories)
-	core.Implementations(controllers2.Payments, controllers2.Categories, controllers2.Balances, controllers2.Expenses)
+	core.Provide(repositories2.Payments, repositories2.Categories)
+	core.Provide(controllers2.Payments, controllers2.Categories, controllers2.Balances, controllers2.Expenses)
 }

@@ -11,8 +11,8 @@ type basic struct {
 	users repositories.Repository[models.User]
 }
 
-func Basic() authenticator.Authenticator {
-	return &basic{}
+func Basic(users repositories.Repository[models.User]) authenticator.Authenticator {
+	return &basic{users}
 }
 
 func (b *basic) Authenticate(writer http.ResponseWriter, request *http.Request) bool {

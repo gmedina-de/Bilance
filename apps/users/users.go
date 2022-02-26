@@ -13,7 +13,7 @@ func init() {
 		WithChild("users", "users").
 		Path = "/settings/users"
 
-	core.Implementations(controllers.Users)
-	core.Implementations(repositories.Users)
-	core.Implementations(authenticator.Basic)
+	core.Provide(controllers.Users)
+	core.Provide(repositories.Users)
+	core.Provide(authenticator.Basic)
 }

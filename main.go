@@ -10,27 +10,13 @@ import (
 	_ "genuine/apps/users"
 	"genuine/core"
 	"genuine/core/server"
-	"genuine/core/template"
 	"genuine/core/translator"
 	"genuine/l10n"
 )
 
 func main() {
-	core.Init(App).Run()
-}
-
-type app struct {
-	server     server.Server
-	Translator translator.Translator
-	Template   template.Template
-}
-
-func App() *app {
-	return &app{}
-}
-
-func (a *app) Run() {
-	a.Template.Parse("views")
-	a.Translator.Translation("de", l10n.De)
-	a.server.Start()
+	core.Invoke(func(server server.Server, translator translator.Translator) {
+		translator.Translation("de", l10n.De)
+		server.Serve()
+	})
 }

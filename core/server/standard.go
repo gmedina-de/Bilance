@@ -15,12 +15,11 @@ type standard struct {
 	router        router.Router
 }
 
-func Standard() Server {
-	return &standard{}
+func Standard(log log.Log, authenticator authenticator.Authenticator, router router.Router) Server {
+	return &standard{log, authenticator, router}
 }
 
-func (r *standard) Start() {
-	r.router.Init()
+func (r *standard) Serve() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", r.ServeHTTP)
 	r.log.Info("Starting server http://localhost:%d", config.ServerPort)

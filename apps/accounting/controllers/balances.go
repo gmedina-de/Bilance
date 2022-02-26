@@ -8,7 +8,6 @@ import (
 )
 
 type balances struct {
-	*controllers.Base
 	payments repositories.Repository[model2.Payment]
 	users    repositories.Repository[models.User]
 }
@@ -17,16 +16,16 @@ func Balances() controllers.Controller {
 	return &balances{}
 }
 
-func (b *balances) Routes() map[string]string {
-	return map[string]string{
-		"/accounting": "get:Balances()",
+func (b *balances) Routes() map[string]controllers.Handler {
+	return map[string]controllers.Handler{
+		"GET /accounting": b.Balances,
 	}
 }
 
-func (b *balances) Balances() {
+func (b *balances) Balances(controllers.Request) controllers.Response {
 	//balanceData := b.prepareBalanceData()
 	//template.Render(writer, request, "balances", &template.Parameters{models: &balanceData}, "accounting/template/balances.gohtml")
-	return
+	return nil
 }
 
 func (b *balances) prepareBalanceData() []*BalanceData {
@@ -64,7 +63,7 @@ func (b *balances) prepareBalanceData() []*BalanceData {
 	//		SentExpenses:         sentExpenses,
 	//		SentTransfer:         sentTransfer,
 	//		ReceivedTransfer:     receivedTransfer,
-	//		Result:               result,
+	//		Response:               result,
 	//	})
 	//}
 	//b.calculateWidths(balanceData, maxBalance)

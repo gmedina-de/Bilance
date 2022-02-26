@@ -10,5 +10,5 @@ func init() {
 	template.AddNavigation("home", "home").
 		Path = "/"
 
-	core.Implementations(controllers.Index)
+	core.Provide(controllers.Index)
 }

@@ -17,6 +17,6 @@ func init() {
 		WithChild("last", "clock").
 		WithChild("trash", "trash")
 
-	core.Implementations(controllers.Files)
+	core.Provide(controllers.Files)
 
 }
