@@ -4,8 +4,8 @@ import (
 	model2 "genuine/app/accounting/models"
 	"genuine/app/settings/models"
 	"genuine/core/controllers"
-	"genuine/core/http"
 	"genuine/core/repositories"
+	"genuine/core/router"
 )
 
 type balances struct {
@@ -17,13 +17,13 @@ func Balances() controllers.Controller {
 	return &balances{}
 }
 
-func (b *balances) Routes() map[string]http.Handler {
-	return map[string]http.Handler{
-		"GET /accounting": b.Balances,
+func (b *balances) Routes() map[string]controllers.Handler {
+	return map[string]controllers.Handler{
+		"GET /accounting book": router.Redirect("/accounting/balances"),
 	}
 }
 
-func (b *balances) Balances(http.Request) http.Response {
+func (b *balances) Balances(controllers.Request) controllers.Response {
 	//balanceData := b.prepareBalanceData()
 	//template.Render(writer, request, "balances", &template.Parameters{models: &balanceData}, "accounting/template/balances.gohtml")
 	return nil

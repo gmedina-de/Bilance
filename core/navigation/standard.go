@@ -1,7 +1,7 @@
 package navigation
 
 import (
-	"genuine/core/http"
+	"genuine/core/controllers"
 	"strconv"
 	"strings"
 )
@@ -20,12 +20,12 @@ func (s *standard) Add(name string, icon string) *Item {
 	return item
 }
 
-func (s *standard) Handle(response http.Response) {
+func (s *standard) Handle(response controllers.Response) {
 	path := response["Path"].(string)
 	traverse(response, path, s.tree, 0)
 }
 
-func traverse(response http.Response, path string, tree []*Item, level int) {
+func traverse(response controllers.Response, path string, tree []*Item, level int) {
 	currentNavigation := currentNavigation(path, tree)
 	levelString := strconv.Itoa(level)
 	response["Navigation"+levelString] = tree

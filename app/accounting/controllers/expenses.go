@@ -3,7 +3,6 @@ package controllers
 import (
 	models2 "genuine/app/accounting/models"
 	"genuine/core/controllers"
-	"genuine/core/http"
 	"genuine/core/repositories"
 )
 
@@ -16,8 +15,8 @@ func Expenses() controllers.Controller {
 	return &expenses{}
 }
 
-func (c *expenses) Routes() map[string]http.Handler {
-	return map[string]http.Handler{}
+func (c *expenses) Routes() map[string]controllers.Handler {
+	return map[string]controllers.Handler{}
 }
 
 func (c *expenses) Expenses() {

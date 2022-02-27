@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"genuine/core/http"
+	"genuine/core/controllers"
 	"genuine/core/models"
 	"genuine/core/repositories"
+	"genuine/core/router"
 	"reflect"
 	"strconv"
 )
@@ -17,8 +18,8 @@ func Generic[T any](repository repositories.Repository[T], route string) *generi
 	return &generic[T]{repository, route}
 }
 
-func (g *generic[T]) Routes() map[string]http.Handler {
-	return map[string]http.Handler{
+func (g *generic[T]) Routes() map[string]controllers.Handler {
+	return map[string]controllers.Handler{
 		"GET " + g.route:             g.List,
 		"POST " + g.route:            g.List,
 		"GET " + g.route + "/new":    g.New,
@@ -28,7 +29,7 @@ func (g *generic[T]) Routes() map[string]http.Handler {
 	}
 }
 
-func (g *generic[T]) List(r http.Request) http.Response {
+func (g *generic[T]) List(r controllers.Request) controllers.Response {
 	page, err := strconv.ParseInt(r.URL.Query().Get("page"), 10, 64)
 	if err != nil {
 		page = 1
@@ -43,7 +44,7 @@ func (g *generic[T]) List(r http.Request) http.Response {
 		pages++
 		model = g.repository.Limit(pageSize, offset)
 	}
-	return http.Response{
+	return controllers.Response{
 		"Model":    model,
 		"Title":    models.Plural(g.repository.Model()),
 		"Pages":    pages,
@@ -52,24 +53,24 @@ func (g *generic[T]) List(r http.Request) http.Response {
 	}
 }
 
-func (g *generic[T]) New(http.Request) http.Response {
-	return http.Response{
+func (g *generic[T]) New(controllers.Request) controllers.Response {
+	return controllers.Response{
 		"Form":     g.repository.Model(),
 		"Title":    "new",
 		"Template": "generic_edit",
 	}
 }
 
-func (g *generic[T]) Edit(r http.Request) http.Response {
+func (g *generic[T]) Edit(r controllers.Request) controllers.Response {
 	id, _ := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
-	return http.Response{
+	return controllers.Response{
 		"Form":     g.repository.Find(id),
 		"Title":    "edit",
 		"Template": "generic_edit",
 	}
 }
 
-func (g *generic[T]) Save(r http.Request) http.Response {
+func (g *generic[T]) Save(r controllers.Request) controllers.Response {
 	id, _ := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
 	record := g.repository.Model()
 	//g.parseForm(record)
@@ -79,14 +80,14 @@ func (g *generic[T]) Save(r http.Request) http.Response {
 		reflect.ValueOf(record).Elem().FieldByName("Id").SetInt(id)
 		g.repository.Update(record)
 	}
-	return http.Response{"Redirect": g.route}
+	return router.Redirect(g.route)(r)
 }
 
-func (g *generic[T]) Remove(r http.Request) http.Response {
+func (g *generic[T]) Remove(r controllers.Request) controllers.Response {
 	id, _ := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
 	item := g.repository.Find(id)
 	g.repository.Delete(item)
-	return http.Response{"Redirect": g.route}
+	return router.Redirect(g.route)(r)
 }
 
 func (g *generic[T]) parseForm(model any) {
