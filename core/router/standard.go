@@ -2,6 +2,8 @@ package router
 
 import (
 	"genuine/core/controllers"
+	"genuine/core/decorator"
+	"genuine/core/filter"
 	"genuine/core/log"
 	"genuine/core/template"
 	"net/http"
@@ -10,13 +12,20 @@ import (
 
 type standard struct {
 	controllers []controllers.Controller
-	log         log.Log
+	filters     []filter.Filter
+	decorators  []decorator.Decorator
 	template    template.Template
 	routes      map[string]controllers.Handler
 }
 
-func Standard(cs []controllers.Controller, log log.Log, template template.Template) Router {
-	s := &standard{cs, log, template, make(map[string]controllers.Handler)}
+func Standard(
+	cs []controllers.Controller,
+	filters []filter.Filter,
+	decorators []decorator.Decorator,
+	template template.Template,
+	log log.Log,
+) Router {
+	s := &standard{cs, filters, decorators, template, make(map[string]controllers.Handler)}
 	for _, c := range s.controllers {
 		for k, v := range c.Routes() {
 			s.routes[k] = v
@@ -26,17 +35,30 @@ func Standard(cs []controllers.Controller, log log.Log, template template.Templa
 	return s
 }
 
-func (s *standard) Handle(writer http.ResponseWriter, request *http.Request) {
-	action, found := s.routes[strings.ToUpper(request.Method)+" "+request.URL.Path]
-	if found {
-		response := action(controllers.Request{Request: request, ResponseWriter: writer})
-		if response != nil {
-			tmpl, render := response["Template"].(string)
-			if render {
-				s.template.Render(request, writer, tmpl, response)
-			}
+func (s *standard) Handle(w http.ResponseWriter, r *http.Request) {
+	handle := true
+	for _, f := range s.filters {
+		if !f.Filter(w, r) {
+			handle = false
 		}
-	} else {
-		writer.WriteHeader(404)
+	}
+	if handle {
+		action, found := s.routes[strings.ToUpper(r.Method)+" "+r.URL.Path]
+		if found {
+			request := controllers.Request{Request: r, ResponseWriter: w}
+			response := action(request)
+			for _, d := range s.decorators {
+				d.Decorate(request, response)
+			}
+
+			if response != nil {
+				tmpl, render := response["Template"].(string)
+				if render {
+					s.template.Render(r, w, tmpl, response)
+				}
+			}
+		} else {
+			w.WriteHeader(404)
+		}
 	}
 }

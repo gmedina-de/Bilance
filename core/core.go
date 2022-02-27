@@ -3,13 +3,12 @@ package core
 import (
 	"genuine/core/config"
 	"genuine/core/database"
-	"genuine/core/localization"
 	"genuine/core/log"
-	"genuine/core/navigation"
 	"genuine/core/router"
 	"genuine/core/server"
 	"genuine/core/template"
-	log2 "log"
+	"genuine/core/translator"
+	. "log"
 	"reflect"
 	"strings"
 )
@@ -19,8 +18,7 @@ func init() {
 	Provide(database.Standard)
 	Provide(server.Standard)
 	Provide(router.Standard)
-	Provide(localization.Standard)
-	Provide(navigation.Standard)
+	Provide(translator.Standard)
 	Provide(template.Standard)
 }
 
@@ -89,6 +87,6 @@ func Invoke(constructor any) reflect.Value {
 
 func debug(format string, v ...any) {
 	if log.Level(config.LogLevel()) == log.Debug {
-		log2.Printf(strings.Repeat("  ", level)+format, v...)
+		Printf(strings.Repeat("  ", level)+format, v...)
 	}
 }

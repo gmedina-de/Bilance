@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"genuine/app/accounting/models"
-	controllers2 "genuine/app/settings/controllers"
+	controllers2 "genuine/app/common/controllers"
 	"genuine/core/controllers"
 	"genuine/core/repositories"
 )
@@ -23,7 +23,7 @@ func Payments(repository repositories.Repository[models.Payment]) controllers.Co
 //		)
 //		template.Render(writer, request, "search_results", &template.Parameters{
 //			models: list,
-//			Toast: strconv.Itoa(len(list)) + " " + localization.Translate("records_found"),
+//			Toast: strconv.Itoa(len(list)) + " " + translator.Translate("records_found"),
 //		}, "crud_table", "payments")
 //	} else {
 //		c.GenericOld.Get(writer, request)

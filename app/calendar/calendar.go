@@ -2,7 +2,7 @@ package files
 
 func init() {
 
-	//template.Add("calendar", "users").
+	//template.add("calendar", "users").
 	//	Sub("all", "folder").
 	//	Sub("favorites", "star").
 	//	Sub("last", "clock").

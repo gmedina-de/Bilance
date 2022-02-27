@@ -2,7 +2,7 @@ package files
 
 func init() {
 	//
-	//template.Add("contacts", "users").
+	//template.add("contacts", "users").
 	//	Sub("all", "folder").
 	//	Sub("favorites", "star").
 	//	Sub("last", "clock").

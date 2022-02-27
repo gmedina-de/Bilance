@@ -1,7 +1,7 @@
 package server
 
 //
-//func Carddav(auth authenticator.Authenticator, log log.Log) any {
+//func Carddav(auth filter.Authenticator, log log.Log) any {
 //	addr := "0.0.0.0:8083"
 //
 //	b := &backend{make(map[string]carddav.AddressObject)}

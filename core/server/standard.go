@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"genuine/core/authenticator"
 	"genuine/core/config"
 	"genuine/core/log"
 	"genuine/core/router"
@@ -10,13 +9,12 @@ import (
 )
 
 type standard struct {
-	log           log.Log
-	authenticator authenticator.Authenticator
-	router        router.Router
+	log    log.Log
+	router router.Router
 }
 
-func Standard(log log.Log, authenticator authenticator.Authenticator, router router.Router) Server {
-	return &standard{log, authenticator, router}
+func Standard(log log.Log, router router.Router) Server {
+	return &standard{log, router}
 }
 
 func (r *standard) Serve() {
@@ -30,13 +28,13 @@ func (r *standard) Serve() {
 }
 
 func (r *standard) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	w := &statusWriter{ResponseWriter: writer, status: 200}
-	if r.authenticator == nil || r.authenticator.Authenticate(w, request) {
-		r.router.Handle(w, request)
-	}
+	w := &statusWriter{ResponseWriter: writer}
+	w.WriteHeader(200)
+	r.router.Handle(w, request)
 	r.log.Debug("%s %s -> %d", request.Method, request.URL, w.status)
 }
 
+// in order to know code status
 type statusWriter struct {
 	http.ResponseWriter
 	status int

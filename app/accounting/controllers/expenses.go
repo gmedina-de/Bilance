@@ -23,9 +23,9 @@ func (c *expenses) Expenses() {
 	//var title string
 	//switch request.URL.Path {
 	//case "/expenses/by_period/":
-	//	title = localization.Translate("expenses") + " " + localization.Translate("by_period")
+	//	title = translator.Translate("expenses") + " " + translator.Translate("by_period")
 	//case "/expenses/by_category/":
-	//	title = localization.Translate("expenses") + " " + localization.Translate("by_category")
+	//	title = translator.Translate("expenses") + " " + translator.Translate("by_category")
 	//}
 	//template.Render(
 	//	writer,

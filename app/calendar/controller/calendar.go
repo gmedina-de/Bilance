@@ -15,7 +15,7 @@ package controllers
 //}
 //
 //func (f *calendar) Routing() {
-//	router.Add(f, "/calendar", "get:Index()")
+//	router.add(f, "/calendar", "get:Index()")
 //}
 //
 //func (f *calendar) Index() {

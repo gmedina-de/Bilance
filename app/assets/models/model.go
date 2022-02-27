@@ -1,7 +1,7 @@
 package models
 
 import (
-	controllers2 "genuine/app/settings/controllers"
+	controllers2 "genuine/app/common/controllers"
 	"genuine/core"
 	"genuine/core/controllers"
 	"genuine/core/database"

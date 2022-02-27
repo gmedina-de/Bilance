@@ -1,7 +1,7 @@
 package server
 
 //import (
-//	"genuine/core/authenticator"
+//	"genuine/core/filter"
 //	"genuine/core/log"
 //	"github.com/emersion/go-vcard"
 //	"github.com/emersion/go-webdav/carddav"
@@ -10,7 +10,7 @@ package server
 //	"time"
 //)
 //
-//func Carddav(auth authenticator.Authenticator, log log.Log) any {
+//func Carddav(auth filter.Authenticator, log log.Log) any {
 //	addr := "0.0.0.0:8082"
 //
 //	b := &backend{make(map[string]carddav.AddressObject)}

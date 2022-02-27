@@ -15,7 +15,7 @@ package controllers
 //}
 //
 //func (f *contacts) Routing() {
-//	router.Add(f, "/contacts", "get:Index()")
+//	router.add(f, "/contacts", "get:Index()")
 //}
 //
 //func (f *contacts) Index() {

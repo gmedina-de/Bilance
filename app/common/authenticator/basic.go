@@ -1,8 +1,8 @@
 package authenticator
 
 import (
-	"genuine/app/settings/models"
-	"genuine/core/authenticator"
+	"genuine/app/common/models"
+	"genuine/core/filter"
 	"genuine/core/repositories"
 	"net/http"
 )
@@ -11,12 +11,12 @@ type basic struct {
 	users repositories.Repository[models.User]
 }
 
-func Basic(users repositories.Repository[models.User]) authenticator.Authenticator {
+func Basic(users repositories.Repository[models.User]) filter.Filter {
 	return &basic{users}
 }
 
-func (b *basic) Authenticate(writer http.ResponseWriter, request *http.Request) bool {
-	return authenticator.Basic(writer, request, func(username, password string) bool {
+func (b *basic) Filter(writer http.ResponseWriter, request *http.Request) bool {
+	return filter.Basic(writer, request, func(username, password string) bool {
 		users := b.users.List("WHERE Name = '" + username + "'")
 		if len(users) > 0 {
 			user := &users[0]

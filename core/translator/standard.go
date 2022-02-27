@@ -1,4 +1,4 @@
-package localization
+package translator
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ type standard struct {
 	translations map[string]any
 }
 
-func Standard() Localization {
+func Standard() Translator {
 	return &standard{translations: make(map[string]any)}
 }
 
