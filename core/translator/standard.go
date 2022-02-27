@@ -3,22 +3,14 @@ package translator
 import (
 	"fmt"
 	"net/http"
-	"reflect"
 )
 
 type standard struct {
-	language     string
-	translation  any
-	translations map[string]any
+	language string
 }
 
 func Standard() Translator {
-	return &standard{translations: make(map[string]any)}
-}
-
-func (s *standard) Add(language string, translation any) {
-	s.translations[language] = translation
-	s.translation = translation
+	return &standard{}
 }
 
 func (s *standard) Set(request *http.Request) {
@@ -31,17 +23,19 @@ func (s *standard) Set(request *http.Request) {
 }
 
 func (s *standard) Translate(key string, params ...any) string {
-	translation, found := s.translations[s.language]
+	localization, found := localizations[s.language]
 	if found {
-		fieldValue := reflect.ValueOf(translation).FieldByName(key)
-		if fieldValue.IsValid() {
-			return fmt.Sprintf(fieldValue.String(), params...)
+		translation, found := localization[key]
+		if found {
+			return fmt.Sprintf(translation, params...)
 		}
 	}
-	fieldType, _ := reflect.TypeOf(s.translation).FieldByName(key)
-	lookup, ok := fieldType.Tag.Lookup("default")
-	if ok {
-		return fmt.Sprintf(lookup, params...)
+	localization, found = localizations["default"]
+	if found {
+		translation, found := localization[key]
+		if found {
+			return fmt.Sprintf(translation, params...)
+		}
 	}
 	return key
 }
