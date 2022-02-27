@@ -1,6 +1,7 @@
 package database
 
 import (
+	"genuine/core/config"
 	"genuine/core/log"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -12,7 +13,7 @@ type standard struct {
 }
 
 func Standard(log log.Log) Database {
-	path := "./database.db"
+	path := config.DatabaseLocation()
 	db, err := gorm.Open(sqlite.Open(path), nil)
 	if err != nil {
 		log.Critical("Failed to connect database")
@@ -28,7 +29,7 @@ func (s *standard) Migrate(model any) {
 }
 
 func (s *standard) Select(result any, query string, params ...any) {
-	s.db.Raw("SELECT "+query, params...).Scan(result)
+	s.db.Raw("SELECT "+query, params...).Where("deleted_at = NULddddL").Scan(result)
 }
 
 func (s *standard) Insert(model any) {

@@ -5,7 +5,7 @@ import (
 	"genuine/core/models"
 	"genuine/core/repositories"
 	"genuine/core/router"
-	"reflect"
+	"github.com/gorilla/schema"
 	"strconv"
 )
 
@@ -20,13 +20,13 @@ func Generic[T any](repository repositories.Repository[T], route string) *generi
 
 func (g *generic[T]) Routes() map[string]controllers.Handler {
 	return map[string]controllers.Handler{
-		"GET " + g.route:             g.List,
-		"POST " + g.route:            g.List,
-		"GET " + g.route + "/new":    g.New,
-		"POST " + g.route + "/new":   g.Save,
-		"GET " + g.route + "/edit":   g.Edit,
-		"POST " + g.route + "/edit":  g.Save,
-		"GET " + g.route + "/delete": g.Remove,
+		"GET " + g.route:                  g.List,
+		"POST " + g.route:                 g.List,
+		"GET " + g.route + "/new":         g.New,
+		"POST " + g.route + "/new":        g.Save,
+		"GET " + g.route + "/edit":        g.Edit,
+		"POST " + g.route + "/edit":       g.Save,
+		"GET " + g.route + "/edit/delete": g.Remove,
 	}
 }
 
@@ -48,15 +48,15 @@ func (g *generic[T]) List(r controllers.Request) controllers.Response {
 	return controllers.Response{
 		"Model":    model,
 		"Title":    models.Plural(g.repository.Model()),
+		"Template": "generic_list",
 		"Pages":    pages,
 		"Page":     page,
-		"Template": "generic_list",
 	}
 }
 
 func (g *generic[T]) New(controllers.Request) controllers.Response {
 	return controllers.Response{
-		"Form":     g.repository.Model(),
+		"Model":    g.repository.Model(),
 		"Title":    "new",
 		"Template": "generic_edit",
 	}
@@ -65,21 +65,32 @@ func (g *generic[T]) New(controllers.Request) controllers.Response {
 func (g *generic[T]) Edit(r controllers.Request) controllers.Response {
 	id, _ := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
 	return controllers.Response{
-		"Form":     g.repository.Find(id),
+		"Model":    g.repository.Find(id),
 		"Title":    "edit",
 		"Template": "generic_edit",
 	}
 }
 
+var decoder = schema.NewDecoder()
+
 func (g *generic[T]) Save(r controllers.Request) controllers.Response {
 	id, _ := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
-	record := g.repository.Model()
-	//g.parseForm(record)
+	model := g.repository.Model()
+
+	err := r.ParseForm()
+	if err != nil {
+		panic(err)
+	}
+	err = decoder.Decode(model, r.PostForm)
+	if err != nil {
+		panic(err)
+	}
+
 	if id == 0 {
-		g.repository.Insert(record)
+		g.repository.Insert(model)
 	} else {
-		reflect.ValueOf(record).Elem().FieldByName("Id").SetInt(id)
-		g.repository.Update(record)
+		models.RealValueOf(model).FieldByName("ID").SetInt(id)
+		g.repository.Update(model)
 	}
 	return router.Redirect(g.route)(r)
 }
@@ -89,14 +100,4 @@ func (g *generic[T]) Remove(r controllers.Request) controllers.Response {
 	item := g.repository.Find(id)
 	g.repository.Delete(item)
 	return router.Redirect(g.route)(r)
-}
-
-func (g *generic[T]) parseForm(model any) {
-	//b.Request.parseForm()
-	//err := decoder.Decode(model, b.Request.PostForm)
-	//if err != nil {
-	//	err.Error()
-	//	println(err.Error())
-	//	// Handle error
-	//}
 }

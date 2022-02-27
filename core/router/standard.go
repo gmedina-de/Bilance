@@ -47,11 +47,11 @@ func (s *standard) Handle(w http.ResponseWriter, r *http.Request) {
 		if found {
 			request := controllers.Request{Request: r, ResponseWriter: w}
 			response := action(request)
-			for _, d := range s.decorators {
-				d.Decorate(request, response)
-			}
-
 			if response != nil {
+				for _, d := range s.decorators {
+					d.Decorate(request, response)
+				}
+
 				tmpl, render := response["Template"].(string)
 				if render {
 					s.template.Render(r, w, tmpl, response)

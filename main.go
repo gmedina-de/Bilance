@@ -11,13 +11,12 @@ import (
 	_ "genuine/app/settings"
 	"genuine/core"
 	"genuine/core/server"
-	"genuine/core/template"
 	"genuine/core/translator"
 	"genuine/l10n"
 )
 
 func main() {
-	core.Invoke(func(server server.Server, template template.Template, translator translator.Translator) {
+	core.Invoke(func(server server.Server, translator translator.Translator) {
 		translator.Add("de", l10n.De)
 		server.Serve()
 	})

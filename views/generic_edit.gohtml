@@ -3,7 +3,7 @@
 {{define "content"}}
     <form method="post" class="mb-3">
         <div class="row g-3 pb-3">
-            {{inputs .Form}}
+            {{inputs .Model}}
         </div>
         <button class="w-100 btn btn-primary btn-lg" type="submit">
             {{l10n "save"}}
@@ -15,7 +15,7 @@
     <h1 class="h2">{{l10n .Title}}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group" role="group">
-            {{if .Form.ID}}
+            {{if .Model.ID}}
                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
                         data-bs-target="#deleteConfirmationModal">
                     <span data-feather="trash-2"></span> {{l10n "delete"}}
@@ -25,22 +25,26 @@
                 <span data-feather="x-square"></span> {{l10n "cancel"}}
             </a>
         </div>
-        <div class="modal fade" id="deleteConfirmationModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{l10n "delete_confirmation"}}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        {{l10n "delete_confirmation_description"}}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{l10n "cancel"}}</button>
-                        <a type="button" class="btn btn-danger" href="{{.Path}}/delete">{{l10n "delete"}}</a>
+        {{if .Model.ID}}
+            <div class="modal fade" id="deleteConfirmationModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{l10n "delete_confirmation"}}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            {{l10n "delete_confirmation_description"}}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">{{l10n "cancel"}}</button>
+                            <a type="button" class="btn btn-danger"
+                               href="{{.Path}}/delete?id={{.Model.ID}}">{{l10n "delete"}}</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {{end}}
     </div>
 {{end}}

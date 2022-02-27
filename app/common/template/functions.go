@@ -18,6 +18,27 @@ func init() {
 
 var tdTemplate = template.Must(template.New("").Parse("<td>{{.}}</td>"))
 
+func th(v interface{}) []string {
+	rv := models.RealValueOf(v)
+	t := rv.Type()
+	ret := make([]string, 0, t.NumField())
+	for i := 0; i < t.NumField(); i++ {
+		rf := rv.Field(i)
+		structField := t.Field(i)
+		if rf.CanInterface() && structField.Name != "Valid" {
+			if structField.Type.Kind() == reflect.Ptr && rf.IsNil() {
+				rf = reflect.New(structField.Type.Elem()).Elem()
+			}
+			if rf.Kind() == reflect.Struct {
+				ret = append(ret, th(rf.Interface())...)
+				continue
+			}
+			ret = append(ret, structField.Name)
+		}
+	}
+	return ret
+}
+
 func td(v interface{}) (template.HTML, error) {
 	tpl, err := tdTemplate.Clone()
 	if err != nil {
@@ -28,8 +49,8 @@ func td(v interface{}) (template.HTML, error) {
 	t := rv.Type()
 	for i := 0; i < t.NumField(); i++ {
 		rf := rv.Field(i)
-		if rf.CanInterface() {
-			structField := t.Field(i)
+		structField := t.Field(i)
+		if rf.CanInterface() && structField.Name != "Valid" {
 			if structField.Type.Kind() == reflect.Ptr && rf.IsNil() {
 				rf = reflect.New(structField.Type.Elem()).Elem()
 			}
@@ -54,27 +75,6 @@ func td(v interface{}) (template.HTML, error) {
 	return html, nil
 }
 
-func th(v interface{}) []string {
-	rv := models.RealValueOf(v)
-	t := rv.Type()
-	ret := make([]string, 0, t.NumField())
-	for i := 0; i < t.NumField(); i++ {
-		rf := rv.Field(i)
-		if rf.CanInterface() {
-			structField := t.Field(i)
-			if structField.Type.Kind() == reflect.Ptr && rf.IsNil() {
-				rf = reflect.New(structField.Type.Elem()).Elem()
-			}
-			if rf.Kind() == reflect.Struct {
-				ret = append(ret, th(rf.Interface())...)
-				continue
-			}
-			ret = append(ret, structField.Name)
-		}
-	}
-	return ret
-}
-
 func paginate(pages int64, page int64, offset int64) []int64 {
 	var i int64
 	var items []int64
@@ -95,10 +95,10 @@ var inputTemplate = template.Must(template.New("").Parse(`
 </div>
 `))
 
-func inputs(v interface{}, errs ...error) (template.HTML, error) {
+func inputs(v interface{}) template.HTML {
 	tpl, err := inputTemplate.Clone()
 	if err != nil {
-		return "", err
+		return ""
 	}
 	fields := fields(v)
 	var html template.HTML
@@ -106,11 +106,11 @@ func inputs(v interface{}, errs ...error) (template.HTML, error) {
 		var sb strings.Builder
 		err := tpl.Execute(&sb, field)
 		if err != nil {
-			return "", err
+			return ""
 		}
 		html = html + template.HTML(sb.String())
 	}
-	return html, nil
+	return html
 }
 
 type field struct {
@@ -129,8 +129,8 @@ func fields(v interface{}, names ...string) []field {
 	ret := make([]field, 0, t.NumField())
 	for i := 0; i < t.NumField(); i++ {
 		rf := rv.Field(i)
-		if rf.CanInterface() {
-			structField := t.Field(i)
+		structField := t.Field(i)
+		if rf.CanInterface() && structField.Name != "Valid" {
 
 			if structField.Name == "ID" {
 				continue

@@ -2,18 +2,17 @@ package models
 
 import (
 	"fmt"
-	models2 "genuine/app/common/models"
 	"genuine/core/models"
 )
 
 type Payment struct {
-	Id       int64    `form:"-"`
-	Name     string   `form:"required"`
-	Amount   Currency `form:"required"`
-	Date     models.Date
-	Category Category
-	Payer    models2.User
-	Payee    models2.User
+	models.Model
+	Name       string   `form:"required"`
+	Amount     Currency `form:"required"`
+	Date       models.Date
+	CategoryID uint
+	PayerID    uint
+	PayeeID    uint
 }
 
 type Currency int64

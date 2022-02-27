@@ -4,17 +4,25 @@ import (
 	"flag"
 )
 
-var serverPort = flag.Int("port", 8080, "application port")
 var logLevel = flag.Int("log", 4, "log level where 0 is critical and 4 is debug")
-var viewDirectory = flag.String("views", "views", "directory where views are stored")
+
+func LogLevel() int {
+	return *logLevel
+}
+
+var databaseLocation = flag.String("db", "./database.db", "database location")
+
+func DatabaseLocation() string {
+	return *databaseLocation
+}
+
+var serverPort = flag.Int("port", 8080, "application port")
 
 func ServerPort() int {
 	return *serverPort
 }
 
-func LogLevel() int {
-	return *logLevel
-}
+var viewDirectory = flag.String("views", "views", "directory where views are stored")
 
 func ViewDirectory() string {
 	return *viewDirectory
