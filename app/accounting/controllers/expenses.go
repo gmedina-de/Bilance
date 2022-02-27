@@ -41,9 +41,9 @@ func (c *expenses) Expenses() {
 //	Filter string
 //	Type   string
 //	X      []string
-//	Y      []models2.EUR
+//	Y      []models2.Currency
 //	Z      []string
-//	Total  models2.EUR
+//	Total  models2.Currency
 //}
 //
 //const primaryColor = "#007bff"
@@ -145,7 +145,7 @@ func (c *expenses) Expenses() {
 //	endDate := end.Format(models.DateLayoutISO)
 //	for _, category := range categories {
 //		data.X = append(data.X, category.Name)
-//		var y models2.EUR
+//		var y models2.Currency
 //		if category.Id == 0 {
 //			y = models2.SumAmounts(c.payments.List(
 //				"PayeeId = 0",

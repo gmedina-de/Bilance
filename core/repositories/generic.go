@@ -61,8 +61,8 @@ func (g *generic[T]) Delete(entity any) {
 	g.database.Delete(entity)
 }
 
-func (g *generic[T]) Model() T {
-	return g.model
+func (g *generic[T]) Model() *T {
+	return &g.model
 }
 
 func (g *generic[T]) tableName() string {

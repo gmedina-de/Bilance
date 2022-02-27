@@ -11,5 +11,5 @@ type Repository[T any] interface {
 	Update(entity any)
 	Delete(entity any)
 
-	Model() T
+	Model() *T
 }

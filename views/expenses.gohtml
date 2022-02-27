@@ -81,7 +81,7 @@
             </li>
         {{end}}
         <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
-            {{l10n .Lang "total"}}
+            {{l10n "total"}}
             <span class="badge rounded-pill bg-primary">{{$Total.FormatWithCurrency}}</span>
         </li>
     </ul>
@@ -91,12 +91,12 @@
     <div class="btn-group">
         <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
             <span data-feather="calendar"></span>
-            {{l10n .Lang (.Parameters.Model.Filter)}}
+            {{l10n (.Parameters.Model.Filter)}}
         </button>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{.Path}}?filter=this_week">{{l10n .Lang "this_week"}}</a></li>
-            <li><a class="dropdown-item" href="{{.Path}}?filter=this_month">{{l10n .Lang "this_month"}}</a></li>
-            <li><a class="dropdown-item" href="{{.Path}}?filter=this_year">{{l10n .Lang "this_year"}}</a></li>
+            <li><a class="dropdown-item" href="{{.Path}}?filter=this_week">{{l10n "this_week"}}</a></li>
+            <li><a class="dropdown-item" href="{{.Path}}?filter=this_month">{{l10n "this_month"}}</a></li>
+            <li><a class="dropdown-item" href="{{.Path}}?filter=this_year">{{l10n "this_year"}}</a></li>
             <li>
                 <hr class="dropdown-divider">
             </li>

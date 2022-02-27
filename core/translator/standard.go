@@ -7,6 +7,7 @@ import (
 )
 
 type standard struct {
+	language     string
 	translation  any
 	translations map[string]any
 }
@@ -20,8 +21,17 @@ func (s *standard) Add(language string, translation any) {
 	s.translation = translation
 }
 
-func (s *standard) Translate(language string, key string, params ...any) string {
-	translation, found := s.translations[language]
+func (s *standard) Set(request *http.Request) {
+	lang := "en-US"
+	al := request.Header.Get("Accept-Language")
+	if len(al) > 4 {
+		lang = al[:5]
+	}
+	s.language = lang
+}
+
+func (s *standard) Translate(key string, params ...any) string {
+	translation, found := s.translations[s.language]
 	if found {
 		fieldValue := reflect.ValueOf(translation).FieldByName(key)
 		if fieldValue.IsValid() {
@@ -34,13 +44,4 @@ func (s *standard) Translate(language string, key string, params ...any) string 
 		return fmt.Sprintf(lookup, params...)
 	}
 	return key
-}
-
-func (s *standard) Lang(request *http.Request) string {
-	lang := "en-US"
-	al := request.Header.Get("Accept-Language")
-	if len(al) > 4 {
-		lang = al[:5]
-	}
-	return lang
 }

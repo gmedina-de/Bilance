@@ -10,6 +10,6 @@ alertList.forEach(function (alert) {
 
 $('table').bootstrapTable({
   onClickRow: function (row, $element, field) {
-    window.location.href = window.location.href.split('?')[0] + "/" + row.Id
+    window.location.href = window.location.href.split('?')[0] + "/edit?id=" + row.ID
   }
 })

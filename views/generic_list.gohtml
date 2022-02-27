@@ -7,14 +7,14 @@
                 <thead class="bg-white">
                 <tr>
                     {{range th (index .Model 0)}}
-                        <th data-field="{{.}}" data-sortable="true">{{l10n $.Lang .}}</th>
+                        <th data-field="{{.}}" data-sortable="true">{{l10n .}}</th>
                     {{end}}
                 </tr>
                 </thead>
                 <tbody class="bg-white">
                 {{$Path:=.Path}}
                 {{range .Model}}
-                    <tr data-link="{{$Path}}/edit?Id={{.Id}}">
+                    <tr data-link="{{$Path}}/edit?Id={{.ID}}">
                         {{td .}}
                     </tr>
                 {{end}}
@@ -22,7 +22,7 @@
             </table>
         </div>
     {{else}}
-        {{l10n .Lang "no_records_found"}}
+        {{l10n "no_records_found"}}
     {{end}}
     <nav class="pt-3">
         <ul class="pagination justify-content-center">
@@ -45,7 +45,7 @@
             </li>
             <li class="ms-2 page-item{{if eq $.Page 0}} active{{end}}">
                 <a class="page-link" href="{{.Path}}?page={{if eq $.Page 0}}1{{else}}0{{end}}">
-                    {{l10n .Lang "all"}}
+                    {{l10n "all"}}
                 </a>
             </li>
         </ul>
@@ -53,16 +53,16 @@
 {{end}}
 
 {{define "options"}}
-    <h1 class="h2">{{l10n .Lang .Title}}</h1>
+    <h1 class="h2">{{l10n .Title}}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group me-2">
             <a class="btn btn-sm btn-outline-secondary">
-                <span data-feather="download"></span> {{l10n .Lang "export"}}
+                <span data-feather="download"></span> {{l10n "export"}}
             </a>
         </div>
         <div class="btn-group">
             <a class="btn btn-sm btn-success" href="{{.Path}}/new">
-                <span data-feather="plus-square"></span> {{l10n .Lang "new"}}
+                <span data-feather="plus-square"></span> {{l10n "new"}}
             </a>
         </div>
     </div>

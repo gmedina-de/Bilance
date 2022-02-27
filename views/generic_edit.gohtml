@@ -6,38 +6,38 @@
             {{inputs .Form}}
         </div>
         <button class="w-100 btn btn-primary btn-lg" type="submit">
-            {{l10n .Lang "save"}}
+            {{l10n "save"}}
         </button>
     </form>
 {{end}}
 
 {{define "options"}}
-    <h1 class="h2">{{l10n .Lang .Title}}</h1>
+    <h1 class="h2">{{l10n .Title}}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group" role="group">
-            {{if .Form.Id}}
+            {{if .Form.ID}}
                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
                         data-bs-target="#deleteConfirmationModal">
-                    <span data-feather="trash-2"></span> {{l10n .Lang "delete"}}
+                    <span data-feather="trash-2"></span> {{l10n "delete"}}
                 </button>
             {{end}}
             <a class="btn btn-sm btn-secondary" onclick="history.back()">
-                <span data-feather="x-square"></span> {{l10n .Lang "cancel"}}
+                <span data-feather="x-square"></span> {{l10n "cancel"}}
             </a>
         </div>
         <div class="modal fade" id="deleteConfirmationModal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{l10n .Lang "delete_confirmation"}}</h5>
+                        <h5 class="modal-title">{{l10n "delete_confirmation"}}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        {{l10n .Lang "delete_confirmation_description"}}
+                        {{l10n "delete_confirmation_description"}}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{l10n .Lang "cancel"}}</button>
-                        <a type="button" class="btn btn-danger" href="{{.Path}}/delete">{{l10n .Lang "delete"}}</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{l10n "cancel"}}</button>
+                        <a type="button" class="btn btn-danger" href="{{.Path}}/delete">{{l10n "delete"}}</a>
                     </div>
                 </div>
             </div>

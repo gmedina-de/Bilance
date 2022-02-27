@@ -28,8 +28,7 @@ func (r *standard) Serve() {
 }
 
 func (r *standard) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	w := &statusWriter{ResponseWriter: writer}
-	w.WriteHeader(200)
+	w := &statusWriter{ResponseWriter: writer, status: 200}
 	r.router.Handle(w, request)
 	r.log.Debug("%s %s -> %d", request.Method, request.URL, w.status)
 }

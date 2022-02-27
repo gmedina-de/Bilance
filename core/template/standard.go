@@ -40,8 +40,8 @@ func Standard(localization translator.Translator, log log.Log) Template {
 }
 
 func (s *standard) Render(request *http.Request, writer http.ResponseWriter, template string, data map[string]any) {
-	data["Lang"] = s.localization.Lang(request)
 	data["Path"] = request.URL.Path
+	s.localization.Set(request)
 	if err := s.templates[template+extension].Execute(writer, data); err != nil {
 		s.log.Error(err.Error())
 	}

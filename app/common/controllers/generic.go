@@ -23,6 +23,7 @@ func (g *generic[T]) Routes() map[string]controllers.Handler {
 		"GET " + g.route:             g.List,
 		"POST " + g.route:            g.List,
 		"GET " + g.route + "/new":    g.New,
+		"POST " + g.route + "/new":   g.Save,
 		"GET " + g.route + "/edit":   g.Edit,
 		"POST " + g.route + "/edit":  g.Save,
 		"GET " + g.route + "/delete": g.Remove,

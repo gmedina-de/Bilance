@@ -36,7 +36,7 @@ func (b *balances) prepareBalanceData() []*BalanceData {
 	//))
 	//userIds := models.StringToIds(project.UserIds)
 	//userAmount := len(userIds)
-	//proportionalExpenses := model2.EUR(int64(totalExpenses) / int64(userAmount))
+	//proportionalExpenses := model2.Currency(int64(totalExpenses) / int64(userAmount))
 	//var maxBalance float64
 	//for _, userId := range userIds {
 	//	userIdString := strconv.FormatInt(userId, 10)
@@ -75,13 +75,13 @@ func (b *balances) prepareBalanceData() []*BalanceData {
 type BalanceData struct {
 	ProjectName          string
 	UserName             string
-	TotalExpenses        model2.EUR
+	TotalExpenses        model2.Currency
 	UserAmount           int
-	ProportionalExpenses model2.EUR
-	SentExpenses         model2.EUR
-	SentTransfer         model2.EUR
-	ReceivedTransfer     model2.EUR
-	Result               model2.EUR
+	ProportionalExpenses model2.Currency
+	SentExpenses         model2.Currency
+	SentTransfer         model2.Currency
+	ReceivedTransfer     model2.Currency
+	Result               model2.Currency
 	Width                float64
 }
 
