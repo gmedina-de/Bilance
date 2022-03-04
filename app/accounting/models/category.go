@@ -1,9 +1,15 @@
 package models
 
-import "genuine/core/models"
+import (
+	"genuine/core/models"
+)
 
 type Category struct {
 	models.Model
-	Name  string `class:"form-control" required:"true"`
-	Color string `class:"form-control" required:"true" form:"Color,color"`
+	Name  string `form:"required"`
+	Color string `form:"required"`
+}
+
+func (c Category) String() string {
+	return c.Name
 }

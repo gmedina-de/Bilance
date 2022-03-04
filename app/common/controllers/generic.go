@@ -64,7 +64,7 @@ func (g *generic[T]) New(controllers.Request) controllers.Response {
 }
 
 func (g *generic[T]) Edit(r controllers.Request) controllers.Response {
-	id, _ := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+	id := uint(g.getID(r))
 	return controllers.Response{
 		"Model":    g.repository.Find(id),
 		"Title":    "edit",
@@ -75,30 +75,34 @@ func (g *generic[T]) Edit(r controllers.Request) controllers.Response {
 var decoder = schema.NewDecoder()
 
 func (g *generic[T]) Save(r controllers.Request) controllers.Response {
-	id, _ := strconv.ParseUint(r.URL.Query().Get("id"), 10, 64)
+	id := g.getID(r)
 	model := g.repository.Model()
 
 	err := r.ParseForm()
 	if err != nil {
 		panic(err)
 	}
-	err = decoder.Decode(model, r.PostForm)
+	err = decoder.Decode(&model, r.PostForm)
 	if err != nil {
 		panic(err)
 	}
 
 	if id == 0 {
-		g.repository.Insert(model)
+		g.repository.Insert(&model)
 	} else {
-		models.RealValueOf(model).FieldByName("ID").SetUint(id)
-		g.repository.Update(model)
+		models.RealValueOf(&model).FieldByName(models.ID).SetUint(id)
+		g.repository.Update(&model)
 	}
 	return router.Redirect(g.route)(r)
 }
 
 func (g *generic[T]) Remove(r controllers.Request) controllers.Response {
-	id, _ := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
-	item := g.repository.Find(id)
+	item := g.repository.Find(uint(g.getID(r)))
 	g.repository.Delete(item)
 	return router.Redirect(g.route)(r)
+}
+
+func (*generic[T]) getID(r controllers.Request) uint64 {
+	id, _ := strconv.ParseUint(r.URL.Query().Get(models.ID), 10, 64)
+	return id
 }

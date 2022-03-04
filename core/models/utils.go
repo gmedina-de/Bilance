@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/gob"
-	"github.com/jinzhu/inflection"
 	"reflect"
 	"strings"
+
+	"github.com/jinzhu/inflection"
 )
 
 func Name(model any) string {

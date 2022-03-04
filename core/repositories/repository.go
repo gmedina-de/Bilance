@@ -3,7 +3,7 @@ package repositories
 type Repository[T any] interface {
 	All() []T
 	Count() int64
-	Find(id int64) *T
+	Find(id uint) *T
 	Limit(limit int, offset int) []T
 	List(where string, args ...any) []T
 
@@ -11,5 +11,5 @@ type Repository[T any] interface {
 	Update(entity *T)
 	Delete(entity *T)
 
-	Model() *T
+	Model() T
 }

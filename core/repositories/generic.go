@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"genuine/core/database"
+
+	"gorm.io/gorm/clause"
 )
 
 type generic[T any] struct {
@@ -25,7 +27,7 @@ func Generic[T any](database database.Database, model T, ordering string) Reposi
 
 func (g *generic[T]) All() []T {
 	var result []T
-	g.database.Find(&result)
+	g.database.Preload(clause.Associations).Find(&result)
 	return result
 }
 
@@ -37,13 +39,13 @@ func (g *generic[T]) Count() int64 {
 
 func (g *generic[T]) Limit(limit int, offset int) []T {
 	var result []T
-	g.database.Limit(limit).Offset(offset).Find(&result)
+	g.database.Limit(limit).Offset(offset).Preload(clause.Associations).Find(&result)
 	return result
 }
 
-func (g *generic[T]) Find(id int64) *T {
+func (g *generic[T]) Find(id uint) *T {
 	var result T
-	g.database.First(&result, id)
+	g.database.Preload(clause.Associations).First(&result, id)
 	return &result
 }
 
@@ -65,6 +67,6 @@ func (g *generic[T]) Delete(entity *T) {
 	g.database.Delete(entity)
 }
 
-func (g *generic[T]) Model() *T {
-	return &g.model
+func (g *generic[T]) Model() T {
+	return g.model
 }

@@ -34,7 +34,7 @@ var standard = map[string]string{
 	"records_found":                   "Records found",
 	"no_records_found":                "No records found",
 	"record_saved_successfully":       "Record saved successfully",
-	"id":                              "Id",
+	"id":                              "ID",
 	"name":                            "Name",
 	"amount":                          "Amount",
 	"date":                            "Date",

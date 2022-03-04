@@ -11,6 +11,10 @@ type User struct {
 	Role     UserRole
 }
 
+func (u User) String() string {
+	return u.Name
+}
+
 type UserRole int64
 
 const UserRoleAdmin UserRole = 0
