@@ -22,3 +22,4 @@ build.sh
 /data/
 database.db
 vendor
+__debug_bin

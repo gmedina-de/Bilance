@@ -1,10 +1,14 @@
 package database
 
 import (
+	"context"
 	"genuine/core/config"
 	"genuine/core/log"
+	"time"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type standard struct {
@@ -13,12 +17,14 @@ type standard struct {
 }
 
 func Standard(log log.Log) Database {
+	s := &standard{log, nil}
 	path := config.DatabaseLocation()
-	db, err := gorm.Open(sqlite.Open(path), nil)
+	db, err := gorm.Open(sqlite.Open(path), &gorm.Config{Logger: s})
 	if err != nil {
 		log.Critical("Failed to connect database")
 	}
-	return &standard{log, db}
+	s.db = db
+	return s
 }
 
 func (s *standard) Migrate(model any) {
@@ -42,4 +48,25 @@ func (s *standard) Update(model any) {
 
 func (s *standard) Delete(model any) {
 	s.db.Delete(model)
+}
+
+// log methods for gorm
+func (s *standard) LogMode(level logger.LogLevel) logger.Interface {
+	return s
+}
+func (s *standard) Info(ctx context.Context, msg string, v ...interface{}) {
+	s.log.Info(msg, v...)
+}
+func (s *standard) Warn(ctx context.Context, msg string, v ...interface{}) {
+	s.log.Warning(msg, v...)
+}
+func (s *standard) Error(ctx context.Context, msg string, v ...interface{}) {
+	s.log.Error(msg, v...)
+}
+func (s *standard) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {
+	sql, rowsAffected := fc()
+	s.log.Debug("SQL %s -> %d", sql, rowsAffected)
+	if err != nil {
+		s.log.Error(err.Error())
+	}
 }
