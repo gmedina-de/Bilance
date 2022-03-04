@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"genuine/core/database"
-	"genuine/core/models"
 )
 
 type generic[T any] struct {
@@ -12,59 +11,60 @@ type generic[T any] struct {
 }
 
 func Generic[T any](database database.Database, model T, ordering string) Repository[T] {
-	database.Migrate(model)
 	if ordering == "" {
 		ordering = "Id DESC"
 	}
+
+	err := database.AutoMigrate(&model)
+	if err != nil {
+		database.Logger.Error(nil, err.Error())
+	}
+
 	return &generic[T]{database, model, ordering}
 }
 
 func (g *generic[T]) All() []T {
 	var result []T
-	g.database.Select(&result, "* FROM "+g.tableName()+" ORDER BY "+g.ordering)
+	g.database.Find(&result)
 	return result
 }
 
 func (g *generic[T]) Count() int64 {
 	var result int64
-	g.database.Select(&result, "COUNT(*) FROM "+g.tableName())
+	g.database.Model(&g.model).Count(&result)
 	return result
 }
 
-func (g *generic[T]) Limit(limit int64, offset int64) []T {
+func (g *generic[T]) Limit(limit int, offset int) []T {
 	var result []T
-	g.database.Select(&result, "* FROM "+g.tableName()+" ORDER BY "+g.ordering+" LIMIT ? OFFSET ?", limit, offset)
+	g.database.Limit(limit).Offset(offset).Find(&result)
 	return result
 }
 
 func (g *generic[T]) Find(id int64) *T {
 	var result T
-	g.database.Select(&result, "* FROM "+g.tableName()+" WHERE Id = ?", id)
+	g.database.First(&result, id)
 	return &result
 }
 
-func (g *generic[T]) List(query string, args ...any) []T {
+func (g *generic[T]) List(where string, args ...any) []T {
 	var result []T
-	g.database.Select(&result, "* FROM "+g.tableName()+" "+query, args...)
+	g.database.Where(where, args...).Find(&result)
 	return result
 }
 
-func (g *generic[T]) Insert(entity any) {
-	g.database.Insert(entity)
+func (g *generic[T]) Insert(entity *T) {
+	g.database.Create(entity)
 }
 
-func (g *generic[T]) Update(entity any) {
-	g.database.Update(entity)
+func (g *generic[T]) Update(entity *T) {
+	g.database.Save(entity)
 }
 
-func (g *generic[T]) Delete(entity any) {
+func (g *generic[T]) Delete(entity *T) {
 	g.database.Delete(entity)
 }
 
 func (g *generic[T]) Model() *T {
 	return &g.model
-}
-
-func (g *generic[T]) tableName() string {
-	return models.Plural(g.model)
 }

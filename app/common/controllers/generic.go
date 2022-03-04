@@ -5,8 +5,9 @@ import (
 	"genuine/core/models"
 	"genuine/core/repositories"
 	"genuine/core/router"
-	"github.com/gorilla/schema"
 	"strconv"
+
+	"github.com/gorilla/schema"
 )
 
 type generic[T any] struct {
@@ -43,7 +44,7 @@ func (g *generic[T]) List(r controllers.Request) controllers.Response {
 		model = g.repository.All()
 	} else {
 		pages++
-		model = g.repository.Limit(pageSize, offset)
+		model = g.repository.Limit(int(pageSize), int(offset))
 	}
 	return controllers.Response{
 		"Model":    model,
@@ -74,7 +75,7 @@ func (g *generic[T]) Edit(r controllers.Request) controllers.Response {
 var decoder = schema.NewDecoder()
 
 func (g *generic[T]) Save(r controllers.Request) controllers.Response {
-	id, _ := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+	id, _ := strconv.ParseUint(r.URL.Query().Get("id"), 10, 64)
 	model := g.repository.Model()
 
 	err := r.ParseForm()
@@ -89,7 +90,7 @@ func (g *generic[T]) Save(r controllers.Request) controllers.Response {
 	if id == 0 {
 		g.repository.Insert(model)
 	} else {
-		models.RealValueOf(model).FieldByName("ID").SetInt(id)
+		models.RealValueOf(model).FieldByName("ID").SetUint(id)
 		g.repository.Update(model)
 	}
 	return router.Redirect(g.route)(r)
