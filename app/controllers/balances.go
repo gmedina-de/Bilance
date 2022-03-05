@@ -1,8 +1,7 @@
 package controllers
 
 import (
-	model2 "genuine/app/accounting/models"
-	"genuine/app/common/models"
+	model2 "genuine/app/models"
 	"genuine/core/controllers"
 	"genuine/core/repositories"
 	"genuine/core/router"
@@ -10,7 +9,7 @@ import (
 
 type balances struct {
 	payments repositories.Repository[model2.Payment]
-	users    repositories.Repository[models.User]
+	users    repositories.Repository[model2.User]
 }
 
 func Balances() controllers.Controller {

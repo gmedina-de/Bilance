@@ -1,9 +1,13 @@
 package models
 
+import (
+	"genuine/app/models/register"
+)
+
 func init() {
-	AddModel(Person{}, "user")
-	AddModel(Note{}, "edit")
-	AddModel(Book{}, "book")
+	register.Register(Person{}, "user")
+	register.Register(Note{}, "edit")
+	register.Register(Book{}, "book")
 }
 
 type Person struct {

@@ -1,8 +1,8 @@
 package navigation
 
 import (
-	model2 "genuine/app/accounting/models"
-	"genuine/app/assets/models"
+	model2 "genuine/app/models"
+	"genuine/app/models/register"
 	"genuine/core/controllers"
 	"genuine/core/decorator"
 	models2 "genuine/core/models"
@@ -38,11 +38,11 @@ func Standard(categories repositories.Repository[model2.Category]) decorator.Dec
 			return items1
 		}
 
-		Models := models.Models
-		items0.add("assets", "box", "/assets"+models2.Plural(Models[0])).SubMenu = func() items {
+		Models := register.Models
+		items0.add("assets", "box", "/assets/"+models2.Plural(Models[0])).SubMenu = func() items {
 			var items1 items
 			for i, m := range Models {
-				items1.add(models2.Plural(m), models.Icons[i], "/assets/"+models2.Plural(m))
+				items1.add(models2.Plural(m), register.Icons[i], "/assets/"+models2.Plural(m))
 			}
 			return items1
 		}

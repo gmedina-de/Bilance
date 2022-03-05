@@ -1,14 +1,14 @@
 package controllers
 
 import (
-	models2 "genuine/app/accounting/models"
+	"genuine/app/models"
 	"genuine/core/controllers"
 	"genuine/core/repositories"
 )
 
 type expenses struct {
-	payments   repositories.Repository[models2.Payment]
-	categories repositories.Repository[models2.Category]
+	payments   repositories.Repository[models.Payment]
+	categories repositories.Repository[models.Category]
 }
 
 func Expenses() controllers.Controller {

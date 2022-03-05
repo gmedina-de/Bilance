@@ -1,7 +1,7 @@
 package filters
 
 import (
-	"genuine/app/common/models"
+	"genuine/app/models"
 	"genuine/core/filter"
 	"genuine/core/repositories"
 	"net/http"

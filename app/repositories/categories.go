@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"genuine/app/accounting/models"
+	"genuine/app/models"
 	"genuine/core/database"
 	"genuine/core/repositories"
 )
