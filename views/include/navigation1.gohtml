@@ -16,9 +16,7 @@
                         </h6>
                     {{end}}
                     {{if and (eq $.CurrentNavigation1.Path $a.Path) $.Navigation2}}
-                        <hr>
                         {{template "navigation2.gohtml" $}}
-                        <hr>
                     {{end}}
                 {{end}}
             </ul>

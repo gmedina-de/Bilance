@@ -1,8 +1,10 @@
-{{range $i, $a := .Navigation2}}
-    <li>
-        <a href="{{.Path}}" class="nav-link{{if eq $.Path $a.Path}} text-primary{{end}}">
-            <span data-feather="{{.Icon}}"></span>
-            {{l10n .Name}}
-        </a>
-    </li>
-{{end}}
+<div class="card mx-3 bg-light">
+    {{range $i, $a := .Navigation2}}
+        <li class="border-bottom">
+            <a href="{{.Path}}" class="nav-link{{if eq $.Path $a.Path}} text-primary{{end}}">
+                <span data-feather="{{.Icon}}"></span>
+                {{l10n .Name}}
+            </a>
+        </li>
+    {{end}}
+</div>
