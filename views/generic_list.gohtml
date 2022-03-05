@@ -1,7 +1,9 @@
 {{ template "base.gohtml" . }}
 
 {{define "content"}}
-    {{template "table.gohtml" . }}
+    <div class="table-responsive" id="model-table">
+        {{template "table.gohtml" .Model }}
+    </div>
     {{template "pagination.gohtml" . }}
 {{end}}
 

@@ -1,5 +1,9 @@
 {{ template "base.gohtml" . }}
 {{ define "content" }}
-    {{template "table.gohtml" . }}
-
+    {{range $key, $value := .Results}}
+        <div class="mb-5">
+            <h2>{{l10n $key}}</h2>
+            {{template "table.gohtml" $value }}
+        </div>
+    {{end}}
 {{ end}}

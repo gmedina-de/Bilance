@@ -8,7 +8,7 @@ alertList.forEach(function (alert) {
   },3000)
 });
 
-$('table').bootstrapTable({
+$('#model-table > table').bootstrapTable({
   onClickRow: function (row, $element, field) {
     window.location.href = window.location.href.split('?')[0] + "/edit?ID=" + row.ID
   }

@@ -51,7 +51,7 @@ func (g *generic[T]) Find(id uint) *T {
 
 func (g *generic[T]) List(where string, args ...any) []T {
 	var result []T
-	g.database.Where(where, args...).Find(&result)
+	g.database.Where(where, args...).Preload(clause.Associations).Find(&result)
 	return result
 }
 

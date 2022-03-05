@@ -17,7 +17,12 @@ type generic[T any] struct {
 }
 
 func Generic[T any](repository repositories.Repository[T], route string) *generic[T] {
-	return &generic[T]{repository, route}
+	g := &generic[T]{repository, route}
+	searchers = append(searchers, func(r controllers.Request) any {
+		where, args := g.search(r)
+		return repository.List(where, args)
+	})
+	return g
 }
 
 func (g *generic[T]) Routes() map[string]controllers.Handler {
@@ -34,8 +39,18 @@ func (g *generic[T]) Routes() map[string]controllers.Handler {
 
 func (g *generic[T]) List(r controllers.Request) controllers.Response {
 	title := models2.Plural(g.repository.Model())
+	where, args := g.search(r)
+	model, page, pages := g.paginate(r, where, args)
+	return controllers.Response{
+		"Title":    title,
+		"Template": "generic_list",
+		"Model":    model,
+		"Pages":    pages,
+		"Page":     page,
+	}
+}
 
-	// HANDLE SEARCH
+func (g *generic[T]) search(r controllers.Request) (string, []any) {
 	where := ""
 	var args []any
 	if r.URL.Query().Has("q") {
@@ -43,15 +58,21 @@ func (g *generic[T]) List(r controllers.Request) controllers.Response {
 		search := r.URL.Query().Get("q")
 		commas := strings.Split(search, ",")
 		for _, comma := range commas {
-			colons := strings.Split(comma, ":")
-			wheres = append(wheres, colons[0]+" LIKE ?")
-			args = append(args, colons[1])
+			if strings.Contains(comma, ":") {
+				colons := strings.Split(comma, ":")
+				wheres = append(wheres, colons[0]+" LIKE ?")
+				args = append(args, colons[1])
+			} else {
+				wheres = append(wheres, "NAME LIKE ?")
+				args = append(args, "%"+comma+"%")
+			}
 		}
 		where = strings.Join(wheres, " AND ")
-		title = "search_results"
 	}
+	return where, args
+}
 
-	// HANDLE PAGINATION
+func (g *generic[T]) paginate(r controllers.Request, where string, args []any) (any, int64, int64) {
 	page, err := strconv.ParseInt(r.URL.Query().Get("p"), 10, 64)
 	if err != nil {
 		page = 1
@@ -66,15 +87,7 @@ func (g *generic[T]) List(r controllers.Request) controllers.Response {
 		pages++
 		model = g.repository.Limit(int(pageSize), int(offset), where, args...)
 	}
-
-	// RENDER
-	return controllers.Response{
-		"Model":    model,
-		"Title":    title,
-		"Template": "generic_list",
-		"Pages":    pages,
-		"Page":     page,
-	}
+	return model, page, pages
 }
 
 func (g *generic[T]) New(controllers.Request) controllers.Response {
