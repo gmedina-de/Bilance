@@ -1,16 +1,16 @@
 package navigation
 
-type Item struct {
+type item struct {
 	Name    string
 	Icon    string
 	Path    string
-	SubMenu []*Item
+	SubMenu func() items
 }
 
-func (i *Item) Sub(name string, icon string) *Item {
-	if i.SubMenu == nil {
-		i.SubMenu = []*Item{}
-	}
-	i.SubMenu = append(i.SubMenu, &Item{Name: name, Icon: icon, Path: i.Path + "/" + name})
+type items []*item
+
+func (is *items) add(name string, icon string, path string) *item {
+	i := &item{Name: name, Icon: icon, Path: path}
+	*is = append(*is, i)
 	return i
 }

@@ -18,5 +18,7 @@ func (f *files) Routes() map[string]controllers.Handler {
 }
 
 func (f *files) Index(controllers.Request) controllers.Response {
-	return nil
+	return controllers.Response{
+		"Template": "files",
+	}
 }
