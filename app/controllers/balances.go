@@ -4,7 +4,6 @@ import (
 	model2 "genuine/app/models"
 	"genuine/core/controllers"
 	"genuine/core/repositories"
-	"genuine/core/router"
 )
 
 type balances struct {
@@ -18,7 +17,7 @@ func Balances() controllers.Controller {
 
 func (b *balances) Routes() map[string]controllers.Handler {
 	return map[string]controllers.Handler{
-		"GET /accounting book": router.Redirect("/accounting/balances"),
+		"GET /accounting book": controllers.Redirect("/accounting/balances"),
 	}
 }
 

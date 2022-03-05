@@ -1,18 +1,20 @@
 package log
 
 import (
+	"flag"
 	"fmt"
-	"genuine/core/config"
 	"log"
 	"os"
 )
+
+var LogLevel = flag.Int("log", 4, "log level where 0 is critical and 4 is debug")
 
 type standard struct {
 	level Level
 }
 
 func Standard() Log {
-	return &standard{level: Level(config.LogLevel())}
+	return &standard{level: Level(*LogLevel)}
 }
 
 func (s *standard) Critical(format string, v ...interface{}) {

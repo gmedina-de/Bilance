@@ -2,7 +2,7 @@ package server
 
 import (
 	"fmt"
-	"genuine/core/filter"
+	"genuine/core/filters"
 	"genuine/core/log"
 	"genuine/core/server"
 	wd "golang.org/x/net/webdav"
@@ -13,10 +13,10 @@ import (
 
 type webdav struct {
 	log     log.Log
-	filters []filter.Filter
+	filters []filters.Filter
 }
 
-func Webdav(log log.Log, filters []filter.Filter) server.Server {
+func Webdav(log log.Log, filters []filters.Filter) server.Server {
 	return &webdav{log, filters}
 }
 

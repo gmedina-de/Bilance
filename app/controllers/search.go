@@ -1,8 +1,8 @@
 package controllers
 
 import (
+	"genuine/app/database"
 	"genuine/core/controllers"
-	"genuine/core/database"
 )
 
 type search struct {

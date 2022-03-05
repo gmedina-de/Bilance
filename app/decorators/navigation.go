@@ -1,22 +1,21 @@
-package navigation
+package decorators
 
 import (
 	model2 "genuine/app/models"
 	"genuine/app/models/register"
 	"genuine/core/controllers"
-	"genuine/core/decorator"
-	models2 "genuine/core/models"
+	"genuine/core/decorators"
 	"genuine/core/repositories"
 	"strconv"
 	"strings"
 )
 
-type standard struct {
+type navigation struct {
 	root func() items
 }
 
-func Standard(categories repositories.Repository[model2.Category]) decorator.Decorator {
-	return &standard{root: func() items {
+func Navigation(categories repositories.Repository[model2.Category]) decorators.Decorator {
+	return &navigation{root: func() items {
 		var items0 items
 		items0.add("home", "home", "/")
 
@@ -39,10 +38,10 @@ func Standard(categories repositories.Repository[model2.Category]) decorator.Dec
 		}
 
 		Models := register.Models
-		items0.add("assets", "box", "/assets/"+models2.Plural(Models[0])).SubMenu = func() items {
+		items0.add("assets", "box", "/assets/"+model2.Plural(Models[0])).SubMenu = func() items {
 			var items1 items
 			for i, m := range Models {
-				items1.add(models2.Plural(m), register.Icons[i], "/assets/"+models2.Plural(m))
+				items1.add(model2.Plural(m), register.Icons[i], "/assets/"+model2.Plural(m))
 			}
 			return items1
 		}
@@ -69,7 +68,7 @@ func Standard(categories repositories.Repository[model2.Category]) decorator.Dec
 	}}
 }
 
-func (s *standard) Decorate(req controllers.Request, res controllers.Response) {
+func (s *navigation) Decorate(req controllers.Request, res controllers.Response) {
 	traverse(res, req.URL.Path, s.root(), 0)
 }
 
@@ -98,4 +97,19 @@ func currentNavigation(path string, navigation items) *item {
 		}
 	}
 	return result
+}
+
+type item struct {
+	Name    string
+	Icon    string
+	Path    string
+	SubMenu func() items
+}
+
+type items []*item
+
+func (is *items) add(name string, icon string, path string) *item {
+	i := &item{Name: name, Icon: icon, Path: path}
+	*is = append(*is, i)
+	return i
 }

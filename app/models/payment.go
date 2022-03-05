@@ -2,14 +2,13 @@ package models
 
 import (
 	"fmt"
-	"genuine/core/models"
 )
 
 type Payment struct {
-	models.Model
+	Model
 	Name       string   `form:"required"`
 	Amount     Currency `form:"required"`
-	Date       models.Date
+	Date       Date
 	CategoryID uint
 	Category   Category
 	PayerID    uint

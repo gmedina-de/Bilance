@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"genuine/core/database"
-
+	"genuine/app/database"
+	"genuine/core/repositories"
 	"gorm.io/gorm/clause"
 )
 
@@ -12,7 +12,7 @@ type generic[T any] struct {
 	ordering string
 }
 
-func Generic[T any](database database.Database, model T, ordering string) Repository[T] {
+func Generic[T any](database database.Database, model T, ordering string) repositories.Repository[T] {
 	if ordering == "" {
 		ordering = "Id DESC"
 	}

@@ -1,8 +1,6 @@
 package core
 
 import (
-	"genuine/core/config"
-	"genuine/core/database"
 	"genuine/core/log"
 	"genuine/core/router"
 	"genuine/core/server"
@@ -15,7 +13,6 @@ import (
 
 func init() {
 	Provide(log.Standard)
-	Provide(database.Standard)
 	Provide(server.Standard)
 	Provide(router.Standard)
 	Provide(translator.Standard)
@@ -86,7 +83,7 @@ func Invoke(constructor any) reflect.Value {
 }
 
 func debug(format string, v ...any) {
-	if log.Level(config.LogLevel()) == log.Debug {
+	if *log.LogLevel == int(log.Debug) {
 		Printf(strings.Repeat("  ", level)+format, v...)
 	}
 }

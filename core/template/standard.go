@@ -1,7 +1,8 @@
 package template
 
 import (
-	"genuine/core/config"
+	"flag"
+	"genuine/core/functions"
 	"genuine/core/log"
 	"genuine/core/translator"
 	"html/template"
@@ -10,24 +11,32 @@ import (
 )
 
 type standard struct {
-	localization translator.Translator
-	log          log.Log
-	templates    map[string]*template.Template
+	translator translator.Translator
+	log        log.Log
+	templates  map[string]*template.Template
 }
 
 const extension = ".gohtml"
 
-func Standard(localization translator.Translator, log log.Log) Template {
-	s := &standard{localization, log, make(map[string]*template.Template)}
+var views = flag.String("views", "views", "directory where views are stored")
+
+func Standard(translator translator.Translator, providers []functions.Provider, log log.Log) Template {
+
+	s := &standard{translator, log, make(map[string]*template.Template)}
 	main := template.New("base.gohtml")
-	AddFunc("l10n", s.localization.Translate)
+
+	var funcMap = make(template.FuncMap)
+	for _, p := range providers {
+		funcMap = s.joinFuncMaps(p.GetFuncMap(), funcMap)
+	}
+	funcMap = s.joinFuncMaps(translator.GetFuncMap(), funcMap)
 	main.Funcs(funcMap)
 
-	baseFiles, err := filepath.Glob(config.ViewDirectory() + "/include/*" + extension)
+	baseFiles, err := filepath.Glob(*views + "/include/*" + extension)
 	if err != nil {
 		s.log.Error(err.Error())
 	}
-	files, err := filepath.Glob(config.ViewDirectory() + "/*" + extension)
+	files, err := filepath.Glob(*views + "/*" + extension)
 	if err != nil {
 		s.log.Error(err.Error())
 	}
@@ -41,7 +50,7 @@ func Standard(localization translator.Translator, log log.Log) Template {
 
 func (s *standard) Render(request *http.Request, writer http.ResponseWriter, template string, data map[string]any) {
 	data["Path"] = request.URL.Path
-	s.localization.Set(request)
+	s.translator.Set(request)
 	templateName := template + extension
 	tmpl, found := s.templates[templateName]
 	if found {
@@ -51,4 +60,11 @@ func (s *standard) Render(request *http.Request, writer http.ResponseWriter, tem
 	} else {
 		s.log.Error("Template %s not found", templateName)
 	}
+}
+
+func (s *standard) joinFuncMaps(m1, m2 template.FuncMap) template.FuncMap {
+	for k, v := range m1 {
+		m2[k] = v
+	}
+	return m2
 }

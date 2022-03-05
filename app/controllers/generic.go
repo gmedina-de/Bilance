@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	models2 "genuine/app/models"
 	"genuine/core/controllers"
 	"genuine/core/models"
 	"genuine/core/repositories"
-	"genuine/core/router"
 	"strconv"
 	"strings"
 
@@ -33,7 +33,7 @@ func (g *generic[T]) Routes() map[string]controllers.Handler {
 }
 
 func (g *generic[T]) List(r controllers.Request) controllers.Response {
-	title := models.Plural(g.repository.Model())
+	title := models2.Plural(g.repository.Model())
 
 	// HANDLE SEARCH
 	where := ""
@@ -112,16 +112,16 @@ func (g *generic[T]) Save(r controllers.Request) controllers.Response {
 	if id == 0 {
 		g.repository.Insert(&model)
 	} else {
-		models.RealValueOf(&model).FieldByName(models.ID).SetUint(id)
+		models2.RealValueOf(&model).FieldByName(models.ID).SetUint(id)
 		g.repository.Update(&model)
 	}
-	return router.Redirect(g.route)(r)
+	return controllers.Redirect(g.route)(r)
 }
 
 func (g *generic[T]) Remove(r controllers.Request) controllers.Response {
 	item := g.repository.Find(uint(g.getID(r)))
 	g.repository.Delete(item)
-	return router.Redirect(g.route)(r)
+	return controllers.Redirect(g.route)(r)
 }
 
 func (*generic[T]) getID(r controllers.Request) uint64 {

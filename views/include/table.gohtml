@@ -4,7 +4,7 @@
             <thead class="bg-white">
             <tr>
                 {{range th (index .Model 0)}}
-                    <th data-field="{{.}}" data-sortable="true">{{l10n .}}</th>
+                    <th data-field="{{.}}" data-sortable="true">{{.}}</th>
                 {{end}}
             </tr>
             </thead>

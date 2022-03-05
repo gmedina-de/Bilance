@@ -1,11 +1,7 @@
 package models
 
-import (
-	"genuine/core/models"
-)
-
 type Category struct {
-	models.Model
+	Model
 	Name  string `form:"required"`
 	Color string `form:"required"`
 }

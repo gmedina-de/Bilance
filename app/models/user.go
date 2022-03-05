@@ -1,11 +1,7 @@
 package models
 
-import (
-	"genuine/core/models"
-)
-
 type User struct {
-	models.Model
+	Model
 	Name     string
 	Password string
 	IsAdmin  bool

@@ -1,23 +1,33 @@
-package template
+package functions
 
 import (
 	"fmt"
-	"genuine/core/database"
+	"genuine/app/database"
+	models2 "genuine/app/models"
+	"genuine/core/functions"
 	"genuine/core/models"
-	template2 "genuine/core/template"
+	"genuine/core/translator"
 	"html/template"
 	"reflect"
 	"strings"
 )
 
-var templates = map[string]string{
-	"default": `
+type form struct {
+	translator translator.Translator
+	templates  map[string]*template.Template
+}
+
+func Form(translator translator.Translator) functions.Provider {
+	f := &form{translator: translator}
+
+	f.templates = map[string]*template.Template{
+		"default": f.parse(`
 <div class="form-floating mb-3">
 	<input type="{{.Type}}" class="form-control" name="{{.Name}}" id="{{.Id}}" placeholder="{{.Placeholder}}" value="{{.Value}}" {{.Custom}}>
 	<label for="{{.Id}}">{{l10n .Label}}</label>
 </div>
-	`,
-	"select": `
+	`),
+		"select": f.parse(`
 <div class="form-floating mb-3">
 	<select class="form-select" name="{{.Name}}ID" id="{{.Id}}" {{.Custom}}>
 		<option></option>
@@ -27,53 +37,45 @@ var templates = map[string]string{
 	</select>
 	<label for="{{.Id}}">{{l10n .Label}}</label>
 </div>
-	`,
-	"checkbox": `
+	`),
+		"checkbox": f.parse(`
 <div class="form-check mb-3">
   <input class="form-check-input" type="checkbox"{{if.Value}} checked{{end}} name="{{.Name}}" id="{{.Id}}" {{.Custom}}>
   <label class="form-check-label" for="{{.Id}}">{{l10n .Label}}</label>
 </div>
-	`,
+	`),
+	}
+
+	return f
 }
 
-type field struct {
-	Name        string
-	Label       string
-	Placeholder string
-	Id          string
-	Type        string
-	Value       any
-	Options     []option
-	Custom      string
+func (f *form) GetFuncMap() template.FuncMap {
+	return map[string]any{
+		"inputs": f.inputs,
+	}
 }
 
-type option struct {
-	Value    uint
-	Selected bool
-	Label    string
-}
-
-func inputs(model any, database database.Database) template.HTML {
-	fields := fields(model, database)
+func (f *form) inputs(model any, database database.Database) template.HTML {
+	fields := f.fields(model, database)
 	var html template.HTML
 	for _, field := range fields {
 		var sb strings.Builder
-		parse(field.Type).Execute(&sb, field)
+		tmpl, found := f.templates[field.Type]
+		if !found {
+			tmpl = f.templates["default"]
+		}
+		tmpl.Execute(&sb, field)
 		html = html + template.HTML(sb.String())
 	}
 	return html
 }
 
-func parse(parse string) *template.Template {
-	tmpl, found := templates[parse]
-	if !found {
-		tmpl = templates["default"]
-	}
-	return template.Must(template.New("").Funcs(template2.GetFuncMap()).Parse(tmpl))
+func (f *form) parse(parse string) *template.Template {
+	return template.Must(template.New("").Funcs(f.translator.GetFuncMap()).Parse(parse))
 }
 
-func fields(model any, database database.Database) []field {
-	rv := models.RealValueOf(model)
+func (f *form) fields(model any, database database.Database) []field {
+	rv := models2.RealValueOf(model)
 	t := rv.Type()
 	ret := make([]field, 0, t.NumField())
 	for i := 0; i < t.NumField(); i++ {
@@ -87,16 +89,16 @@ func fields(model any, database database.Database) []field {
 			Label:       sf.Name,
 			Placeholder: sf.Name,
 			Id:          sf.Name,
-			Type:        fieldInputType(sf),
+			Type:        f.fieldInputType(sf),
 			Value:       rf.Interface(),
-			Options:     options(sf, selectedId(rv, sf), database),
+			Options:     f.options(sf, f.selectedId(rv, sf), database),
 			Custom:      sf.Tag.Get("form"),
 		})
 	}
 	return ret
 }
 
-func selectedId(rv reflect.Value, sf reflect.StructField) uint {
+func (f *form) selectedId(rv reflect.Value, sf reflect.StructField) uint {
 	idField := rv.FieldByName(sf.Name + models.ID)
 	if !reflect.ValueOf(idField).IsZero() {
 		return uint(idField.Uint())
@@ -104,7 +106,7 @@ func selectedId(rv reflect.Value, sf reflect.StructField) uint {
 	return 0
 }
 
-func options(sf reflect.StructField, selectedId uint, database database.Database) []option {
+func (f *form) options(sf reflect.StructField, selectedId uint, database database.Database) []option {
 	var ret []option
 	slice := reflect.MakeSlice(reflect.SliceOf(sf.Type), 0, 10).Interface()
 	database.Find(&slice)
@@ -121,7 +123,7 @@ func options(sf reflect.StructField, selectedId uint, database database.Database
 	return ret
 }
 
-func fieldInputType(t reflect.StructField) string {
+func (f *form) fieldInputType(t reflect.StructField) string {
 	switch t.Name {
 	case "Color":
 		return "color"
@@ -161,4 +163,21 @@ func fieldInputType(t reflect.StructField) string {
 		return "select"
 	}
 	return "text"
+}
+
+type field struct {
+	Name        string
+	Label       string
+	Placeholder string
+	Id          string
+	Type        string
+	Value       any
+	Options     []option
+	Custom      string
+}
+
+type option struct {
+	Value    uint
+	Selected bool
+	Label    string
 }

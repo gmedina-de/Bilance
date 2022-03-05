@@ -1,13 +1,8 @@
 package localizations
 
-import "genuine/core/translator"
+import "genuine/core/localizations"
 
-func init() {
-	translator.AddLocalization("default", standard)
-	translator.AddLocalization("de", de)
-}
-
-var standard = map[string]string{
+var localization_default = localizations.Localization{
 	"payments":                        "Payments",
 	"categories":                      "Categories",
 	"analysis":                        "Analysis",

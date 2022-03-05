@@ -1,12 +1,14 @@
 package server
 
 import (
+	"flag"
 	"fmt"
-	"genuine/core/config"
 	"genuine/core/log"
 	"genuine/core/router"
 	"net/http"
 )
+
+var port = flag.Int("port", 8080, "application port")
 
 type standard struct {
 	log    log.Log
@@ -20,8 +22,8 @@ func Standard(log log.Log, router router.Router) Server {
 func (r *standard) Serve() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", r.ServeHTTP)
-	r.log.Info("Starting server http://localhost:%d", config.ServerPort())
-	err := http.ListenAndServe(fmt.Sprintf(":%d", config.ServerPort()), nil)
+	r.log.Info("Starting server http://localhost:%d", *port)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
 	if err != nil {
 		r.log.Critical(err.Error())
 	}

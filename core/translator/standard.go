@@ -2,15 +2,24 @@ package translator
 
 import (
 	"fmt"
+	"genuine/core/localizations"
+	"html/template"
 	"net/http"
 )
 
 type standard struct {
-	language string
+	language      string
+	localizations map[string]localizations.Localization
 }
 
-func Standard() Translator {
-	return &standard{}
+func Standard(provider localizations.Provider) Translator {
+	return &standard{localizations: provider.GetLocalizations()}
+}
+
+func (s *standard) GetFuncMap() template.FuncMap {
+	return map[string]any{
+		"l10n": s.Translate,
+	}
 }
 
 func (s *standard) Set(request *http.Request) {
@@ -23,14 +32,14 @@ func (s *standard) Set(request *http.Request) {
 }
 
 func (s *standard) Translate(key string, params ...any) string {
-	localization, found := localizations[s.language]
+	localization, found := s.localizations[s.language]
 	if found {
 		translation, found := localization[key]
 		if found {
 			return fmt.Sprintf(translation, params...)
 		}
 	}
-	localization, found = localizations["default"]
+	localization, found = s.localizations["default"]
 	if found {
 		translation, found := localization[key]
 		if found {

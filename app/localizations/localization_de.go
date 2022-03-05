@@ -1,6 +1,8 @@
 package localizations
 
-var de = map[string]string{
+import "genuine/core/localizations"
+
+var localization_de = localizations.Localization{
 	"payments":                        "Zahlungen",
 	"categories":                      "Kategorien",
 	"analysis":                        "Auswertungen",

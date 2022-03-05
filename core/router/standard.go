@@ -1,10 +1,10 @@
 package router
 
 import (
+	"genuine/app/database"
 	"genuine/core/controllers"
-	"genuine/core/database"
-	"genuine/core/decorator"
-	"genuine/core/filter"
+	"genuine/core/decorators"
+	"genuine/core/filters"
 	"genuine/core/log"
 	"genuine/core/template"
 	"net/http"
@@ -13,8 +13,8 @@ import (
 
 type standard struct {
 	controllers []controllers.Controller
-	filters     []filter.Filter
-	decorators  []decorator.Decorator
+	filters     []filters.Filter
+	decorators  []decorators.Decorator
 	template    template.Template
 	database    database.Database
 
@@ -23,8 +23,8 @@ type standard struct {
 
 func Standard(
 	cs []controllers.Controller,
-	filters []filter.Filter,
-	decorators []decorator.Decorator,
+	filters []filters.Filter,
+	decorators []decorators.Decorator,
 	template template.Template,
 	database database.Database,
 	log log.Log,

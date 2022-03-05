@@ -18,6 +18,7 @@ type TimeUnit int
 
 const TimeUnitWeekday TimeUnit = iota
 const TimeUnitMonthday TimeUnit = iota + 1
+
 const TimeUnitMonth TimeUnit = iota + 2
 
 func NormalWeekday(weekday time.Weekday) int {
