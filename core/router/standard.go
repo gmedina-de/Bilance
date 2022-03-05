@@ -2,6 +2,7 @@ package router
 
 import (
 	"genuine/core/controllers"
+	"genuine/core/database"
 	"genuine/core/decorator"
 	"genuine/core/filter"
 	"genuine/core/log"
@@ -15,7 +16,9 @@ type standard struct {
 	filters     []filter.Filter
 	decorators  []decorator.Decorator
 	template    template.Template
-	routes      map[string]controllers.Handler
+	database    database.Database
+
+	routes map[string]controllers.Handler
 }
 
 func Standard(
@@ -23,9 +26,10 @@ func Standard(
 	filters []filter.Filter,
 	decorators []decorator.Decorator,
 	template template.Template,
+	database database.Database,
 	log log.Log,
 ) Router {
-	s := &standard{cs, filters, decorators, template, make(map[string]controllers.Handler)}
+	s := &standard{cs, filters, decorators, template, database, make(map[string]controllers.Handler)}
 	for _, c := range s.controllers {
 		for k, v := range c.Routes() {
 			s.routes[k] = v
@@ -54,6 +58,7 @@ func (s *standard) Handle(w http.ResponseWriter, r *http.Request) {
 
 				tmpl, render := response["Template"].(string)
 				if render {
+					response["Database"] = s.database
 					s.template.Render(r, w, tmpl, response)
 				}
 			}

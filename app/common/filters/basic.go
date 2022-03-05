@@ -1,4 +1,4 @@
-package authenticator
+package filters
 
 import (
 	"genuine/app/common/models"

@@ -11,22 +11,15 @@ func th(v any) []string {
 	t := rv.Type()
 	ret := make([]string, 0, t.NumField())
 	for i := 0; i < t.NumField(); i++ {
-		rf := rv.Field(i)
-		field := t.Field(i)
-
-		if !rf.CanInterface() ||
-			field.Name == "Valid" ||
-			strings.HasSuffix(field.Name, models.ID) && field.Name != models.ID {
+		sf := t.Field(i)
+		if !sf.IsExported() || strings.HasSuffix(sf.Name, models.ID) && sf.Name != models.ID {
 			continue
 		}
-
-		if field.Name == "Model" {
+		if sf.Name == "Model" {
 			ret = append(ret, models.ID)
 			continue
 		}
-
-		ret = append(ret, field.Name)
-
+		ret = append(ret, sf.Name)
 	}
 	return ret
 }
@@ -38,16 +31,12 @@ func td(v any) template.HTML {
 	var ret template.HTML
 	for i := 0; i < t.NumField(); i++ {
 		rf := rv.Field(i)
-		field := t.Field(i)
-
-		if !rf.CanInterface() ||
-			field.Name == "Valid" ||
-			strings.HasSuffix(field.Name, models.ID) && field.Name != models.ID {
+		sf := t.Field(i)
+		if !sf.IsExported() || strings.HasSuffix(sf.Name, models.ID) && sf.Name != models.ID {
 			continue
 		}
-
 		var sb strings.Builder
-		if field.Name == "Model" {
+		if sf.Name == "Model" {
 			tpl.Execute(&sb, rf.FieldByName(models.ID).Uint())
 		} else {
 			tpl.Execute(&sb, rf.Interface())

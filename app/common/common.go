@@ -1,7 +1,7 @@
 package common
 
 import (
-	"genuine/app/common/authenticator"
+	"genuine/app/common/filters"
 	_ "genuine/app/common/localizations"
 	"genuine/app/common/navigation"
 	"genuine/app/common/repositories"
@@ -11,7 +11,7 @@ import (
 
 func init() {
 	core.Provide(repositories.Users)
-	core.Provide(authenticator.Basic)
+	core.Provide(filters.Basic)
 	core.Provide(navigation.Standard)
 
 }

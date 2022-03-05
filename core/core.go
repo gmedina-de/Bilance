@@ -64,7 +64,7 @@ func Invoke(constructor any) reflect.Value {
 			if !constructorsFound {
 				panic("No constructor found for " + parameterName)
 			}
-			instances = reflect.MakeSlice(reflect.SliceOf(parameterType), 0, 0)
+			instances = reflect.MakeSlice(reflect.SliceOf(parameterType), 0, 10)
 			for _, c := range constructors {
 				instances = reflect.Append(instances, Invoke(c))
 			}
