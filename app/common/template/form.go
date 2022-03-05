@@ -4,19 +4,20 @@ import (
 	"fmt"
 	"genuine/core/database"
 	"genuine/core/models"
+	template2 "genuine/core/template"
 	"html/template"
 	"reflect"
 	"strings"
 )
 
-var templates = map[string]*template.Template{
-	"default": parse(`
+var templates = map[string]string{
+	"default": `
 <div class="form-floating mb-3">
 	<input type="{{.Type}}" class="form-control" name="{{.Name}}" id="{{.Id}}" placeholder="{{.Placeholder}}" value="{{.Value}}" {{.Custom}}>
-	<label for="{{.Id}}">{{.Label}}</label>
+	<label for="{{.Id}}">{{l10n .Label}}</label>
 </div>
-	`),
-	"select": parse(`
+	`,
+	"select": `
 <div class="form-floating mb-3">
 	<select class="form-select" name="{{.Name}}ID" id="{{.Id}}" {{.Custom}}>
 		<option></option>
@@ -24,19 +25,15 @@ var templates = map[string]*template.Template{
 			<option value="{{.Value}}"{{if .Selected}} selected{{end}}>{{.Label}}</option>
 		{{end}}
 	</select>
-	<label for="{{.Id}}">{{.Label}}</label>
+	<label for="{{.Id}}">{{l10n .Label}}</label>
 </div>
-	`),
-	"checkbox": parse(`
+	`,
+	"checkbox": `
 <div class="form-check mb-3">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-  <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+  <input class="form-check-input" type="checkbox"{{if.Value}} checked{{end}} name="{{.Name}}" id="{{.Id}}" {{.Custom}}>
+  <label class="form-check-label" for="{{.Id}}">{{l10n .Label}}</label>
 </div>
-	`),
-}
-
-func parse(parse string) *template.Template {
-	return template.Must(template.New("").Parse(parse))
+	`,
 }
 
 type field struct {
@@ -61,14 +58,18 @@ func inputs(model any, database database.Database) template.HTML {
 	var html template.HTML
 	for _, field := range fields {
 		var sb strings.Builder
-		tmpl, found := templates[field.Type]
-		if !found {
-			tmpl = templates["default"]
-		}
-		tmpl.Execute(&sb, field)
+		parse(field.Type).Execute(&sb, field)
 		html = html + template.HTML(sb.String())
 	}
 	return html
+}
+
+func parse(parse string) *template.Template {
+	tmpl, found := templates[parse]
+	if !found {
+		tmpl = templates["default"]
+	}
+	return template.Must(template.New("").Funcs(template2.GetFuncMap()).Parse(tmpl))
 }
 
 func fields(model any, database database.Database) []field {

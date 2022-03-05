@@ -2,9 +2,9 @@ package repositories
 
 type Repository[T any] interface {
 	All() []T
-	Count() int64
+	Count(where string, args ...any) int64
 	Find(id uint) *T
-	Limit(limit int, offset int) []T
+	Limit(limit int, offset int, where string, args ...any) []T
 	List(where string, args ...any) []T
 
 	Insert(entity *T)

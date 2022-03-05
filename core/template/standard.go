@@ -23,7 +23,7 @@ func Standard(localization translator.Translator, log log.Log) Template {
 	AddFunc("l10n", s.localization.Translate)
 	main.Funcs(funcMap)
 
-	baseFiles, err := filepath.Glob(config.ViewDirectory() + "/base/*" + extension)
+	baseFiles, err := filepath.Glob(config.ViewDirectory() + "/include/*" + extension)
 	if err != nil {
 		s.log.Error(err.Error())
 	}
@@ -42,7 +42,13 @@ func Standard(localization translator.Translator, log log.Log) Template {
 func (s *standard) Render(request *http.Request, writer http.ResponseWriter, template string, data map[string]any) {
 	data["Path"] = request.URL.Path
 	s.localization.Set(request)
-	if err := s.templates[template+extension].Execute(writer, data); err != nil {
-		s.log.Error(err.Error())
+	templateName := template + extension
+	tmpl, found := s.templates[templateName]
+	if found {
+		if err := tmpl.Execute(writer, data); err != nil {
+			s.log.Error(err.Error())
+		}
+	} else {
+		s.log.Error("Template %s not found", templateName)
 	}
 }

@@ -26,7 +26,7 @@ func Standard(categories repositories.Repository[model2.Category]) decorator.Dec
 			items1.add("categories", "tag", "/accounting/categories").SubMenu = func() items {
 				var items2 items
 				for _, c := range categories.All() {
-					items2.add(c.Name, "arrow-right", "/accounting/payments?search=CategoryID:"+strconv.FormatUint(uint64(c.ID), 10))
+					items2.add(c.Name, "search", "/accounting/payments?q=category_id:"+strconv.FormatUint(uint64(c.ID), 10))
 				}
 				return items2
 			}

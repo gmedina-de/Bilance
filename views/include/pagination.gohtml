@@ -1,0 +1,26 @@
+<nav class="pt-3">
+    <ul class="pagination justify-content-center">
+        <li class="page-item{{if le $.Page 1}} disabled{{end}}">
+            <a class="page-link" href="{{$.Path}}?p=1">
+                «
+            </a>
+        </li>
+        {{ range $i := paginate $.Pages $.Page 2}}
+            <li class="page-item{{if eq $i $.Page}} active{{end}}">
+                <a class="page-link" href="{{$.Path}}?p={{$i}}">
+                    {{$i}}
+                </a>
+            </li>
+        {{end}}
+        <li class="page-item{{if ge $.Page $.Pages}} disabled{{end}}">
+            <a class="page-link" href="{{$.Path}}?p={{$.Pages}}">
+                »
+            </a>
+        </li>
+        <li class="ms-2 page-item{{if eq $.Page 0}} active{{end}}">
+            <a class="page-link" href="{{.Path}}?p={{if eq $.Page 0}}1{{else}}0{{end}}">
+                {{l10n "all"}}
+            </a>
+        </li>
+    </ul>
+</nav>

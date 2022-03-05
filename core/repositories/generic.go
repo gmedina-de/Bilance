@@ -31,15 +31,15 @@ func (g *generic[T]) All() []T {
 	return result
 }
 
-func (g *generic[T]) Count() int64 {
+func (g *generic[T]) Count(where string, args ...any) int64 {
 	var result int64
-	g.database.Model(&g.model).Count(&result)
+	g.database.Model(&g.model).Where(where, args...).Count(&result)
 	return result
 }
 
-func (g *generic[T]) Limit(limit int, offset int) []T {
+func (g *generic[T]) Limit(limit int, offset int, where string, args ...any) []T {
 	var result []T
-	g.database.Limit(limit).Offset(offset).Preload(clause.Associations).Find(&result)
+	g.database.Where(where, args...).Limit(limit).Offset(offset).Preload(clause.Associations).Find(&result)
 	return result
 }
 

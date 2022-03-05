@@ -24,15 +24,15 @@
                 {{range $i, $a := .Navigation0}}
                     <li>
                         <a href="{{.Path}}"
-                           class="nav-link{{if eq $.CurrentNavigation0.Path $a.Path}} text-primary{{end}}">
+                           class="nav-link{{if and $.CurrentNavigation0 (eq $.CurrentNavigation0.Path $a.Path)}} text-primary{{end}}">
                             <span data-feather="{{$a.Icon}}" class="bi d-lg-block mx-auto"></span>
                             {{l10n $a.Name}}
                         </a>
                     </li>
                 {{end}}
             </ul>
-            <form>
-                <input class="form-control" type="text" placeholder="Search">
+            <form action="/search" method="get">
+                <input class="form-control" type="text" name="q" placeholder="Search">
             </form>
         </div>
     </div>

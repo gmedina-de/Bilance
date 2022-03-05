@@ -18,5 +18,5 @@ func (i *index) Routes() map[string]controllers.Handler {
 }
 
 func (i *index) Index(controllers.Request) controllers.Response {
-	return map[string]any{"Template": "index"}
+	return controllers.Response{"Template": "index"}
 }

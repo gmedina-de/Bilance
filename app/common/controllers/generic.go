@@ -6,6 +6,7 @@ import (
 	"genuine/core/repositories"
 	"genuine/core/router"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/schema"
 )
@@ -32,23 +33,44 @@ func (g *generic[T]) Routes() map[string]controllers.Handler {
 }
 
 func (g *generic[T]) List(r controllers.Request) controllers.Response {
-	page, err := strconv.ParseInt(r.URL.Query().Get("page"), 10, 64)
+	title := models.Plural(g.repository.Model())
+
+	// HANDLE SEARCH
+	where := ""
+	var args []any
+	if r.URL.Query().Has("q") {
+		var wheres []string
+		search := r.URL.Query().Get("q")
+		commas := strings.Split(search, ",")
+		for _, comma := range commas {
+			colons := strings.Split(comma, ":")
+			wheres = append(wheres, colons[0]+" LIKE ?")
+			args = append(args, colons[1])
+		}
+		where = strings.Join(wheres, " AND ")
+		title = "search_results"
+	}
+
+	// HANDLE PAGINATION
+	page, err := strconv.ParseInt(r.URL.Query().Get("p"), 10, 64)
 	if err != nil {
 		page = 1
 	}
 	var pageSize int64 = 10
 	var model []T
-	var pages = g.repository.Count() / pageSize
+	var pages = g.repository.Count(where, args...) / pageSize
 	var offset = pageSize * (page - 1)
 	if page == 0 {
-		model = g.repository.All()
+		model = g.repository.List(where, args...)
 	} else {
 		pages++
-		model = g.repository.Limit(int(pageSize), int(offset))
+		model = g.repository.Limit(int(pageSize), int(offset), where, args...)
 	}
+
+	// RENDER
 	return controllers.Response{
 		"Model":    model,
-		"Title":    models.Plural(g.repository.Model()),
+		"Title":    title,
 		"Template": "generic_list",
 		"Pages":    pages,
 		"Page":     page,
