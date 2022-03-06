@@ -2,7 +2,6 @@ package decorators
 
 import (
 	model2 "genuine/app/models"
-	"genuine/app/models/register"
 	"genuine/core/controllers"
 	"genuine/core/decorators"
 	"genuine/core/repositories"
@@ -14,7 +13,7 @@ type navigation struct {
 	root func() items
 }
 
-func Navigation(categories repositories.Repository[model2.Category]) decorators.Decorator {
+func Navigation(categories repositories.Repository[model2.Category], assets []model2.Asset) decorators.Decorator {
 	return &navigation{root: func() items {
 		var items0 items
 		items0.add("home", "home", "/")
@@ -37,11 +36,12 @@ func Navigation(categories repositories.Repository[model2.Category]) decorators.
 			return items1
 		}
 
-		Models := register.Models
-		items0.add("assets", "box", "/assets/"+model2.Plural(Models[0])).SubMenu = func() items {
+		firstAssetName := model2.Plural(assets[0])
+		items0.add("assets", "box", "/assets/"+firstAssetName).SubMenu = func() items {
 			var items1 items
-			for i, m := range Models {
-				items1.add(model2.Plural(m), register.Icons[i], "/assets/"+model2.Plural(m))
+			for _, asset := range assets {
+				assetName := model2.Plural(asset)
+				items1.add(assetName, asset.Icon(), "/assets/"+assetName)
 			}
 			return items1
 		}

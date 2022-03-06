@@ -8,13 +8,9 @@ import (
 	"genuine/app/filters"
 	"genuine/app/functions"
 	"genuine/app/localizations"
-	"genuine/app/models"
-	"genuine/app/models/register"
 	"genuine/app/repositories"
 	"genuine/app/server"
 	"genuine/core"
-	controllers2 "genuine/core/controllers"
-	repositories2 "genuine/core/repositories"
 )
 
 func init() {
@@ -40,18 +36,5 @@ func init() {
 		server.Webdav,
 	)
 
-	for _, model := range register.Models {
-		provide(model)
-	}
-
 	flag.Parse()
-}
-
-func provide[T any](model T) {
-	core.Provide(func(database database.Database) repositories2.Repository[T] {
-		return repositories.Generic(database, model, "Id DESC")
-	})
-	core.Provide(func(repository repositories2.Repository[T]) controllers2.Controller {
-		return controllers.Generic[T](repository, "/assets/"+models.Plural(model))
-	})
 }

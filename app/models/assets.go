@@ -1,30 +1,49 @@
 package models
 
-import (
-	"genuine/app/models/register"
-)
-
-func init() {
-	register.Register(Person{}, "user")
-	register.Register(Note{}, "edit")
-	register.Register(Book{}, "book")
+type Person struct {
+	Model
+	Name     string
+	Password string
 }
 
-type Person struct {
-	Id       int64  `form:"-"`
-	Name     string `required:"true" class:"form-control"`
-	Password string `form:"Password,password" required:"true" class:"form-control"`
+func (p Person) Icon() string {
+	return "user"
+}
+
+func (p Person) String() string {
+	return p.Name
 }
 
 type Note struct {
-	Id          int64
+	Model
 	Name        string
 	Description string
 }
 
+func (n Note) String() string {
+	return n.Name
+}
+
+func (n Note) Icon() string {
+	return "edit"
+}
+
 type Book struct {
-	Id          int64
+	Model
 	Name        string
 	Description string
-	//Note        *Note
+	Note        Note
+	NoteID      uint
+}
+
+func (b Book) Icon() string {
+	return "book"
+}
+
+func (b Book) String() string {
+	return b.Name
+}
+
+type Asset interface {
+	Icon() string
 }
