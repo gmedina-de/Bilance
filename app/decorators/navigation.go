@@ -29,11 +29,11 @@ func Navigation(categories repositories.Repository[model2.Category]) decorators.
 				}
 				return items2
 			}
-			items1.add("analysis", "", "analysis")
-			items1.add("balances", "activity", "balances")
-			items1.add("expenses", "", "expenses")
-			items1.add("expenses/by_period", "bar-chart-2", "expenses/by_period")
-			items1.add("expenses/by_category", "pie-chart", "expenses/by_category")
+			items1.add("analysis", "", "/accounting/analysis")
+			items1.add("balances", "activity", "/accounting/balances")
+			items1.add("expenses", "", "/accounting/expenses")
+			items1.add("expenses_by_period", "bar-chart-2", "/accounting/expenses/by_period")
+			items1.add("expenses_by_category", "pie-chart", "/accounting/expenses/by_category")
 			return items1
 		}
 

@@ -4,6 +4,7 @@ import (
 	model2 "genuine/app/models"
 	"genuine/core/controllers"
 	"genuine/core/repositories"
+	"math"
 )
 
 type balances struct {
@@ -11,63 +12,53 @@ type balances struct {
 	users    repositories.Repository[model2.User]
 }
 
-func Balances() controllers.Controller {
-	return &balances{}
+func Balances(payments repositories.Repository[model2.Payment], users repositories.Repository[model2.User]) controllers.Controller {
+	return &balances{payments: payments, users: users}
 }
 
 func (b *balances) Routes() map[string]controllers.Handler {
 	return map[string]controllers.Handler{
-		"GET /accounting book": controllers.Redirect("/accounting/balances"),
+		"GET /accounting/balances": b.Balances,
 	}
 }
 
 func (b *balances) Balances(controllers.Request) controllers.Response {
-	//balanceData := b.prepareBalanceData()
-	//template.Render(writer, request, "balances", &template.Parameters{models: &balanceData}, "accounting/template/balances.gohtml")
-	return nil
+	balanceData := b.prepareBalanceData()
+	return controllers.Response{
+		"Template":    "balances",
+		"BalanceData": balanceData,
+	}
 }
 
 func (b *balances) prepareBalanceData() []*BalanceData {
-	//var balanceData []*BalanceData
-	//totalExpenses := -model2.SumAmounts(b.payments.List(
-	//	"PayeeId = 0",
-	//))
-	//userIds := models.StringToIds(project.UserIds)
-	//userAmount := len(userIds)
-	//proportionalExpenses := model2.Currency(int64(totalExpenses) / int64(userAmount))
-	//var maxBalance float64
-	//for _, userId := range userIds {
-	//	userIdString := strconv.FormatInt(userId, 10)
-	//	sentExpenses := model2.SumAmounts(b.payments.List(
-	//		"PayerId = "+userIdString,
-	//		"AND PayeeId = 0",
-	//	))
-	//	sentTransfer := model2.SumAmounts(b.payments.List(
-	//		"PayerId = "+userIdString,
-	//		"AND PayeeId != 0",
-	//	))
-	//	receivedTransfer := model2.SumAmounts(b.payments.List(
-	//		"PayerId != "+userIdString,
-	//		"AND PayeeId = "+userIdString,
-	//	))
-	//	result := proportionalExpenses + sentExpenses + sentTransfer - receivedTransfer
-	//	if math.Abs(float64(result)) > float64(maxBalance) {
-	//		maxBalance = float64(result)
-	//	}
-	//	balanceData = append(balanceData, &BalanceData{
-	//		UserName:             b.users.Find(userId).Name,
-	//		TotalExpenses:        totalExpenses,
-	//		UserAmount:           userAmount,
-	//		ProportionalExpenses: proportionalExpenses,
-	//		SentExpenses:         sentExpenses,
-	//		SentTransfer:         sentTransfer,
-	//		ReceivedTransfer:     receivedTransfer,
-	//		Response:               result,
-	//	})
-	//}
-	//b.calculateWidths(balanceData, maxBalance)
-	//return balanceData
-	return nil
+	var balanceData []*BalanceData
+	totalExpenses := -model2.SumAmounts(b.payments.List("payee_id = 0"))
+	users := b.users.All()
+	userAmount := len(users)
+	proportionalExpenses := model2.Currency(int64(totalExpenses) / int64(userAmount))
+	var maxBalance float64
+	for _, user := range users {
+		userID := user.ID
+		sentExpenses := model2.SumAmounts(b.payments.List("payer_id = ? AND payee_id = 0", userID))
+		sentTransfer := model2.SumAmounts(b.payments.List("payer_id = ? AND payee_id != 0", userID))
+		receivedTransfer := model2.SumAmounts(b.payments.List("payer_id != ? AND payee_id = ?", userID, userID))
+		result := proportionalExpenses + sentExpenses + sentTransfer - receivedTransfer
+		if math.Abs(float64(result)) > float64(maxBalance) {
+			maxBalance = float64(result)
+		}
+		balanceData = append(balanceData, &BalanceData{
+			UserName:             user.Name,
+			TotalExpenses:        totalExpenses,
+			UserAmount:           userAmount,
+			ProportionalExpenses: proportionalExpenses,
+			SentExpenses:         sentExpenses,
+			SentTransfer:         sentTransfer,
+			ReceivedTransfer:     receivedTransfer,
+			Result:               result,
+		})
+	}
+	b.calculateWidths(balanceData, maxBalance)
+	return balanceData
 }
 
 type BalanceData struct {

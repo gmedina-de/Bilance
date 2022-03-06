@@ -1,5 +1,6 @@
+{{ template "base.gohtml" . }}
+
 {{define "content"}}
-    {{$BalanceData := .Parameters.Model}}
     <table class="w-100 text-center mb-3">
         <thead>
         <tr>
@@ -9,7 +10,7 @@
         </tr>
         </thead>
         <tbody>
-        {{range $BalanceData}}
+        {{range .BalanceData}}
             <tr>
                 <td>
                     {{if lt .Result 0}}
@@ -38,7 +39,7 @@
     </table>
 
     <div class="accordion" id="accordionExample">
-        {{range $BalanceData}}
+        {{range .BalanceData}}
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"

@@ -1,32 +1,27 @@
 {{define "content"}}
-    {{$GraphDataType := .Parameters.Model.Type}}
-    {{$GraphDataX := .Parameters.Model.X}}
-    {{$GraphDataY := .Parameters.Model.Y}}
-    {{$GraphDataZ := .Parameters.Model.Z}}
-    {{$Total := .Parameters.Model.Total}}
     <canvas class="my-4 w-100" id="expensesGraph" width="900" height="380"></canvas>
-    <script src="/prototype/staticype/static/Chart.min.js"></script>
+    <script src="/static/Chart.min.js"></script>
     <script>
         (function () {
             'use strict'
-            var ctx = document.getElementById('expensesGraph')
-            var myChart = new Chart(ctx, {
-                type: '{{$GraphDataType}}',
+            let ctx = document.getElementById('expensesGraph')
+            let myChart = new Chart(ctx, {
+                type: '{{.GraphData.Type}}',
                 data: {
                     labels: [
-                        {{range $GraphDataX}}
+                        {{range .GraphData.X}}
                         {{.}},
                         {{end}}
                     ],
                     datasets: [{
                         data: [
-                            {{range $GraphDataY}}
+                            {{range .GraphData.Y}}
                             {{.Format}},
                             {{end}}
                         ],
                         lineTension: 0,
                         backgroundColor: [
-                            {{range $GraphDataZ}}
+                            {{range .GraphData.Z}}
                             '{{.}}',
                             {{end}}
                         ],
@@ -41,7 +36,7 @@
                             label: function (tooltipItem, data) {
                                 return data['datasets'][0]['data'][tooltipItem['index']] + ' €';
                             },
-                            {{if eq $GraphDataType "doughnut"}}
+                            {{if eq .GraphData.Type "doughnut"}}
                             afterLabel: function (tooltipItem, data) {
                                 var dataset = data['datasets'][0];
                                 var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
@@ -50,7 +45,7 @@
                             {{end}}
                         }
                     },
-                    {{if eq $GraphDataType "bar"}}
+                    {{if eq .GraphData.Type "bar"}}
                     scales: {
                         yAxes: [{
                             ticks: {
@@ -71,18 +66,18 @@
     </script>
 
     <ul class="list-group">
-        {{range $i, $e := $GraphDataX}}
+        {{range $i, $e := .GraphData.X}}
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{index $GraphDataX $i}}
+                {{$e}}
                 <span class="badge rounded-pill bg-secondary"
-                      style="background-color: {{index $GraphDataZ $i}}{{if eq $GraphDataType "doughnut"}}!important;{{end}}">
-                    {{(index $GraphDataY $i).FormatWithCurrency}}
+                      style="background-color: {{index $.GraphData.Z $i}}{{if eq $.GraphData.Type "doughnut"}}!important;{{end}}">
+                    {{(index $.GraphData.Y $i).FormatWithCurrency}}
                 </span>
             </li>
         {{end}}
         <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
             {{l10n "total"}}
-            <span class="badge rounded-pill bg-primary">{{$Total.FormatWithCurrency}}</span>
+            <span class="badge rounded-pill bg-primary">{{.GraphData.Total.FormatWithCurrency}}</span>
         </li>
     </ul>
 {{end}}
@@ -91,7 +86,7 @@
     <div class="btn-group">
         <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
             <span data-feather="calendar"></span>
-            {{l10n (.Parameters.Model.Filter)}}
+            {{l10n (.GraphData.Filter)}}
         </button>
         <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{.Path}}?filter=this_week">{{l10n "this_week"}}</a></li>
@@ -100,9 +95,8 @@
             <li>
                 <hr class="dropdown-divider">
             </li>
-            {{$Path := .Path}}
-            {{range .Parameters.Data}}
-                <li><a class="dropdown-item" href="{{$Path}}?filter=year{{.}}">{{.}}</a></li>
+            {{range .Years}}
+                <li><a class="dropdown-item" href="{{$.Path}}?filter=year{{.}}">{{.}}</a></li>
             {{end}}
         </ul>
     </div>

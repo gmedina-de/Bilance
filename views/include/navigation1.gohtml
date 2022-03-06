@@ -2,10 +2,10 @@
     <div class="col-lg-3 col-xl-2 d-lg-block collapse" id="sidebarMenu">
         <nav class="card sidebar">
             <ul class="nav flex-column pt-3 pb-2">
-                {{range $i, $a := .Navigation1}}
+                {{range .Navigation1}}
                     {{if ne .Icon ""}}
                         <li>
-                            <a href="{{.Path}}" class="nav-link{{if eq $.CurrentNavigation1.Path $a.Path}} text-primary{{end}}">
+                            <a href="{{.Path}}" class="nav-link{{if eq $.CurrentNavigation1.Path .Path}} text-primary{{end}}">
                                 <span data-feather="{{.Icon}}"></span>
                                 {{l10n .Name}}
                             </a>
@@ -15,7 +15,7 @@
                             <span>{{l10n .Name}}</span>
                         </h6>
                     {{end}}
-                    {{if and (eq $.CurrentNavigation1.Path $a.Path) $.Navigation2}}
+                    {{if and (eq $.CurrentNavigation1.Path .Path) $.Navigation2}}
                         {{template "navigation2.gohtml" $}}
                     {{end}}
                 {{end}}
