@@ -22,6 +22,7 @@ func init() {
 		controllers.Index,
 		controllers.Payments,
 		controllers.Search,
+		controllers.Sites,
 		controllers.Users,
 		database.Standard,
 		decorators.Navigation,

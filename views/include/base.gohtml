@@ -18,8 +18,12 @@
 {{end}}
 <div class="container">
     <div class="row">
-        {{template "navigation1.gohtml" .}}
-        <main class="ms-sm-auto{{if .Navigation1}} col-lg-9 col-xl-10{{end}} mb-2">
+        {{if .Navigation1}}
+            <div class="col-lg-3 d-lg-block collapse sticky-top" style="top: 68px" id="menu1">
+                {{template "navigation1.gohtml" .}}
+            </div>
+        {{end}}
+        <main class="{{if .Navigation1}}col-lg-9 {{end}}ms-sm-auto mb-2">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
                 {{block "options" .}}{{end}}
             </div>

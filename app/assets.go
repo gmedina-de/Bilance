@@ -17,13 +17,15 @@ func init() {
 }
 
 func register[T models.Asset](model T) {
-	core.Provide(func() models.Asset {
-		return model
-	})
-	core.Provide(func(database database.Database) repositories2.Repository[T] {
-		return repositories.Generic(database, model, "Id DESC")
-	})
-	core.Provide(func(repository repositories2.Repository[T]) controllers2.Controller {
-		return controllers.Generic(repository, "/assets/"+models.Plural(model))
-	})
+	core.Provide(
+		func() models.Asset {
+			return model
+		},
+		func(database database.Database) repositories2.Repository[T] {
+			return repositories.Generic(database, model, "Id DESC")
+		},
+		func(repository repositories2.Repository[T]) controllers2.Controller {
+			return controllers.Generic(repository, "/assets/"+models.Plural(model))
+		},
+	)
 }

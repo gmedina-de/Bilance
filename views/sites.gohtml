@@ -1,0 +1,28 @@
+{{ template "base.gohtml" . }}
+
+{{define "content"}}
+    <div class="card">
+        <div class="card-header bg-dark">
+
+            <a href="#" class="btn btn-sm btn-primary" style="float: right">
+                {{l10n "new"}}
+            </a>
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="true" href="#">Active</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+
+
+        </div>
+        <div class="card-body">
+            {{.Output}}
+        </div>
+    </div>
+{{end}}

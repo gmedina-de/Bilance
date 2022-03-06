@@ -1,7 +1,7 @@
-<div class="card mx-3 bg-light">
+<div class="card mx-2 bg-light" id="menu2">
     {{range $i, $a := .Navigation2}}
         <li class="border-bottom">
-            <a href="{{.Path}}" class="nav-link{{if eq $.Path $a.Path}} text-primary{{end}}">
+            <a href="{{.Path}}" class="nav-link{{if and $.CurrentNavigation2 (eq $.CurrentNavigation2 $a)}} text-primary{{end}}">
                 <span data-feather="{{.Icon}}"></span>
                 {{l10n .Name}}
             </a>

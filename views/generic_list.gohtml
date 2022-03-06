@@ -1,21 +1,25 @@
 {{ template "base.gohtml" . }}
 
 {{define "content"}}
-    <div class="table-responsive" id="model-table">
-        {{template "table.gohtml" .Model }}
-    </div>
-    {{template "pagination.gohtml" . }}
+    {{if .Model}}
+        <div class="table-responsive shadow-sm" id="model-table">
+            {{template "table.gohtml" .Model }}
+        </div>
+        {{template "pagination.gohtml" . }}
+    {{else}}
+        {{l10n "no_records_found"}}
+    {{end}}
 {{end}}
 
 {{define "options"}}
     <h1 class="h2">{{l10n .Title}}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group me-2">
+        <div class="btn-group shadow-sm me-2">
             <a class="btn btn-sm btn-outline-secondary">
                 <span data-feather="download"></span> {{l10n "export"}}
             </a>
         </div>
-        <div class="btn-group">
+        <div class="btn-group shadow-sm">
             <a class="btn btn-sm btn-success" href="{{.Path}}/new">
                 <span data-feather="plus-square"></span> {{l10n "new"}}
             </a>

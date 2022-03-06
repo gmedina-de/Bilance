@@ -20,14 +20,14 @@ func Navigation(categories repositories.Repository[model2.Category], assets []mo
 
 		items0.add("accounting", "book", "/accounting/payments").SubMenu = func() items {
 			var items1 items
-			items1.add("payments", "layers", "/accounting/payments")
-			items1.add("categories", "tag", "/accounting/categories").SubMenu = func() items {
+			items1.add("payments", "layers", "/accounting/payments").SubMenu = func() items {
 				var items2 items
 				for _, c := range categories.All() {
 					items2.add(c.Name, "search", "/accounting/payments?q=category_id:"+strconv.FormatUint(uint64(c.ID), 10))
 				}
 				return items2
 			}
+			items1.add("categories", "tag", "/accounting/categories")
 			items1.add("analysis", "", "/accounting/analysis")
 			items1.add("balances", "activity", "/accounting/balances")
 			items1.add("expenses", "", "/accounting/expenses")
@@ -55,7 +55,18 @@ func Navigation(categories repositories.Repository[model2.Category], assets []mo
 			return items1
 		}
 
-		items0.add("sites", "layout", "/sites")
+		items0.add("sites", "layout", "/sites").SubMenu = func() items {
+			var items1 items
+			items1.add("all", "book", "/sites").SubMenu = func() items {
+				var items2 items
+				items2.add("test", "box", "/sites")
+				return items2
+			}
+			items1.add("favorites", "star", "/files/favorites")
+			items1.add("last", "clock", "/files/last")
+			items1.add("trash", "trash", "/files/trash")
+			return items1
+		}
 
 		items0.add("tasks", "check-circle", "/tasks")
 
@@ -69,7 +80,11 @@ func Navigation(categories repositories.Repository[model2.Category], assets []mo
 }
 
 func (s *navigation) Decorate(req controllers.Request, res controllers.Response) {
-	traverse(res, req.URL.Path, s.root(), 0)
+	var query string
+	if req.URL.RawQuery != "" {
+		query += "?" + req.URL.RawQuery
+	}
+	traverse(res, req.URL.Path+query, s.root(), 0)
 }
 
 func traverse(response controllers.Response, path string, tree items, level int) {

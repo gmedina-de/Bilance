@@ -1,20 +1,16 @@
-{{if .}}
-    <table class="table table-hover" data-toggle="table">
-        <thead class="bg-white">
-        <tr>
-            {{range th (index . 0)}}
-                <th data-field="{{.}}" data-sortable="true">{{.}}</th>
-            {{end}}
-        </tr>
-        </thead>
-        <tbody class="bg-white">
-        {{range .}}
-            <tr>
-                {{td .}}
-            </tr>
+<table class="table table-hover" data-toggle="table">
+    <thead class="bg-dark text-light">
+    <tr>
+        {{range th (index . 0)}}
+            <th data-field="{{.}}" data-sortable="true">{{.}}</th>
         {{end}}
-        </tbody>
-    </table>
-{{else}}
-    {{l10n "no_records_found"}}
-{{end}}
+    </tr>
+    </thead>
+    <tbody class="bg-white">
+    {{range .}}
+        <tr>
+            {{td .}}
+        </tr>
+    {{end}}
+    </tbody>
+</table>

@@ -3,6 +3,7 @@ module genuine
 go 1.18
 
 require (
+	github.com/gomarkdown/markdown v0.0.0-20220306001849-6e467e7bd3e8
 	github.com/gorilla/schema v1.2.0
 	github.com/jinzhu/inflection v1.0.0
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
