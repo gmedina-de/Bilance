@@ -2,7 +2,7 @@ package localizations
 
 import "genuine/core/localizations"
 
-var localization_de = localizations.Localization{
+var de = localizations.Localization{
 	"payments":                        "Zahlungen",
 	"categories":                      "Kategorien",
 	"analysis":                        "Auswertungen",

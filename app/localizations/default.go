@@ -2,7 +2,7 @@ package localizations
 
 import "genuine/core/localizations"
 
-var localization_default = localizations.Localization{
+var dfault = localizations.Localization{
 	"payments":                        "Payments",
 	"categories":                      "Categories",
 	"analysis":                        "Analysis",
