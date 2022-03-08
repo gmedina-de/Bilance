@@ -16,6 +16,7 @@ import (
 func init() {
 	core.Provide(
 		controllers.Balances,
+		controllers.Books,
 		controllers.Categories,
 		controllers.Expenses,
 		controllers.Files,
@@ -31,6 +32,7 @@ func init() {
 		functions.Paginate,
 		functions.Table,
 		localizations.All,
+		repositories.Books,
 		repositories.Categories,
 		repositories.Payments,
 		repositories.Users,

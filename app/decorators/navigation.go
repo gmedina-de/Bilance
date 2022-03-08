@@ -1,7 +1,7 @@
 package decorators
 
 import (
-	model2 "genuine/app/models"
+	"genuine/app/models"
 	"genuine/core/controllers"
 	"genuine/core/decorators"
 	"genuine/core/repositories"
@@ -12,7 +12,11 @@ type navigation struct {
 	root func() items
 }
 
-func Navigation(categories repositories.Repository[model2.Category], assets []model2.Asset) decorators.Decorator {
+func Navigation(
+	categories repositories.Repository[models.Category],
+	books repositories.Repository[models.Book],
+	assets []models.Asset,
+) decorators.Decorator {
 	return &navigation{root: func() items {
 		var items0 items
 		items0.add("home", "home", "/")
@@ -35,11 +39,11 @@ func Navigation(categories repositories.Repository[model2.Category], assets []mo
 			return items1
 		}
 
-		firstAssetName := model2.Plural(assets[0])
+		firstAssetName := models.Plural(assets[0])
 		items0.add("assets", "box", "/assets/"+firstAssetName).SubMenu = func() items {
 			var items1 items
 			for _, asset := range assets {
-				assetName := model2.Plural(asset)
+				assetName := models.Plural(asset)
 				items1.add(assetName, asset.Icon(), "/assets/"+assetName)
 			}
 			return items1
@@ -56,14 +60,10 @@ func Navigation(categories repositories.Repository[model2.Category], assets []mo
 
 		items0.add("sites", "layout", "/sites").SubMenu = func() items {
 			var items1 items
-			items1.add("all", "book", "/sites").SubMenu = func() items {
-				var items2 items
-				items2.add("test", "box", "/sites")
-				return items2
+			items1.add("books", "archive", "/sites/books")
+			for _, b := range books.All() {
+				items1.add(b.Name, "book", "/sites?q=book_id:"+strconv.FormatUint(uint64(b.ID), 10))
 			}
-			items1.add("favorites", "star", "/files/favorites")
-			items1.add("last", "clock", "/files/last")
-			items1.add("trash", "trash", "/files/trash")
 			return items1
 		}
 
