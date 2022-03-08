@@ -6,7 +6,6 @@ import (
 	"genuine/core/decorators"
 	"genuine/core/repositories"
 	"strconv"
-	"strings"
 )
 
 type navigation struct {
@@ -99,19 +98,30 @@ func traverse(response controllers.Response, path string, tree items, level int)
 }
 
 func currentNavigation(path string, navigation items) *item {
-	pathParts := strings.Split(path, "/")
-	var result *item
-	max := 0
+	var result = &item{}
+	maxSimilarity := 0
 	for _, n := range navigation {
-		nParts := strings.Split(n.Path, "/")
-		for j, p := range pathParts {
-			if j < len(nParts) && p == nParts[j] && max < j {
-				max++
-				result = n
-			}
+		similarity := similarity(n.Path, path)
+		if similarity > maxSimilarity {
+			result = n
+			maxSimilarity = similarity
 		}
 	}
 	return result
+}
+
+func similarity(s1, s2 string) int {
+	var count int
+	for i := range s1 {
+		if len(s2) > i {
+			if s1[i] == s2[i] {
+				count++
+			} else {
+				break
+			}
+		}
+	}
+	return count
 }
 
 type item struct {

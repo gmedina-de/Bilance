@@ -4,7 +4,7 @@
     <form method="post" class="mb-3">
         {{inputs .Model .Database}}
         <hr>
-        <button class="w-100 btn btn-primary btn-lg" type="submit">
+        <button class="w-100 btn btn-primary btn-lg shadow-sm" type="submit">
             {{l10n "save"}}
         </button>
     </form>
@@ -13,7 +13,7 @@
 {{define "options"}}
     <h1 class="h2">{{l10n .Title}}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group" role="group">
+        <div class="btn-group shadow-sm" role="group">
             {{if .Model.ID}}
                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
                         data-bs-target="#deleteConfirmationModal">

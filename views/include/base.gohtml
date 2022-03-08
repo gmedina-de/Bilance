@@ -12,16 +12,14 @@
     <link rel="stylesheet" href="/static/bootstrap-table.min.css">
     <link rel="stylesheet" href="/static/custom.css">
 </head>
-<body class="bg-light">
+<body class="bg-light" id="body">
 {{if .Navigation0}}
     {{template "navigation0.gohtml" .}}
 {{end}}
 <div class="container">
     <div class="row">
         {{if .Navigation1}}
-            <div class="col-lg-3 d-lg-block collapse sticky-top" style="top: 68px" id="menu1">
-                {{template "navigation1.gohtml" .}}
-            </div>
+            {{template "navigation1.gohtml" .}}
         {{end}}
         <main class="{{if .Navigation1}}col-lg-9 {{end}}ms-sm-auto mb-2">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">

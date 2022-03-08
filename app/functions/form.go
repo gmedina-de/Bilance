@@ -22,13 +22,13 @@ func Form(translator translator.Translator) functions.Provider {
 
 	f.templates = map[string]*template.Template{
 		"default": f.parse(`
-<div class="form-floating mb-3">
+<div class="form-floating shadow-sm mb-3">
 	<input type="{{.Type}}" class="form-control" name="{{.Name}}" id="{{.Id}}" placeholder="{{.Placeholder}}" value="{{.Value}}" {{.Custom}}>
 	<label for="{{.Id}}">{{l10n .Label}}</label>
 </div>
 	`),
 		"select": f.parse(`
-<div class="form-floating mb-3">
+<div class="form-floating shadow-sm mb-3">
 	<select class="form-select" name="{{.Name}}ID" id="{{.Id}}" {{.Custom}}>
 		<option></option>
 		{{range .Options}}

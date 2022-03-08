@@ -12,13 +12,10 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#menu1">
                     <span data-feather="{{.CurrentNavigation1.Icon}}"></span>
-                </button>
-            {{end}}
-            {{if .CurrentNavigation2}}
-                <span data-feather="chevron-right" class="text-light d-lg-none"></span>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#menu1">
-                    <span data-feather="{{.CurrentNavigation2.Icon}}"></span>
+                    {{if .CurrentNavigation2}}
+                        <span data-feather="chevron-right" class="text-light d-lg-none"></span>
+                        <span data-feather="{{.CurrentNavigation2.Icon}}"></span>
+                    {{end}}
                 </button>
             {{end}}
         </div>
@@ -26,7 +23,7 @@
             gCloud
             <span data-feather="cloud"></span>
         </a>
-        <div class="collapse navbar-collapse" id="menu0">
+        <div class="collapse navbar-collapse" data-bs-parent="body" id="menu0">
             <ul class="navbar-nav mx-auto mb-2 mb-sm-0 mt-md-1" style="overflow: auto;">
                 {{range $i, $a := .Navigation0}}
                     <li>
