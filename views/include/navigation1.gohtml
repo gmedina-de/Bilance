@@ -1,9 +1,9 @@
 <div class="col-lg-3 d-lg-block collapse sticky-top" data-bs-parent="body" style="top: 68px" id="menu1">
     <nav class="card sidebar shadow-sm">
-        <ul class="nav flex-column pt-3 pb-2">
+        <ul class="nav flex-column">
             {{range $i, $a := .Navigation1}}
                 {{if ne .Icon ""}}
-                    <li>
+                    <li class="border-bottom">
                         <a href="{{.Path}}"
                            class="nav-link{{if and $.CurrentNavigation1 (eq $.CurrentNavigation1 $a)}} text-primary{{end}}">
                             <span data-feather="{{.Icon}}"></span>
@@ -11,7 +11,7 @@
                         </a>
                     </li>
                 {{else}}
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <h6 class="border-bottom sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 pb-1 mb-0 text-muted">
                         <span>{{l10n .Name}}</span>
                     </h6>
                 {{end}}

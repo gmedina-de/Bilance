@@ -1,26 +1,20 @@
 {{ template "base.gohtml" . }}
 
 {{define "content"}}
-    <div class="card shadow-sm">
-        <div class="card-header bg-dark">
-
+    <div class="row">
+        <nav class="col-lg-10">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Library</li>
+            </ol>
+        </nav>
+        <div class="col-lg-2 align-content-end">
             <a href="#" class="btn btn-sm btn-primary" style="float: right">
                 {{l10n "new"}}
             </a>
-            <ul class="nav nav-tabs card-header-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="true" href="#">Active</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
-            </ul>
-
-
         </div>
+    </div>
+    <div class="card shadow-sm">
         <div class="card-body">
             {{.Output}}
         </div>

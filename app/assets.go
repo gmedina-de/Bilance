@@ -13,7 +13,7 @@ import (
 func init() {
 	register(models.Person{})
 	register(models.Note{})
-	register(models.Booook{})
+	register(models.Book{})
 }
 
 func register[T models.Asset](model T) {

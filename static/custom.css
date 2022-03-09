@@ -41,6 +41,10 @@
     animation-direction: reverse;
 }
 
+.navbar {
+    z-index: 1030;
+}
+
 .sidebar-heading {
     font-size: .75rem;
     text-transform: uppercase;

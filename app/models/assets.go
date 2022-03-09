@@ -28,7 +28,7 @@ func (n Note) Icon() string {
 	return "edit"
 }
 
-type Booook struct {
+type Book struct {
 	Model
 	Name        string
 	Description string
@@ -36,11 +36,11 @@ type Booook struct {
 	NoteID      uint
 }
 
-func (b Booook) Icon() string {
+func (b Book) Icon() string {
 	return "book"
 }
 
-func (b Booook) String() string {
+func (b Book) String() string {
 	return b.Name
 }
 

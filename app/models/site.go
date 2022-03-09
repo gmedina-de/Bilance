@@ -2,7 +2,8 @@ package models
 
 type Site struct {
 	Model
-	Name    string
-	Content string
-	BookID  uint
+	Name     string
+	Content  string
+	ParentID uint
+	Parent   *Site
 }

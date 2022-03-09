@@ -59,7 +59,8 @@ func Sites() controllers.Controller {
 
 func (s *sites) Routes() map[string]controllers.Handler {
 	return map[string]controllers.Handler{
-		"GET /sites": s.Index,
+		"GET /sites":     s.Index,
+		"GET /sites/new": s.Edit,
 	}
 }
 

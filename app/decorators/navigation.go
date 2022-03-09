@@ -14,7 +14,7 @@ type navigation struct {
 
 func Navigation(
 	categories repositories.Repository[models.Category],
-	books repositories.Repository[models.Book],
+	sites repositories.Repository[models.Site],
 	assets []models.Asset,
 ) decorators.Decorator {
 	return &navigation{root: func() items {
@@ -58,14 +58,7 @@ func Navigation(
 			return items1
 		}
 
-		items0.add("sites", "layout", "/sites").SubMenu = func() items {
-			var items1 items
-			items1.add("books", "archive", "/sites/books")
-			for _, b := range books.All() {
-				items1.add(b.Name, "book", "/sites?q=book_id:"+strconv.FormatUint(uint64(b.ID), 10))
-			}
-			return items1
-		}
+		items0.add("sites", "layout", "/sites").SubMenu = sitesRecursive(sites, 0)
 
 		items0.add("tasks", "check-circle", "/tasks")
 
@@ -76,6 +69,17 @@ func Navigation(
 		}
 		return items0
 	}}
+}
+
+func sitesRecursive(sites repositories.Repository[models.Site], parentId int) func() items {
+	return func() items {
+		var items items
+		for _, site := range sites.List("parent_id", parentId) {
+			add := items.add(site.Name, "file-text", "/sites?q=id:"+strconv.FormatUint(uint64(site.ID), 10))
+			add.SubMenu = sitesRecursive(sites, parentId+1)
+		}
+		return items
+	}
 }
 
 func (s *navigation) Decorate(req controllers.Request, res controllers.Response) {
