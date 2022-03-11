@@ -1,11 +1,9 @@
 package controllers
 
 import (
+	"genuine/app/models"
 	"genuine/core/controllers"
-	"github.com/gomarkdown/markdown"
-	"github.com/gomarkdown/markdown/html"
-	"github.com/gomarkdown/markdown/parser"
-	"html/template"
+	"genuine/core/repositories"
 )
 
 var markdownExample = []byte(`
@@ -51,30 +49,28 @@ An image:
 `)
 
 type sites struct {
+	*generic[models.Site]
 }
 
-func Sites() controllers.Controller {
-	return &sites{}
+func Sites(repository repositories.Repository[models.Site]) controllers.Controller {
+	return &sites{Generic(repository, "/sites")}
 }
 
 func (s *sites) Routes() map[string]controllers.Handler {
 	return map[string]controllers.Handler{
-		"GET /sites":     s.Index,
-		"GET /sites/new": s.Edit,
+		"GET /sites":                      s.Index,
+		"GET /sites/new":                  s.Index,
+		"GET " + s.route + "/new":         s.New,
+		"POST " + s.route + "/new/save":   s.Save,
+		"GET " + s.route + "/edit":        s.Edit,
+		"POST " + s.route + "/edit/save":  s.Save,
+		"GET " + s.route + "/edit/delete": s.Remove,
 	}
 }
 
-func (s *sites) Index(controllers.Request) controllers.Response {
-	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
-	parser := parser.NewWithExtensions(extensions)
-
-	htmlFlags := html.CommonFlags | html.HrefTargetBlank
-	opts := html.RendererOptions{Flags: htmlFlags}
-	renderer := html.NewRenderer(opts)
-
-	output := markdown.ToHTML(markdownExample, parser, renderer)
+func (s *sites) Index(r controllers.Request) controllers.Response {
 	return controllers.Response{
 		"Template": "sites",
-		"Output":   template.HTML(output),
+		"Site":     s.repository.Find(r.GetID()),
 	}
 }

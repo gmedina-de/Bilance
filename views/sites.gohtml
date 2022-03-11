@@ -2,21 +2,21 @@
 
 {{define "content"}}
     <div class="row">
-        <nav class="col-lg-10">
+        <nav class="col-10">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item active">Library</li>
             </ol>
         </nav>
-        <div class="col-lg-2 align-content-end">
-            <a href="#" class="btn btn-sm btn-primary" style="float: right">
+        <div class="col-2 align-content-end">
+            <a href="/sites/new?parentId={{.Site.ID}}" class="btn btn-sm btn-primary" style="float: right">
                 {{l10n "new"}}
             </a>
         </div>
     </div>
     <div class="card shadow-sm">
         <div class="card-body">
-            {{.Output}}
+            {{.Site.String}}
         </div>
     </div>
 {{end}}

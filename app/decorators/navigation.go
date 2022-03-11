@@ -75,7 +75,7 @@ func sitesRecursive(sites repositories.Repository[models.Site], parentId int) fu
 	return func() items {
 		var items items
 		for _, site := range sites.List("parent_id", parentId) {
-			add := items.add(site.Name, "file-text", "/sites?q=id:"+strconv.FormatUint(uint64(site.ID), 10))
+			add := items.add(site.Name, "file-text", "/sites?id="+strconv.FormatUint(uint64(site.ID), 10))
 			add.SubMenu = sitesRecursive(sites, parentId+1)
 		}
 		return items
