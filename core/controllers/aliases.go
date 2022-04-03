@@ -19,3 +19,7 @@ func (r *Request) GetID() uint {
 type Response = map[string]any
 
 type Handler func(r Request) Response
+
+type Routes map[string]any
+
+type Template string

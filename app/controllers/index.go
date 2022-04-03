@@ -11,12 +11,13 @@ func Index() controllers.Controller {
 	return &index{}
 }
 
-func (i *index) Routes() map[string]controllers.Handler {
-	return map[string]controllers.Handler{
+func (i *index) Routes() controllers.Routes {
+	return controllers.Routes{
 		"GET /": i.Index,
 	}
 }
 
-func (i *index) Index(controllers.Request) controllers.Response {
-	return controllers.Response{"Template": "index"}
+func (i *index) Index() controllers.Template {
+	// todo general functions for handlers
+	return "index"
 }

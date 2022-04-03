@@ -29,6 +29,7 @@ func Standard(
 	database database.Database,
 	log log.Log,
 ) Router {
+	//todo use regex routing (library?) for more flexibility
 	s := &standard{cs, filters, decorators, template, database, make(map[string]controllers.Handler)}
 	for _, c := range s.controllers {
 		for k, v := range c.Routes() {
