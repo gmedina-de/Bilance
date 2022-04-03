@@ -6,6 +6,7 @@ import (
 	"genuine/core/decorators"
 	"genuine/core/repositories"
 	"strconv"
+	"strings"
 )
 
 type navigation struct {
@@ -105,6 +106,9 @@ func currentNavigation(path string, navigation items) *item {
 	var result = &item{}
 	maxSimilarity := 0
 	for _, n := range navigation {
+		if strings.Contains(n.Path, "?") && !strings.Contains(path, "?") {
+			continue
+		}
 		similarity := similarity(n.Path, path)
 		if similarity > maxSimilarity {
 			result = n

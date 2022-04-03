@@ -16,7 +16,7 @@
                     datasets: [{
                         data: [
                             {{range .GraphData.Y}}
-                            {{.Format}},
+                            {{.}},
                             {{end}}
                         ],
                         lineTension: 0,
@@ -71,13 +71,13 @@
                 {{$e}}
                 <span class="badge rounded-pill bg-secondary"
                       style="background-color: {{index $.GraphData.Z $i}}{{if eq $.GraphData.Type "doughnut"}}!important;{{end}}">
-                    {{(index $.GraphData.Y $i).FormatWithCurrency}}
+                    {{(index $.GraphData.Y $i)}}
                 </span>
             </li>
         {{end}}
         <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
             {{l10n "total"}}
-            <span class="badge rounded-pill bg-primary">{{.GraphData.Total.FormatWithCurrency}}</span>
+            <span class="badge rounded-pill bg-primary">{{.GraphData.Total}}</span>
         </li>
     </ul>
 {{end}}

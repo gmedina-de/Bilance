@@ -22,7 +22,8 @@ type Currency int64
 func (m Currency) String() string {
 	x := float64(m)
 	x = x / 100
-	return fmt.Sprintf("%.2f", x)
+	// todo admit more currencies
+	return fmt.Sprintf("%.2f", x) + " €"
 }
 
 func SumAmounts(payments []Payment) Currency {

@@ -17,7 +17,7 @@
                         <div class="progress" style="transform: rotate(180deg)">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger"
                                  style="width: {{.Width}}%">
-                                <b style="transform: rotate(180deg)">{{.Result.FormatWithCurrency}}</b>
+                                <b style="transform: rotate(180deg)">{{.Result}}</b>
                             </div>
                         </div>
                     {{end}}
@@ -28,7 +28,7 @@
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
                                  style="width: {{.Width}}%">
-                                <b>{{.Result.FormatWithCurrency}}</b>
+                                <b>{{.Result}}</b>
                             </div>
                         </div>
                     {{end}}
@@ -59,7 +59,7 @@
                             <tbody>
                             <tr>
                                 <td>{{l10n "total_expenses"}}</td>
-                                <td>{{.TotalExpenses.FormatWithCurrency}}</td>
+                                <td>{{.TotalExpenses}}</td>
                             </tr>
                             <tr>
                                 <td>/ {{l10n "user_amount"}}</td>
@@ -67,19 +67,19 @@
                             </tr>
                             <tr class="fw-bold">
                                 <td>{{l10n "proportional_expenses"}}</td>
-                                <td>{{.ProportionalExpenses.FormatWithCurrency}}</td>
+                                <td>{{.ProportionalExpenses}}</td>
                             </tr>
                             <tr>
                                 <td>+ {{l10n "sent_expenses"}}</td>
-                                <td>{{.SentExpenses.FormatWithCurrency}}</td>
+                                <td>{{.SentExpenses}}</td>
                             </tr>
                             <tr>
                                 <td>+ {{l10n "sent_transfer"}}</td>
-                                <td>{{.SentTransfer.FormatWithCurrency}}</td>
+                                <td>{{.SentTransfer}}</td>
                             </tr>
                             <tr>
                                 <td>- {{l10n "received_transfer"}}</td>
-                                <td>{{.ReceivedTransfer.FormatWithCurrency}}</td>
+                                <td>{{.ReceivedTransfer}}</td>
                             </tr>
                             {{$ResultClass := ""}}
                             {{if lt .Result 0}}
@@ -89,7 +89,7 @@
                             {{end}}
                             <tr class="fw-bolder">
                                 <td>{{l10n "result"}}</td>
-                                <td class="{{$ResultClass}}">{{.Result.FormatWithCurrency}}</td>
+                                <td class="{{$ResultClass}}">{{.Result}}</td>
                             </tr>
                             </tbody>
                         </table>
