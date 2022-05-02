@@ -5,6 +5,7 @@ import (
 	"genuine/localizations"
 	"html/template"
 	"net/http"
+	"strings"
 )
 
 type Translator interface {
@@ -38,6 +39,7 @@ func (s *standard) Set(request *http.Request) {
 }
 
 func (s *standard) Translate(key string, params ...any) string {
+	key = strings.ToLower(key)
 	localization, found := s.localizations[s.language]
 	if found {
 		translation, found := localization[key]

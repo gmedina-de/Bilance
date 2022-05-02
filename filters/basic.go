@@ -21,7 +21,12 @@ func (b *basic) Filter(writer http.ResponseWriter, request *http.Request) bool {
 		if len(users) > 0 {
 			user := &users[0]
 			if username == user.Name && password == user.Password {
-				return true
+				// todo be more specific which urls are not allowed for non admins
+				if request.URL.Path != "/settings/users" {
+					return true
+				} else if user.IsAdmin {
+					return true
+				}
 			}
 		}
 	}

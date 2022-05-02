@@ -40,13 +40,13 @@ func Form(translator Translator, log log.Log) Provider {
 		"checkbox": f.parse(`
 <div class="form-check mb-3">
   <input class="form-check-input" type="checkbox"{{if.Value}} checked{{end}} name="{{.Name}}" id="{{.Id}}" {{.Custom}}>
-  <label class="form-check-label" for="{{.Id}}">{{.Id}}</label>
+  <label class="form-check-label" for="{{.Id}}">{{l10n .Label}}</label>
 </div>
 	`),
 		"number": f.parse(`
 <div class="form-floating shadow-sm mb-3">
 	<input type="number" class="form-control" name="{{.Name}}" id="{{.Id}}" placeholder="{{.Name}}" value="{{.Value.Raw}}" min="0.00" max="100000.00" step="0.01" {{.Custom}}>
-	<label for="{{.Id}}">{{.Id}}</label>
+	<label for="{{.Id}}">{{l10n .Label}}</label>
 </div>
 `),
 	}
