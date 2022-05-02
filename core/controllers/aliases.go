@@ -20,6 +20,6 @@ type Response = map[string]any
 
 type Handler func(r Request) Response
 
-type Routes map[string]any
+type Routes = map[string]Handler
 
 type Template string

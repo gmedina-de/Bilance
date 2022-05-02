@@ -17,7 +17,9 @@ func (i *index) Routes() controllers.Routes {
 	}
 }
 
-func (i *index) Index() controllers.Template {
+func (i *index) Index(controllers.Request) controllers.Response {
 	// todo general functions for handlers
-	return "index"
+	return map[string]any{
+		"Template": "index",
+	}
 }

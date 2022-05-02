@@ -1,7 +1,7 @@
 {{ template "base.gohtml" . }}
 
 {{define "content"}}
-    <form method="post" action="{{.Path}}/save" class="mb-3">
+    <form method="post" action="{{.Path}}/save{{if .Model.ID}}?ID={{.Model.ID}}{{end}}" class="mb-3">
         {{inputs .Model .Database}}
         <hr>
         <button class="w-100 btn btn-primary btn-lg shadow-sm" type="submit">

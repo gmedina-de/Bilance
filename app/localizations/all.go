@@ -11,7 +11,7 @@ func All() localizations.Provider {
 
 func (s all) GetLocalizations() map[string]localizations.Localization {
 	return map[string]localizations.Localization{
-		"de":      de,
+		"de-DE":   de,
 		"default": dfault,
 	}
 }

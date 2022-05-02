@@ -27,7 +27,7 @@ func Generic[T any](database database.Database, model T, ordering string) reposi
 
 func (g *generic[T]) All() []T {
 	var result []T
-	g.database.Preload(clause.Associations).Find(&result)
+	g.database.Preload(clause.Associations).Order(g.ordering).Find(&result)
 	return result
 }
 
@@ -39,7 +39,7 @@ func (g *generic[T]) Count(where string, args ...any) int64 {
 
 func (g *generic[T]) Limit(limit int, offset int, where string, args ...any) []T {
 	var result []T
-	g.database.Where(where, args...).Limit(limit).Offset(offset).Preload(clause.Associations).Find(&result)
+	g.database.Where(where, args...).Order(g.ordering).Limit(limit).Offset(offset).Preload(clause.Associations).Find(&result)
 	return result
 }
 
@@ -51,7 +51,7 @@ func (g *generic[T]) Find(id uint) *T {
 
 func (g *generic[T]) List(where string, args ...any) []T {
 	var result []T
-	g.database.Where(where, args...).Preload(clause.Associations).Find(&result)
+	g.database.Order(g.ordering).Where(where, args...).Preload(clause.Associations).Find(&result)
 	return result
 }
 

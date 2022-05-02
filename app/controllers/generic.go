@@ -117,6 +117,26 @@ func (g *generic[T]) Save(r controllers.Request) controllers.Response {
 	if err != nil {
 		panic(err)
 	}
+
+	// todo refactor
+	if r.PostForm.Has("Amount") {
+		var newAmount string
+		oldAmount := r.PostForm.Get("Amount")
+		split := strings.Split(oldAmount, ".")
+		if len(split) > 1 {
+			cents := split[1]
+			newAmount = strings.ReplaceAll(oldAmount, ".", "")
+			if len(cents) == 1 {
+				newAmount += "0"
+			} else if len(cents) == 0 {
+				newAmount += "00"
+			}
+		} else {
+			newAmount = oldAmount + "00"
+		}
+		r.PostForm.Set("Amount", newAmount)
+	}
+
 	err = decoder.Decode(&model, r.PostForm)
 	if err != nil {
 		panic(err)

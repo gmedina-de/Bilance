@@ -7,7 +7,7 @@ import (
 type Payment struct {
 	Model
 	Name       string   `form:"required"`
-	Amount     Currency `form:"required min=\"0.00\" max=\"100000.00\" step=\"0.01\""`
+	Amount     Currency `form:"required"`
 	Date       Date
 	CategoryID uint
 	Category   Category
@@ -20,10 +20,14 @@ type Payment struct {
 type Currency int64
 
 func (m Currency) String() string {
+	return m.Raw() + " €"
+}
+
+func (m Currency) Raw() string {
 	x := float64(m)
 	x = x / 100
 	// todo admit more currencies
-	return fmt.Sprintf("%.2f", x) + " €"
+	return fmt.Sprintf("%.2f", x)
 }
 
 func SumAmounts(payments []Payment) Currency {

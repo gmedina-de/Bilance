@@ -7,5 +7,13 @@ import (
 )
 
 func Users(database database.Database) repositories.Repository[models.User] {
-	return Generic(database, models.User{}, "Id DESC")
+	r := Generic(database, models.User{}, "Id DESC")
+	if r.Count("is_admin = ?", true) == 0 {
+		r.Insert(&models.User{
+			Name:     "admin",
+			Password: "admin",
+			IsAdmin:  true,
+		})
+	}
+	return r
 }

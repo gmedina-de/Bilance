@@ -5,6 +5,7 @@ import (
 	"genuine/app/database"
 	models2 "genuine/app/models"
 	"genuine/core/functions"
+	"genuine/core/log"
 	"genuine/core/models"
 	"genuine/core/translator"
 	"html/template"
@@ -14,11 +15,12 @@ import (
 
 type form struct {
 	translator translator.Translator
+	log        log.Log
 	templates  map[string]*template.Template
 }
 
-func Form(translator translator.Translator) functions.Provider {
-	f := &form{translator: translator}
+func Form(translator translator.Translator, log log.Log) functions.Provider {
+	f := &form{translator: translator, log: log}
 
 	f.templates = map[string]*template.Template{
 		"default": f.parse(`
@@ -41,9 +43,15 @@ func Form(translator translator.Translator) functions.Provider {
 		"checkbox": f.parse(`
 <div class="form-check mb-3">
   <input class="form-check-input" type="checkbox"{{if.Value}} checked{{end}} name="{{.Name}}" id="{{.Id}}" {{.Custom}}>
-  <label class="form-check-label" for="{{.Id}}">{{l10n .Label}}</label>
+  <label class="form-check-label" for="{{.Id}}">{{.Id}}</label>
 </div>
 	`),
+		"number": f.parse(`
+<div class="form-floating shadow-sm mb-3">
+	<input type="number" class="form-control" name="{{.Name}}" id="{{.Id}}" placeholder="{{.Name}}" value="{{.Value.Raw}}" min="0.00" max="100000.00" step="0.01" {{.Custom}}>
+	<label for="{{.Id}}">{{.Id}}</label>
+</div>
+`),
 	}
 
 	return f
@@ -56,6 +64,7 @@ func (f *form) GetFuncMap() template.FuncMap {
 }
 
 func (f *form) inputs(model any, database database.Database) template.HTML {
+
 	fields := f.fields(model, database)
 	var html template.HTML
 	for _, field := range fields {
@@ -64,7 +73,10 @@ func (f *form) inputs(model any, database database.Database) template.HTML {
 		if !found {
 			tmpl = f.templates["default"]
 		}
-		tmpl.Execute(&sb, field)
+		err := tmpl.Execute(&sb, field)
+		if err != nil {
+			f.log.Error("Error formatting field %s: %s", field, err.Error())
+		}
 		html = html + template.HTML(sb.String())
 	}
 	return html

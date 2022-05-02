@@ -7,5 +7,5 @@ import (
 )
 
 func Payments(database database.Database) repositories.Repository[models.Payment] {
-	return Generic(database, models.Payment{}, "Id DESC")
+	return Generic(database, models.Payment{}, "Date DESC")
 }
