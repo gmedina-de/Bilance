@@ -129,6 +129,7 @@ func (g *generic[T]) Save(r Request) Response {
 			} else if len(cents) == 0 {
 				newAmount += "00"
 			}
+			newAmount = newAmount[0 : len(oldAmount)-len(cents)+1]
 		} else {
 			newAmount = oldAmount + "00"
 		}

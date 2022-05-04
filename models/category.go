@@ -7,5 +7,9 @@ type Category struct {
 }
 
 func (c Category) String() string {
+	return "<div style=\"color:" + c.Color + "\">" + c.Name + "</div>"
+}
+
+func (c Category) Title() string {
 	return c.Name
 }

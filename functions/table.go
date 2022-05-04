@@ -2,6 +2,7 @@ package functions
 
 import (
 	"genuine/models"
+	"html"
 	"html/template"
 	"strings"
 )
@@ -56,7 +57,8 @@ func (t *table) td(v any) template.HTML {
 		} else {
 			tpl.Execute(&sb, rf.Interface())
 		}
-		ret = ret + template.HTML(sb.String())
+
+		ret = ret + template.HTML(html.UnescapeString(sb.String()))
 	}
 
 	return ret

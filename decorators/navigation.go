@@ -128,10 +128,13 @@ func similarity(s1, s2 string) int {
 		return 0
 	}
 
+	s1split := strings.Split(s1, "/")
+	s2split := strings.Split(s2, "/")
+
 	var count int
-	for i := range s1 {
+	for i := range s1split {
 		if len(s2) > i {
-			if s1[i] == s2[i] {
+			if strings.Split(s1split[i], "?")[0] == strings.Split(s2split[i], "?")[0] {
 				count++
 			} else {
 				break

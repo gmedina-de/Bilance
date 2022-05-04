@@ -39,17 +39,17 @@ func (s *standard) Set(request *http.Request) {
 }
 
 func (s *standard) Translate(key string, params ...any) string {
-	key = strings.ToLower(key)
+	lowerKey := strings.ToLower(key)
 	localization, found := s.localizations[s.language]
 	if found {
-		translation, found := localization[key]
+		translation, found := localization[lowerKey]
 		if found {
 			return fmt.Sprintf(translation, params...)
 		}
 	}
 	localization, found = s.localizations["default"]
 	if found {
-		translation, found := localization[key]
+		translation, found := localization[lowerKey]
 		if found {
 			return fmt.Sprintf(translation, params...)
 		}

@@ -123,10 +123,17 @@ func (f *form) options(sf reflect.StructField, selectedId uint, database databas
 	for i := 0; i < sv.Len(); i++ {
 		item := sv.Index(i)
 		id := uint(item.FieldByName(models.ID).Uint())
+		var label string
+		if m, ok := item.Interface().(models.Titler); ok {
+			label = m.Title()
+		} else {
+			label = fmt.Sprintf("%s", item.Interface())
+		}
+
 		ret = append(ret, option{
 			Value:    id,
 			Selected: id == selectedId,
-			Label:    fmt.Sprintf("%s", item.Interface()),
+			Label:    label,
 		})
 	}
 	return ret
