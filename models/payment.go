@@ -8,7 +8,7 @@ type Payment struct {
 	Model
 	Name       string   `form:"required"`
 	Amount     Currency `form:"required"`
-	Date       Date
+	Date       Date     `form:"required"`
 	CategoryID uint
 	Category   Category
 	PayerID    uint
