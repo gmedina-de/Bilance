@@ -4,7 +4,6 @@ import (
 	controllers3 "genuine/controllers"
 	"genuine/database"
 	"genuine/decorators"
-	"genuine/filters"
 	"genuine/log"
 	"genuine/template"
 	"net/http"
@@ -13,7 +12,6 @@ import (
 
 type standard struct {
 	controllers []controllers3.Controller
-	filters     []filters.Filter
 	decorators  []decorators.Decorator
 	template    template.Template
 	database    database.Database
@@ -23,14 +21,13 @@ type standard struct {
 
 func Standard(
 	cs []controllers3.Controller,
-	filters []filters.Filter,
 	decorators []decorators.Decorator,
 	template template.Template,
 	database database.Database,
 	log log.Log,
 ) Router {
 	//todo use regex routing (library?) for more flexibility
-	s := &standard{cs, filters, decorators, template, database, make(map[string]controllers3.Handler)}
+	s := &standard{cs, decorators, template, database, make(map[string]controllers3.Handler)}
 	for _, c := range s.controllers {
 		for k, v := range c.Routes() {
 			s.routes[k] = v
@@ -41,30 +38,22 @@ func Standard(
 }
 
 func (s *standard) Handle(w http.ResponseWriter, r *http.Request) {
-	handle := true
-	for _, f := range s.filters {
-		if !f.Filter(w, r) {
-			handle = false
-		}
-	}
-	if handle {
-		action, found := s.routes[strings.ToUpper(r.Method)+" "+r.URL.Path]
-		if found {
-			request := controllers3.Request{Request: r, ResponseWriter: w}
-			response := action(request)
-			if response != nil {
-				for _, d := range s.decorators {
-					d.Decorate(request, response)
-				}
-
-				tmpl, render := response["Template"].(string)
-				if render {
-					response["Database"] = s.database
-					s.template.Render(r, w, tmpl, response)
-				}
+	action, found := s.routes[strings.ToUpper(r.Method)+" "+r.URL.Path]
+	if found {
+		request := controllers3.Request{Request: r, ResponseWriter: w}
+		response := action(request)
+		if response != nil {
+			for _, d := range s.decorators {
+				d.Decorate(request, response)
 			}
-		} else {
-			w.WriteHeader(404)
+
+			tmpl, render := response["Template"].(string)
+			if render {
+				response["Database"] = s.database
+				s.template.Render(r, w, tmpl, response)
+			}
 		}
+	} else {
+		w.WriteHeader(404)
 	}
 }

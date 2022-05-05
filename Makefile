@@ -19,7 +19,7 @@ all: help
 
 ## Build:
 build: ## Build your project
-	GO111MODULE=on $(GOCMD) build -mod vendor -tags dev -o $(BINARY_NAME) .
+	GO111MODULE=on $(GOCMD) build -mod vendor -tags dev -o $(BINARY_NAME) --ldflags '-linkmode external -extldflags "-static"' .
 
 clean: ## Remove build related file
 	rm -fr ./bin

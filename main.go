@@ -12,7 +12,6 @@ import (
 	models2 "genuine/models"
 	repositories2 "genuine/repositories"
 	"genuine/server"
-	"sync"
 )
 
 func init() {
@@ -37,7 +36,6 @@ func init() {
 		repositories2.Payments,
 		repositories2.Sites,
 		repositories2.Users,
-		server.Webdav,
 	)
 
 	flag.Parse()
@@ -62,17 +60,8 @@ func registerAsset[T models2.Asset](model T) {
 }
 
 func main() {
-	injector.Invoke(func(server []server.Server, translator functions.Translator) any {
-		var wg sync.WaitGroup
-		for _, s := range server {
-			s := s
-			wg.Add(1)
-			go func() {
-				s.Serve()
-				wg.Done()
-			}()
-		}
-		wg.Wait()
+	injector.Invoke(func(server server.Server, translator functions.Translator) any {
+		server.Serve()
 		return nil
 	})
 }
